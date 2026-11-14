@@ -21,6 +21,10 @@ def test_health_endpoint(client):
     assert data["database_connected"] is True
     assert data["dataset_loaded"] is True
 
+    # Also test /api/health
+    response_api = client.get("/api/health")
+    assert response_api.status_code == 200
+
 def test_metrics_endpoint(client):
     response = client.get("/api/metrics")
     assert response.status_code == 200
