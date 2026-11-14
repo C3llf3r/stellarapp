@@ -131,3 +131,47 @@ def test_simulation_validation_errors(client):
     }
     response = client.post("/api/ai/simulate", json=invalid_payload)
     assert response.status_code == 422
+
+def test_psi_overview_endpoint(client):
+    response = client.get("/api/psi/overview")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total_studies"] == 14
+    assert data["total_experimental_parameters"] == 32
+    assert data["combustion_studies_count"] >= 3
+
+def test_psi_studies_endpoint(client):
+    response = client.get("/api/psi/studies")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 14
+
+    # Test filtering by category
+    resp_comb = client.get("/api/psi/studies?category=Combustion")
+    assert resp_comb.status_code == 200
+    data_comb = resp_comb.json()
+    assert len(data_comb) >= 3
+
+def test_psi_study_detail_endpoint(client):
+    response = client.get("/api/psi/studies/PSI-159")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["study"]["psi_id"] == "PSI-159"
+    assert len(data["parameters"]) > 0
+    assert len(data["documents"]) > 0
+
+def test_psi_parameters_endpoint(client):
+    response = client.get("/api/psi/parameters")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 32
+
+    resp_single = client.get("/api/psi/parameters?psi_id=PSI-159")
+    assert resp_single.status_code == 200
+    assert len(resp_single.json()) > 0
+
+def test_psi_publications_endpoint(client):
+    response = client.get("/api/psi/publications")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) > 0

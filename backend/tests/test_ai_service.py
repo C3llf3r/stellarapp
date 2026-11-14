@@ -46,6 +46,12 @@ async def test_instant_response_thermal_limits(ai_service):
     assert "StellarApp" in result["model"]
 
 @pytest.mark.anyio
+async def test_instant_response_psi_repository(ai_service):
+    result = await ai_service.ask_safety_assistant("¿Qué investigaciones contiene el repositorio NASA PSI?")
+    assert "14 estudios" in result["answer"] or "psi-159" in result["answer"].lower()
+    assert "StellarApp" in result["model"]
+
+@pytest.mark.anyio
 async def test_simulate_combustion_model(ai_service):
     params = {
         "material": "PMMA",

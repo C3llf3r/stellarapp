@@ -87,3 +87,45 @@ export interface ThermalLimitsResponse {
   human_critical_temp_c: number;
   hull_yield_temp_c: number;
 }
+
+export interface PsiStudy {
+  psi_id: string;
+  title: string;
+  description: string;
+  submission_date?: string;
+  public_release_date?: string;
+  approach?: string;
+  category: string;
+  status: string;
+  parameters?: PsiParameter[];
+  documents_count?: number;
+  documents?: any[];
+  contacts?: any[];
+}
+
+export interface PsiParameter {
+  id: number;
+  psi_id: string;
+  parameter_name: string;
+  parameter_value: string;
+  unit: string;
+  condition?: string;
+  source?: string;
+  notes?: string;
+}
+
+export interface PsiOverview {
+  metadata: {
+    name: string;
+    description: string;
+    version: string;
+    source: string;
+  };
+  total_studies: number;
+  total_experimental_parameters: number;
+  total_documents: number;
+  total_contacts: number;
+  total_publications: number;
+  combustion_studies_count: number;
+  combustion_studies: PsiStudy[];
+}

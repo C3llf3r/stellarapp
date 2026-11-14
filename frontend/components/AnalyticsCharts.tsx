@@ -27,7 +27,11 @@ import {
   Thermometer,
   HeartPulse,
   Info,
+  Database,
+  Search,
+  FileText,
 } from "lucide-react";
+import { PsiStudy } from "@/types";
 
 interface FlameSpreadPoint {
   o2_pct: number;
@@ -77,13 +81,17 @@ interface ThermalTimelinePoint {
 }
 
 export default function AnalyticsCharts() {
-  const [activeTab, setActiveTab] = useState<"all" | "flame" | "radiation" | "soot" | "flammability" | "thermal">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "flame" | "radiation" | "soot" | "flammability" | "thermal" | "psi">("all");
   const [flameData, setFlameData] = useState<FlameSpreadPoint[]>([]);
   const [materialsData, setMaterialsData] = useState<MaterialRadiation[]>([]);
   const [sootData, setSootData] = useState<SootPoint[]>([]);
   const [flammabilityData, setFlammabilityData] = useState<FlammabilityPoint[]>([]);
   const [thermalBands, setThermalBands] = useState<ThermalTolerancePoint[]>([]);
   const [thermalTimeline, setThermalTimeline] = useState<ThermalTimelinePoint[]>([]);
+  const [psiStudies, setPsiStudies] = useState<PsiStudy[]>([]);
+  const [psiCategory, setPsiCategory] = useState<string>("all");
+  const [psiSearch, setPsiSearch] = useState<string>("");
+  const [selectedStudy, setSelectedStudy] = useState<PsiStudy | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -160,6 +168,13 @@ export default function AnalyticsCharts() {
         ]);
         setLoading(false);
       });
+
+    fetch("/api/psi/studies")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) setPsiStudies(data);
+      })
+      .catch(() => {});
   }, []);
 
   const CustomTooltip = ({ active, payload, label }: any) => {
@@ -246,6 +261,15 @@ export default function AnalyticsCharts() {
             }`}
           >
             MATRIZ NASA-STD-6001
+          </button>
+          <button
+            onClick={() => setActiveTab("psi")}
+            className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors flex items-center space-x-1.5 ${
+              activeTab === "psi" ? "bg-[#76b900] text-black" : "text-[#76b900] hover:text-white border border-[#76b900]/30"
+            }`}
+          >
+            <Database className="h-3.5 w-3.5" />
+            <span>NASA PSI (14 ESTUDIOS)</span>
           </button>
         </div>
       </div>
@@ -714,6 +738,215 @@ export default function AnalyticsCharts() {
                 <span className="text-[#df6500] block">MATERIALES PROHIBIDOS EN ARTEMIS:</span>
                 <strong className="text-white">PMMA (17.3%) &amp; Algodón (16.5%)</strong>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Section 5: NASA Physical Sciences Informatics (PSI) Database (14 Estudios & 32 Parámetros) */}
+        {(activeTab === "all" || activeTab === "psi") && (
+          <div className="relative bg-[#1a1a1a] border border-[#333333] p-6 space-y-6 lg:col-span-2">
+            <div className="corner-square" />
+
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#333333]">
+              <div>
+                <div className="flex items-center space-x-2 text-[11px] font-bold text-[#76b900] uppercase tracking-widest">
+                  <Database className="h-4 w-4" />
+                  <span>NASA PHYSICAL SCIENCES INFORMATICS (PSI) DATABASE</span>
+                </div>
+                <h3 className="text-lg font-bold text-white mt-1">
+                  14 Estudios Experimentales de Microgravedad &amp; 32 Parámetros Validados
+                </h3>
+                <p className="text-xs text-[#898989] mt-0.5">
+                  Repositorio oficial de investigaciones en la Estación Espacial Internacional (ISS), Cygnus y vuelos parabólicos.
+                </p>
+              </div>
+
+              {/* KPI Badges */}
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="px-3 py-1 bg-black border border-[#333333] text-center">
+                  <span className="text-xs font-mono font-bold text-[#76b900]">14</span>
+                  <span className="text-[10px] text-[#898989] block uppercase">Estudios</span>
+                </div>
+                <div className="px-3 py-1 bg-black border border-[#333333] text-center">
+                  <span className="text-xs font-mono font-bold text-[#00b0ff]">32</span>
+                  <span className="text-[10px] text-[#898989] block uppercase">Parámetros</span>
+                </div>
+                <div className="px-3 py-1 bg-black border border-[#333333] text-center">
+                  <span className="text-xs font-mono font-bold text-[#e040fb]">8</span>
+                  <span className="text-[10px] text-[#898989] block uppercase">Docs NASA</span>
+                </div>
+                <div className="px-3 py-1 bg-black border border-[#76b900]/40 text-center">
+                  <span className="text-xs font-mono font-bold text-white">ISS Flight</span>
+                  <span className="text-[10px] text-[#76b900] block uppercase">Validado</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Search and Category Filter Bar */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-[#757575]" />
+                <input
+                  type="text"
+                  placeholder="Buscar por ID (PSI-159, PSI-60), título, material o parámetro..."
+                  value={psiSearch}
+                  onChange={(e) => setPsiSearch(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 bg-black border border-[#333333] text-white text-xs placeholder-[#666666] focus:outline-none focus:border-[#76b900] font-mono"
+                />
+              </div>
+
+              <div className="flex flex-wrap items-center gap-1.5">
+                {[
+                  { id: "all", label: "TODOS" },
+                  { id: "combustion", label: "COMBUSTIÓN (ACME/BASS/SPICE)" },
+                  { id: "heat", label: "FLUIDOS & CALOR" },
+                  { id: "materials", label: "CIENCIA DE MATERIALES" },
+                  { id: "colloid", label: "COLOIDES" }
+                ].map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setPsiCategory(cat.id)}
+                    className={`px-2.5 py-1.5 text-[11px] font-mono font-bold uppercase transition-colors ${
+                      psiCategory === cat.id
+                        ? "bg-[#76b900] text-black"
+                        : "bg-black text-[#cccccc] hover:text-white border border-[#333333]"
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Studies Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {psiStudies
+                .filter((s) => {
+                  const matchCat =
+                    psiCategory === "all" ||
+                    (psiCategory === "combustion" && (s.category.toLowerCase().includes("combustion") || s.category.toLowerCase().includes("flame"))) ||
+                    (psiCategory === "heat" && (s.category.toLowerCase().includes("heat") || s.category.toLowerCase().includes("fluid") || s.category.toLowerCase().includes("cfd"))) ||
+                    (psiCategory === "materials" && (s.category.toLowerCase().includes("material") || s.category.toLowerCase().includes("cement") || s.category.toLowerCase().includes("solidification"))) ||
+                    (psiCategory === "colloid" && s.category.toLowerCase().includes("colloid"));
+                  const q = psiSearch.toLowerCase();
+                  const matchQuery =
+                    !q ||
+                    s.psi_id.toLowerCase().includes(q) ||
+                    s.title.toLowerCase().includes(q) ||
+                    s.description.toLowerCase().includes(q) ||
+                    (s.parameters && s.parameters.some((p) => p.parameter_name.toLowerCase().includes(q) || p.parameter_value.toLowerCase().includes(q)));
+                  return matchCat && matchQuery;
+                })
+                .map((study) => (
+                  <div
+                    key={study.psi_id}
+                    onClick={() => setSelectedStudy(selectedStudy?.psi_id === study.psi_id ? null : study)}
+                    className={`relative bg-black border p-4 cursor-pointer transition-all ${
+                      selectedStudy?.psi_id === study.psi_id
+                        ? "border-[#76b900] shadow-md shadow-[#76b900]/20"
+                        : "border-[#333333] hover:border-[#666666]"
+                    }`}
+                  >
+                    <div className="corner-square" />
+                    
+                    {/* Card Top */}
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-mono text-xs font-bold text-[#76b900] px-2 py-0.5 bg-[#1a1a1a] border border-[#333333]">
+                        {study.psi_id}
+                      </span>
+                      <span className="text-[10px] font-mono text-[#898989] uppercase">
+                        {study.status || "PUBLIC RELEASE"}
+                      </span>
+                    </div>
+
+                    <h4 className="text-xs font-bold text-white leading-snug line-clamp-2 mb-1.5">
+                      {study.title}
+                    </h4>
+
+                    <div className="text-[10px] text-[#76b900] font-mono mb-2">
+                      {study.category}
+                    </div>
+
+                    <p className="text-[11px] text-[#a7a7a7] line-clamp-3 leading-relaxed mb-3">
+                      {study.description}
+                    </p>
+
+                    {/* Parameters Preview */}
+                    {study.parameters && study.parameters.length > 0 && (
+                      <div className="space-y-1 pt-2 border-t border-[#262626]">
+                        <span className="text-[9px] font-mono uppercase text-[#757575] block">
+                          Parámetros Físicos ({study.parameters.length}):
+                        </span>
+                        <div className="flex flex-wrap gap-1">
+                          {study.parameters.slice(0, 3).map((p, pIdx) => (
+                            <span
+                              key={pIdx}
+                              className="px-1.5 py-0.5 bg-[#161616] border border-[#333333] text-[10px] font-mono text-[#cccccc]"
+                            >
+                              {p.parameter_name}: <strong className="text-white">{p.parameter_value} {p.unit}</strong>
+                            </span>
+                          ))}
+                          {study.parameters.length > 3 && (
+                            <span className="text-[10px] font-mono text-[#76b900] self-center">
+                              +{study.parameters.length - 3} más
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Footer */}
+                    <div className="flex items-center justify-between pt-2.5 mt-2 border-t border-[#262626] text-[10px] font-mono text-[#757575]">
+                      <div className="flex items-center space-x-1">
+                        <FileText className="h-3 w-3" />
+                        <span>{study.documents_count || (study.documents ? study.documents.length : 0)} docs</span>
+                      </div>
+                      <span className="text-[#76b900] hover:underline">
+                        {selectedStudy?.psi_id === study.psi_id ? "Cerrar Detalle ▲" : "Ver Detalle ▼"}
+                      </span>
+                    </div>
+
+                    {/* Expanded Detail View */}
+                    {selectedStudy?.psi_id === study.psi_id && (
+                      <div className="mt-3 pt-3 border-t border-[#76b900]/40 space-y-3 bg-[#111111] -mx-4 -mb-4 p-4 text-xs font-mono">
+                        <div>
+                          <span className="text-[#76b900] font-bold block mb-1">METODOLOGÍA &amp; ENFOQUE:</span>
+                          <p className="text-[#cccccc] text-[11px] leading-relaxed">
+                            {study.approach || "Ensayos experimentales con hardware CIR / BASS / FAMIS a bordo de la ISS."}
+                          </p>
+                        </div>
+
+                        {study.parameters && study.parameters.length > 0 && (
+                          <div>
+                            <span className="text-[#00b0ff] font-bold block mb-1">TODOS LOS PARÁMETROS CALIBRADOS:</span>
+                            <div className="space-y-1 max-h-40 overflow-y-auto pr-1">
+                              {study.parameters.map((p, idx) => (
+                                <div key={idx} className="flex justify-between py-0.5 border-b border-[#222222] text-[11px]">
+                                  <span className="text-[#a7a7a7]">{p.parameter_name}:</span>
+                                  <span className="text-white font-bold">{p.parameter_value} {p.unit}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {study.contacts && study.contacts.length > 0 && (
+                          <div>
+                            <span className="text-[#e040fb] font-bold block mb-1">EQUIPO DE INVESTIGACIÓN:</span>
+                            <div className="space-y-1">
+                              {study.contacts.map((c: any, cIdx: number) => (
+                                <div key={cIdx} className="text-[11px] text-[#cccccc]">
+                                  • {c.first_name} {c.last_name} ({c.role}) — <span className="text-[#757575]">{c.affiliation}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
             </div>
           </div>
         )}

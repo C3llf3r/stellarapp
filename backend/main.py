@@ -34,6 +34,10 @@ PSI_DB_PATH = Path(__file__).parent / "data" / "database.json"
 if not PSI_DB_PATH.exists():
     PSI_DB_PATH = Path(__file__).parent.parent / "database.json"
 
+PSI_FULL_DB_PATH = Path(__file__).parent / "data" / "nasa_psi_database.json"
+if not PSI_FULL_DB_PATH.exists():
+    PSI_FULL_DB_PATH = Path(__file__).parent.parent / "nasa_psi_database.json"
+
 ai_service = CombustionAIService(str(DATA_PATH))
 
 def load_data() -> List[Dict[str, Any]]:
@@ -47,6 +51,14 @@ def load_psi_database() -> Dict[str, Any]:
     except Exception as e:
         print(f"Error cargando base de datos PSI-159: {e}")
         return {}
+
+def load_psi_full_database() -> Dict[str, Any]:
+    try:
+        with open(PSI_FULL_DB_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error cargando base de datos completa NASA PSI: {e}")
+        return {"metadata": {}, "tables": {}}
 
 class QueryRequest(BaseModel):
     query: str = Field(..., min_length=1, max_length=2000, description="Consulta del astronauta o ingeniero")
@@ -192,6 +204,119 @@ class KalmanRequest(BaseModel):
 @app.get("/api/scenarios")
 def get_scenarios():
     return [s.to_dict() for s in SCENARIOS.values()]
+
+# --- NASA Physical Sciences Informatics (PSI) Full Database Endpoints ---
+@app.get("/api/psi/overview")
+def get_psi_overview():
+    """
+    Retorna resumen general del repositorio oficial Physical Sciences Informatics (PSI) de la NASA:
+    total de estudios, documentos, parámetros experimentales y publicaciones científicas.
+    """
+    db = load_psi_full_database()
+    tables = db.get("tables", {})
+    studies = tables.get("studies", [])
+    combustion_studies = [s for s in studies if "combustion" in s.get("category", "").lower() or "flame" in s.get("category", "").lower()]
+    return {
+        "metadata": db.get("metadata", {}),
+        "total_studies": len(studies),
+        "total_experimental_parameters": len(tables.get("experimental_parameters", [])),
+        "total_documents": len(tables.get("documents", [])),
+        "total_contacts": len(tables.get("contacts", [])),
+        "total_publications": len(tables.get("publications", [])),
+        "combustion_studies_count": len(combustion_studies),
+        "combustion_studies": combustion_studies
+    }
+
+@app.get("/api/psi/studies")
+def get_psi_studies(
+    category: Optional[str] = Query(None, description="Filtro por categoría (Combustion, Heat Transfer, Materials)"),
+    search: Optional[str] = Query(None, description="Búsqueda por texto libre")
+):
+    """
+    Retorna la lista de estudios de la base de datos NASA PSI con sus parámetros y documentos asociados.
+    """
+    db = load_psi_full_database()
+    tables = db.get("tables", {})
+    studies = tables.get("studies", [])
+    params = tables.get("experimental_parameters", [])
+    docs = tables.get("documents", [])
+    contacts = tables.get("contacts", [])
+
+    results = []
+    for s in studies:
+        psi_id = s.get("psi_id", "")
+        if category and category.lower() not in s.get("category", "").lower():
+            continue
+        if search:
+            query = search.lower()
+            match_title = query in s.get("title", "").lower()
+            match_desc = query in s.get("description", "").lower()
+            match_id = query in psi_id.lower()
+            if not (match_title or match_desc or match_id):
+                continue
+
+        study_params = [p for p in params if p.get("psi_id") == psi_id]
+        study_docs = [d for d in docs if d.get("psi_id") == psi_id]
+        study_contacts = [c for c in contacts if c.get("psi_id") == psi_id]
+        results.append({
+            **s,
+            "parameters": study_params,
+            "documents_count": len(study_docs),
+            "documents": study_docs,
+            "contacts": study_contacts
+        })
+    return results
+
+@app.get("/api/psi/studies/{psi_id}")
+def get_psi_study_detail(psi_id: str):
+    """
+    Retorna el detalle completo de un estudio específico de NASA PSI (ej. PSI-159, PSI-60, PSI-62).
+    """
+    db = load_psi_full_database()
+    tables = db.get("tables", {})
+    studies = tables.get("studies", [])
+    target = None
+    for s in studies:
+        if s.get("psi_id", "").lower() == psi_id.lower():
+            target = s
+            break
+    if not target:
+        raise HTTPException(status_code=404, detail=f"Estudio {psi_id} no encontrado en NASA PSI")
+
+    p_id = target.get("psi_id")
+    params = [p for p in tables.get("experimental_parameters", []) if p.get("psi_id") == p_id]
+    docs = [d for d in tables.get("documents", []) if d.get("psi_id") == p_id]
+    contacts = [c for c in tables.get("contacts", []) if c.get("psi_id") == p_id]
+    pubs = [pb for pb in tables.get("publications", []) if pb.get("psi_id") == p_id]
+    raw = [r for r in tables.get("raw_data", []) if r.get("psi_id") == p_id]
+
+    return {
+        "study": target,
+        "parameters": params,
+        "documents": docs,
+        "contacts": contacts,
+        "publications": pubs,
+        "raw_data_manifest": raw
+    }
+
+@app.get("/api/psi/parameters")
+def get_psi_parameters(psi_id: Optional[str] = Query(None, description="Filtro por ID de estudio PSI")):
+    """
+    Retorna la lista de parámetros físicos experimentales validados por la NASA.
+    """
+    db = load_psi_full_database()
+    params = db.get("tables", {}).get("experimental_parameters", [])
+    if psi_id:
+        params = [p for p in params if p.get("psi_id", "").lower() == psi_id.lower()]
+    return params
+
+@app.get("/api/psi/publications")
+def get_psi_publications():
+    """
+    Retorna publicaciones científicas asociadas a los estudios NASA PSI.
+    """
+    db = load_psi_full_database()
+    return db.get("tables", {}).get("publications", [])
 
 # --- NASA PSI-159 & Microgravity Combustion Standards ---
 @app.get("/api/psi159/database")

@@ -11,6 +11,7 @@ class CombustionAIService:
         self.dataset_path = dataset_path
         self.dataset = self._load_dataset()
         self.psi_db = self._load_psi_db()
+        self.psi_full_db = self._load_psi_full_db()
 
     def _load_dataset(self) -> List[Dict[str, Any]]:
         try:
@@ -34,6 +35,20 @@ class CombustionAIService:
                     print(f"Error loading PSI database from {candidate}: {e}")
         return {}
 
+    def _load_psi_full_db(self) -> Dict[str, Any]:
+        for candidate in [
+            os.path.join(os.path.dirname(__file__), "data", "nasa_psi_database.json"),
+            os.path.join(os.path.dirname(os.path.dirname(__file__)), "nasa_psi_database.json"),
+            "nasa_psi_database.json"
+        ]:
+            if os.path.exists(candidate):
+                try:
+                    with open(candidate, "r", encoding="utf-8") as f:
+                        return json.load(f)
+                except Exception as e:
+                    print(f"Error loading full PSI database from {candidate}: {e}")
+        return {"metadata": {}, "tables": {}}
+
     def _is_query_in_domain(self, query: str) -> bool:
         """
         Guardrail: Verifies that the query pertains strictly to NASA spaceflight,
@@ -47,7 +62,7 @@ class CombustionAIService:
             "artemis", "marte", "mars", "luna", "moon", "iss", "cygnus", "orion", "gateway",
             "oxigeno", "oxígeno", "o2", "presion", "presión", "flujo", "ventilaci",
             "pmma", "nomex", "algodon", "algodón", "cotton", "kapton", "teflon", "etfe", "silicon", "heptan",
-            "pbi", "ptfe", "kevlar", "loi", "psi", "psi-159", "psi159",
+            "pbi", "ptfe", "kevlar", "loi", "psi", "psi-159", "psi159", "psi-60", "psi-62", "psi-138", "psi-153", "psi-174", "psi-177", "psi-189", "spice",
             "humo", "smoke", "soot", "hollin", "hollín", "aerosol",
             "extinci", "supresi", "nitrogeno", "nitrógeno", "co2", "apagar",
             "kalman", "sensor", "monoxido", "monóxido", "ppm", "toxic", "eclss",
@@ -312,6 +327,23 @@ INSTRUCCIONES CLAVE:
                 "grounded": True,
                 "model": "StellarApp-AeroEngine (Inferencia Instantánea NASA)",
                 "sources": ["NASA-FIRMS-EPSG6933", "EXP-SAFFIRE-001", "MODIS-VIIRS-FRP"]
+            }
+
+        # 9. Repositorio Oficial NASA PSI (Physical Sciences Informatics)
+        if any(w in q for w in ["psi", "estudios", "investigacion", "investigación", "repositorio", "spice", "ansys", "fluent", "ebullicion", "ebullición", "bifasic", "bifásic"]):
+            return {
+                "answer": (
+                    "🔬 **Repositorio Oficial NASA Physical Sciences Informatics (PSI):**\n\n"
+                    "StellarApp integra la base de datos oficial NASA PSI con **14 estudios de vuelo espacial y 32 parámetros experimentales validados**:\n\n"
+                    "• **PSI-159 (Cool Flames / ACME):** Flamas difusivas esféricas gaseosas en la ISS. Calibración de fotomultiplicadores PMT1 (ganancia 10.0), PMT2 (8.0), PMT3 (10.0), radiómetros y control de flujo estático MFCA1 (0.50) para detección de llamas frías invisibles.\n"
+                    "• **PSI-60 (SPICE / Dobbins et al. 2022):** Formación y aglomeración de hollín en microgravedad mediante pirometría de relación de dos colores (*two-color pyrometry*) analizando más de 1600 imágenes de llama en la ISS.\n"
+                    "• **PSI-62 (BASS / Flamelet Generated Manifolds):** Modelado numérico de propagación concurrente de llama sobre superficies sólidas en 0g comparado con tomografía experimental en la ISS.\n"
+                    "• **PSI-138 & PSI-189:** Transferencia de calor en ebullición y dinámica bifásica gas-líquido para reactores y sistemas de soporte de vida ECLSS.\n\n"
+                    "Puedes consultar estos estudios directamente en `/api/psi/studies` y `/api/psi/parameters`."
+                ),
+                "grounded": True,
+                "model": "StellarApp-AeroEngine (Inferencia Instantánea NASA PSI)",
+                "sources": ["NASA-PSI-159", "NASA-PSI-60", "NASA-PSI-62", "DOI:10.1080/00102202.2022.2041621"]
             }
 
         return None
