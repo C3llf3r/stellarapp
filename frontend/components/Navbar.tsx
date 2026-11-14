@@ -41,17 +41,17 @@ export default function Navbar({ onOpenAI, onOpenSimulator }: NavbarProps) {
             <Flame className="h-4 w-4 text-black fill-black" />
           </div>
           <div className="flex items-baseline space-x-2">
-            <span className="font-bold text-lg tracking-wider text-white">
+            <span className="font-bold text-base sm:text-lg tracking-wider text-white">
               STELLAR<span className="text-[#76b900]">APP</span>
             </span>
-            <span className="text-[11px] font-bold tracking-widest text-[#898989] uppercase border-l border-[#333333] pl-2">
+            <span className="text-[10px] sm:text-[11px] font-bold tracking-widest text-[#898989] uppercase border-l border-[#333333] pl-2 hidden sm:inline">
               NASA SPACE APPS
             </span>
           </div>
         </Link>
 
         {/* Live ISS Orbital Telemetry Widget */}
-        <div className="hidden md:flex items-center space-x-3 px-3 py-1.5 bg-[#1a1a1a] border border-[#333333] text-xs font-mono">
+        <div className="hidden lg:flex items-center space-x-3 px-3 py-1.5 bg-[#1a1a1a] border border-[#333333] text-xs font-mono">
           <div className="flex items-center space-x-1.5 text-[#76b900]">
             <Radio className="h-3.5 w-3.5 animate-pulse" />
             <span className="font-bold uppercase tracking-wider">ISS LIVE:</span>
@@ -70,10 +70,10 @@ export default function Navbar({ onOpenAI, onOpenSimulator }: NavbarProps) {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2 sm:space-x-3">
           <Link
             href="/pitch"
-            className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[#76b900] border border-[#76b900] hover:bg-[#76b900] hover:text-black transition-colors"
+            className="inline-flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#76b900] border border-[#76b900] hover:bg-[#76b900] hover:text-black transition-colors"
           >
             <Presentation className="h-3.5 w-3.5" />
             <span>PITCH</span>
@@ -89,7 +89,7 @@ export default function Navbar({ onOpenAI, onOpenSimulator }: NavbarProps) {
 
           <button
             onClick={onOpenAI}
-            className="inline-flex items-center space-x-1.5 px-4 py-1.5 text-xs font-bold uppercase tracking-wider bg-[#76b900] text-black hover:bg-[#5a8d00] transition-colors"
+            className="inline-flex items-center space-x-1 sm:space-x-1.5 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider bg-[#76b900] text-black hover:bg-[#5a8d00] transition-colors"
           >
             <Sparkles className="h-3.5 w-3.5 fill-black" />
             <span>AGENTE IA</span>

@@ -148,7 +148,7 @@ export default function EarthSpaceBridge() {
                 <span className="text-[11px] font-mono text-[#898989]">RESOLUCIÓN: 375m – 1000m</span>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="p-3 bg-[#1a1a1a] border border-[#333333]">
                   <span className="text-[10px] font-bold uppercase text-[#757575] block">Métrica Central</span>
                   <div className="text-sm font-bold text-white mt-1">FRP (MegaWatts)</div>
@@ -181,7 +181,7 @@ export default function EarthSpaceBridge() {
                 <span className="text-[11px] font-mono text-[#76b900]">0.0001g (MICROGRAVEDAD)</span>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="p-3 bg-[#1a1a1a] border border-[#333333]">
                   <span className="text-[10px] font-bold uppercase text-[#757575] block">Métrica Central</span>
                   <div className="text-sm font-bold text-white mt-1">Flujo Térmico</div>

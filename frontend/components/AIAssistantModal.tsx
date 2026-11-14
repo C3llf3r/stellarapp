@@ -83,8 +83,8 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-none">
-      <div className="relative w-full max-w-2xl bg-black border border-[#76b900] shadow-2xl flex flex-col h-[600px] overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-none">
+      <div className="relative w-full max-w-2xl bg-black border border-[#76b900] shadow-2xl flex flex-col h-[600px] max-h-[92dvh] overflow-hidden">
         {/* Corner Square */}
         <div className="corner-square" />
 

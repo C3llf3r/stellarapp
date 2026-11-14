@@ -100,7 +100,7 @@ export default function KalmanTelemetry() {
         </div>
 
         {/* Habitat Selector Tabs */}
-        <div className="flex bg-black p-1 border border-[#333333]">
+        <div className="flex flex-wrap sm:flex-nowrap gap-1 bg-black p-1 border border-[#333333]">
           {[
             { id: "iss", label: "ISS (916 m³)" },
             { id: "lunar", label: "BASE LUNAR (280 m³)" },
