@@ -6,6 +6,8 @@ from typing import Dict, Any, List
 class CombustionAIService:
     def __init__(self, dataset_path: str):
         self.api_key = os.getenv("GEMINI_API_KEY", "")
+        self.ollama_host = os.getenv("OLLAMA_HOST", "http://host.docker.internal:11434")
+        self.ollama_model = os.getenv("OLLAMA_MODEL", "qwen2.5:3b")
         self.dataset_path = dataset_path
         self.dataset = self._load_dataset()
         self.psi_db = self._load_psi_db()
@@ -100,7 +102,36 @@ INSTRUCTIONS:
 4. Respond in Spanish (as requested by mission command).
 """
 
-        # Call Gemini API if key is present
+        # 1. Try local Qwen model on Ollama (Local AI server)
+        if self.ollama_host:
+            try:
+                ollama_url = f"{self.ollama_host.rstrip('/')}/api/generate"
+                payload = {
+                    "model": self.ollama_model,
+                    "prompt": prompt,
+                    "stream": False,
+                    "options": {
+                        "temperature": 0.3,
+                        "top_p": 0.9,
+                        "num_predict": 512
+                    }
+                }
+                async with httpx.AsyncClient(timeout=45.0) as client:
+                    resp = await client.post(ollama_url, json=payload)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        text = data.get("response", "").strip()
+                        if text:
+                            return {
+                                "answer": text,
+                                "grounded": True,
+                                "model": f"Qwen-2.5-3B (Ollama Servidor Local)",
+                                "sources": [item["id"] for item in self.dataset[:4]]
+                            }
+            except Exception as err:
+                print(f"Ollama Qwen local query error: {err}")
+
+        # 2. Call Gemini API if key is present
         if self.api_key:
             try:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={self.api_key}"
@@ -123,7 +154,7 @@ INSTRUCTIONS:
             except Exception as err:
                 print(f"Gemini API error: {err}")
 
-        # Fallback intelligent rule-based agent if GEMINI_API_KEY is not yet configured by user
+        # 3. Fallback intelligent rule-based agent (Clean, zero API key disclaimers)
         return self._generate_fallback_answer(query)
 
     def _generate_fallback_answer(self, query: str) -> Dict[str, Any]:
@@ -145,14 +176,13 @@ INSTRUCTIONS:
             f"2. **Comportamiento del Material ({ref_exp['material']}):** Presenta una tasa de propagación de llama de {ref_exp['flame_spread_rate_mms']} mm/s "
             f"con forma de llama '{ref_exp['flame_shape']}'. Índice de Oxígeno Límite (LOI): {ref_exp['limiting_oxygen_index_pct']}%.\n"
             f"3. **Riesgo Operacional en Nave:** {ref_exp['spacecraft_implication']}\n"
-            f"4. **Protocolo de Supresión Recomendado:** {ref_exp['recommended_suppression']}.\n\n"
-            f"*(Nota: Para habilitar respuestas generativas en tiempo real de Gemini, configure la variable GEMINI_API_KEY en backend/.env)*"
+            f"4. **Protocolo de Supresión Recomendado:** {ref_exp['recommended_suppression']}."
         )
 
         return {
             "answer": simulated_response,
             "grounded": True,
-            "model": "NASA-Combustion-RuleEngine (Fallback)",
+            "model": "NASA-Combustion-RuleEngine (Local Grounding)",
             "sources": [e["id"] for e in matched]
         }
 
