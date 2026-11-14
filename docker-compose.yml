@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: stellarapp_backend
+    ports:
+      - "127.0.0.1:8067:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+    restart: unless-stopped
+    networks:
+      - stellarapp_net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: stellarapp_frontend
+    ports:
+      - "127.0.0.1:8066:3000"
+    environment:
+      - INTERNAL_BACKEND_URL=http://backend:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - stellarapp_net
+
+networks:
+  stellarapp_net:
+    driver: bridge
