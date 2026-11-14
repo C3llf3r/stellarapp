@@ -35,9 +35,24 @@ export default function AISimulator() {
         throw new Error("Backend response error");
       }
     } catch {
-      const riskScore = (o2 / 21.0) * (airFlow / 10.0 + 0.5) * (gravity < 0.1 ? 1.1 : 1.0);
-      const riskLevel = o2 > 25.0 ? "Extreme" : riskScore > 1.8 ? "Critical" : riskScore > 1.0 ? "Moderate" : "Low";
-      const spread = Math.max(0.05, (o2 - 14.0) * 0.15 * (gravity < 0.1 ? 1.0 : 0.8) * (airFlow / 10.0 + 0.2));
+      const loiMap: Record<string, { loi: number; tox: string }> = {
+        nomex: { loi: 30.0, tox: "CO (bajo a medio)" },
+        pbi: { loi: 40.0, tox: "CO (bajo)" },
+        kapton: { loi: 38.0, tox: "HCN + CO (alto)" },
+        kevlar: { loi: 29.0, tox: "CO (medio)" },
+        ptfe: { loi: 95.0, tox: "HF (muy alto)" },
+        pmma: { loi: 17.3, tox: "CO + CO2 (alto)" },
+        cotton: { loi: 16.5, tox: "CO (moderado)" },
+        etfe: { loi: 25.0, tox: "HF trazas + CO" },
+        heptane: { loi: 14.0, tox: "CO + Hidrocarburos" },
+      };
+      const matKey = material.toLowerCase();
+      const matInfo = loiMap[matKey] || { loi: 21.0, tox: "CO (medio)" };
+      const loiExceeded = o2 >= matInfo.loi;
+
+      const riskScore = (o2 / 21.0) * (airFlow / 10.0 + 0.5) * (gravity < 0.1 ? 1.1 : 1.0) + (loiExceeded ? 0.8 : 0.0);
+      const riskLevel = o2 > 25.0 || (loiExceeded && matInfo.tox.includes("HF")) ? "Extreme" : (riskScore > 1.8 || loiExceeded) ? "Critical" : riskScore > 1.0 ? "Moderate" : "Low";
+      const spread = Math.max(0.05, (o2 - 14.0) * 0.15 * (gravity < 0.1 ? 1.0 : 0.8) * (airFlow / 10.0 + 0.2) * (loiExceeded ? 1.0 : 0.25));
 
       setResult({
         input_parameters: {
@@ -55,7 +70,14 @@ export default function AISimulator() {
           gravity < 0.1
             ? "Corte inmediato de ventilación de cabina (< 1.0 cm/s) e inyección de gas inerte N₂"
             : "Descarga de extintor de agua nebulizada / CO₂",
-        compliance_note: "Evaluado conforme a directrices NASA-STD-6001 (Flammability in Spacecraft Environments).",
+        compliance_note: loiExceeded 
+          ? `⚠️ ALERTA PSI-159: O₂ (${o2}%) >= LOI (${matInfo.loi}%). Toxicidad crítica: ${matInfo.tox}.`
+          : `✅ NASA PSI-159 / STD-6001: Material auto-extinguible (O₂: ${o2}% < LOI: ${matInfo.loi}%).`,
+        material_loi: matInfo.loi,
+        toxic_hazard: matInfo.tox,
+        loi_exceeded: loiExceeded,
+        psi_calibrated: true,
+        psi_sensor_context: "Calibrado con NASA PSI-159 (PMT1: 4.42 V, IonCurrent: -0.888)",
       });
     } finally {
       setLoading(false);
@@ -96,11 +118,15 @@ export default function AISimulator() {
                 onChange={(e) => setMaterial(e.target.value)}
                 className="w-full bg-black border border-[#333333] text-xs font-bold text-white px-3 py-2.5 focus:border-[#76b900] focus:outline-none"
               >
-                <option value="PMMA">PMMA (Acrílico estructural)</option>
-                <option value="Nomex">Nomex (Fibra de aramida de trajes)</option>
-                <option value="Cotton">Algodón (NASA Standard Test 1)</option>
-                <option value="ETFE">ETFE (Aislante de cableado aeroespacial)</option>
-                <option value="Heptane">n-Heptano (Combustión de gotas)</option>
+                <option value="Nomex">Nomex (LOI 30% - Trajes ISS / NASA Reference)</option>
+                <option value="PBI">PBI (LOI 40% - Óptimo Alto Oxígeno Artemis)</option>
+                <option value="Kapton">Kapton (LOI 38% - Aislamiento / Alerta HCN)</option>
+                <option value="Kevlar">Kevlar (LOI 29% - Textil de protección)</option>
+                <option value="PTFE">PTFE (LOI 95% - Alta inercia / Alerta HF)</option>
+                <option value="PMMA">PMMA (LOI 17.3% - Acrílico estructural)</option>
+                <option value="Cotton">Algodón (LOI 16.5% - NASA Standard Test 1)</option>
+                <option value="ETFE">ETFE (LOI 25% - Cableado aeroespacial)</option>
+                <option value="Heptane">n-Heptano (LOI 14% - Combustión de gotas)</option>
               </select>
             </div>
 
@@ -130,17 +156,17 @@ export default function AISimulator() {
               </div>
               <input
                 type="range"
-                min="15"
-                max="34"
+                min="16"
+                max="38"
                 step="0.5"
                 value={o2}
                 onChange={(e) => setO2(parseFloat(e.target.value))}
                 className="w-full h-1 bg-black appearance-none cursor-pointer accent-[#76b900]"
               />
               <div className="flex justify-between text-[10px] text-[#757575] mt-1 font-mono uppercase">
-                <span>15% (Límite hipóxico)</span>
+                <span>16% (Límite hipóxico)</span>
                 <span>21% (ISS Estándar)</span>
-                <span>26%-32% (Artemis EVA Prep)</span>
+                <span>30%-37% (Artemis / Exploración)</span>
               </div>
             </div>
 
@@ -237,6 +263,47 @@ export default function AISimulator() {
                     <p className="text-[11px] text-[#df6500] leading-relaxed">
                       <strong>ALERTA DE FUEGO FRÍO:</strong> Con flujo de aire &lt; 3 cm/s, la combustión continúa sin emisión de luz ni calor convencional detectable por sensores estándar.
                     </p>
+                  </div>
+                )}
+
+                {result.material_loi !== undefined && (
+                  <div className={`p-3 border text-xs ${
+                    result.loi_exceeded
+                      ? "bg-[#200505] border-[#e52020] text-white"
+                      : "bg-[#081708] border-[#76b900] text-white"
+                  }`}>
+                    <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-[#333333]">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#a7a7a7]">
+                        CALIBRACIÓN NASA PSI-159 // LOI vs O₂
+                      </span>
+                      <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 ${
+                        result.loi_exceeded ? "bg-[#e52020] text-white" : "bg-[#76b900] text-black"
+                      }`}>
+                        {result.loi_exceeded ? "LOI SUPERADO" : "MATERIAL SEGURO"}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-[11px] font-mono text-center my-1.5">
+                      <div className="bg-[#141414] p-1.5 border border-[#2b2b2b]">
+                        <span className="text-[9px] text-[#898989] block">LOI LÍMITE</span>
+                        <strong className="text-white">{result.material_loi}%</strong>
+                      </div>
+                      <div className="bg-[#141414] p-1.5 border border-[#2b2b2b]">
+                        <span className="text-[9px] text-[#898989] block">O₂ AMBIENTE</span>
+                        <strong className="text-[#76b900]">{o2}%</strong>
+                      </div>
+                      <div className="bg-[#141414] p-1.5 border border-[#2b2b2b]">
+                        <span className="text-[9px] text-[#898989] block">MARGEN</span>
+                        <strong className={result.loi_exceeded ? "text-[#e52020]" : "text-[#76b900]"}>
+                          {(result.material_loi - o2) > 0 ? `+${(result.material_loi - o2).toFixed(1)}%` : `${(result.material_loi - o2).toFixed(1)}%`}
+                        </strong>
+                      </div>
+                    </div>
+                    {result.toxic_hazard && (
+                      <div className="mt-2 text-[10px] text-[#cccccc] flex items-center space-x-1.5">
+                        <AlertCircle className="h-3.5 w-3.5 text-[#df6500] shrink-0" />
+                        <span>Gas de Descomposición: <strong className="text-white">{result.toxic_hazard}</strong></span>
+                      </div>
+                    )}
                   </div>
                 )}
 

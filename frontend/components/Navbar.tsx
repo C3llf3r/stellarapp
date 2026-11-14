@@ -5,9 +5,9 @@ import Link from "next/link";
 import { Flame, Compass, Sparkles, Presentation, Radio, Globe2, BarChart3 } from "lucide-react";
 
 interface NavbarProps {
-  onOpenAI: () => void;
   onOpenSimulator: () => void;
   onOpenAnalytics?: () => void;
+  onOpenAI?: () => void;
 }
 
 interface ISSTelemetry {
@@ -96,14 +96,6 @@ export default function Navbar({ onOpenAI, onOpenSimulator, onOpenAnalytics }: N
           >
             <Compass className="h-3.5 w-3.5" />
             <span>SIMULADOR</span>
-          </button>
-
-          <button
-            onClick={onOpenAI}
-            className="inline-flex items-center space-x-1 sm:space-x-1.5 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider bg-[#76b900] text-black hover:bg-[#5a8d00] transition-colors"
-          >
-            <Sparkles className="h-3.5 w-3.5 fill-black" />
-            <span>AGENTE IA</span>
           </button>
         </div>
       </div>

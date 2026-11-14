@@ -55,6 +55,15 @@ export default function FloatingAIAgent() {
     }
   }, [messages, isOpen, isMinimized]);
 
+  useEffect(() => {
+    const handleOpen = () => {
+      setIsOpen(true);
+      setIsMinimized(false);
+    };
+    window.addEventListener("open-floating-ai", handleOpen);
+    return () => window.removeEventListener("open-floating-ai", handleOpen);
+  }, []);
+
   const handleSend = async (queryText?: string) => {
     const q = (queryText || input).trim();
     if (!q || loading) return;

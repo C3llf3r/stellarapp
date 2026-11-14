@@ -75,10 +75,15 @@ export default function Home() {
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
+  const openFloatingAI = () => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("open-floating-ai"));
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black text-[#cccccc] flex flex-col font-sans">
       <Navbar
-        onOpenAI={() => setAiModalOpen(true)}
         onOpenSimulator={scrollToSimulator}
         onOpenAnalytics={scrollToAnalytics}
       />
@@ -106,7 +111,7 @@ export default function Home() {
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <button
-                onClick={() => setAiModalOpen(true)}
+                onClick={openFloatingAI}
                 className="px-6 py-3 bg-[#76b900] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#5a8d00] transition-colors flex items-center space-x-2"
               >
                 <Sparkles className="h-4 w-4 fill-black" />
