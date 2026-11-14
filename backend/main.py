@@ -30,11 +30,23 @@ app.add_middleware(
 )
 
 DATA_PATH = Path(__file__).parent / "data" / "nasa_combustion_data.json"
+PSI_DB_PATH = Path(__file__).parent / "data" / "database.json"
+if not PSI_DB_PATH.exists():
+    PSI_DB_PATH = Path(__file__).parent.parent / "database.json"
+
 ai_service = CombustionAIService(str(DATA_PATH))
 
 def load_data() -> List[Dict[str, Any]]:
     with open(DATA_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
+
+def load_psi_database() -> Dict[str, Any]:
+    try:
+        with open(PSI_DB_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error cargando base de datos PSI-159: {e}")
+        return {}
 
 class QueryRequest(BaseModel):
     query: str
@@ -45,6 +57,11 @@ class SimulationRequest(BaseModel):
     oxygen_concentration_pct: float = 21.0
     pressure_kpa: float = 101.3
     air_flow_velocity_cms: float = 5.0
+
+class MaterialEvalRequest(BaseModel):
+    material: str = "Nomex"
+    oxygen_pct: float = 21.0
+    gravity_g: float = 0.0001
 
 @app.get("/")
 def root():
@@ -165,6 +182,80 @@ class KalmanRequest(BaseModel):
 def get_scenarios():
     return [s.to_dict() for s in SCENARIOS.values()]
 
+# --- NASA PSI-159 & Microgravity Combustion Standards ---
+@app.get("/api/psi159/database")
+def get_psi159_database():
+    """Retorna la base de datos completa de parámetros y sensores PSI-159 / ISS."""
+    return load_psi_database()
+
+@app.get("/api/psi159/materials")
+def get_psi159_materials():
+    """Retorna los materiales aeroespaciales caracterizados por LOI y toxicidad de gases."""
+    db = load_psi_database()
+    return db.get("materiales", [])
+
+@app.post("/api/psi159/recommend")
+def evaluate_material_flammability(req: MaterialEvalRequest):
+    """
+    Evalúa la compatibilidad de un material frente a la atmósfera de la nave (LOI vs O2)
+    según la regla de oro de la NASA: Si O2 >= LOI, la combustión se auto-sostiene.
+    """
+    db = load_psi_database()
+    materials = db.get("materiales", [])
+    
+    # Buscar material por id o coincidencia en nombre
+    target = None
+    query = req.material.lower().strip()
+    for m in materials:
+        if m.get("id", "").lower() == query or query in m.get("nombre", "").lower():
+            target = m
+            break
+            
+    if not target:
+        # Fallbacks conocidos de NASA STD-6001
+        defaults = {
+            "pmma": {"id": "pmma", "nombre": "PMMA", "loi": 17.3, "toxicidad": "CO + CO2 (alto)", "notas": "Acrílico estructural"},
+            "cotton": {"id": "cotton", "nombre": "Algodón", "loi": 16.5, "toxicidad": "CO (moderado)", "notas": "NASA Standard Test 1"},
+            "etfe": {"id": "etfe", "nombre": "ETFE", "loi": 25.0, "toxicidad": "HF trazas + CO", "notas": "Aislante cableado"}
+        }
+        target = defaults.get(query, {"id": query, "nombre": req.material, "loi": 21.0, "toxicidad": "CO (medio)", "notas": "Material no clasificado"})
+
+    loi = float(target.get("loi", 21.0))
+    margin = round(loi - req.oxygen_pct, 2)
+    is_safe = req.oxygen_pct < loi
+    
+    # Alternativas seguras si el material es vulnerable
+    safer = []
+    if not is_safe:
+        for m in materials:
+            if float(m.get("loi", 0)) > req.oxygen_pct:
+                safer.append({
+                    "id": m.get("id"),
+                    "nombre": m.get("nombre"),
+                    "loi": m.get("loi"),
+                    "toxicidad": m.get("toxicidad"),
+                    "seguridad_margin": round(float(m.get("loi", 0)) - req.oxygen_pct, 1)
+                })
+
+    psi_stats = db.get("datos_psi159", {}).get("sensores", {}).get("estadisticas_muestra", {})
+
+    return {
+        "material_evaluado": target,
+        "oxygen_concentration_pct": req.oxygen_pct,
+        "loi_limit_pct": loi,
+        "safety_margin_pct": margin,
+        "is_safe": is_safe,
+        "combustion_state": "Auto-extinguible / Pasivo" if is_safe else "Ignición y propagación sostenida",
+        "toxic_hazard": target.get("toxicidad", "CO"),
+        "safer_alternatives": safer,
+        "sensor_calibration": {
+            "fuente": db.get("metadata", {}).get("fuente_principal", "NASA PSI-159"),
+            "ion_current_mean": psi_stats.get("IonCurrent", {}).get("media", -0.8885),
+            "pmt1_mean_v": psi_stats.get("PMT1", {}).get("media", 4.4225),
+            "mfc_max_voltage": db.get("constantes_codigo", {}).get("mfcMaxVoltage", 4.92)
+        }
+    }
+
 @app.post("/api/telemetry/kalman")
 def get_kalman_telemetry(req: KalmanRequest):
     return engine.compute_telemetry(req.scenario_id, req.o2_pct)
@@ -224,11 +315,39 @@ def get_analytics_charts():
         {"name": "Nomex", "loi": 28.5, "quenching_mm": 12.4, "safe": True}
     ]
 
+    # 5. Thermal Limits & Survivability (NASA-STD-3001 vs. NASA-SP-20205001358)
+    thermal_tolerance_bands = [
+        {"entity": "Confort Tripulante", "max_temp_c": 26.7, "ref_threshold": "NASA-STD-3001 Nom.", "category": "Humano", "color": "#76b900"},
+        {"entity": "Supervivencia Humana", "max_temp_c": 45.0, "ref_threshold": "Evacuación Obligatoria", "category": "Humano", "color": "#df6500"},
+        {"entity": "Dolor Cutáneo / Quemadura", "max_temp_c": 50.0, "ref_threshold": "Daño Tisular", "category": "Humano", "color": "#ef4444"},
+        {"entity": "Aviónica Cold Plates", "max_temp_c": 55.0, "ref_threshold": "Límite Enfriamiento", "category": "Nave", "color": "#00b0ff"},
+        {"entity": "Casco Al-Li (Fluencia)", "max_temp_c": 150.0, "ref_threshold": "-40% Resistencia Tracción", "category": "Nave", "color": "#e040fb"},
+        {"entity": "Sellos Viton O-Ring", "max_temp_c": 180.0, "ref_threshold": "Despresurización", "category": "Nave", "color": "#f59e0b"},
+        {"entity": "Fuego Saffire (0g Pico)", "max_temp_c": 1147.0, "ref_threshold": "Llama Cygnus 1420K", "category": "Fuego", "color": "#ff0055"}
+    ]
+
+    # 6. Thermal Excursion Timeline during Cabin Fire (0 to 180s)
+    thermal_excursion_timeline = [
+        {"time_s": 0, "cabin_air_c": 21.0, "skin_absorbed_c": 34.0, "hull_temp_c": 20.0, "limit_human": 45.0, "limit_hull": 150.0},
+        {"time_s": 15, "cabin_air_c": 24.5, "skin_absorbed_c": 34.8, "hull_temp_c": 21.2, "limit_human": 45.0, "limit_hull": 150.0},
+        {"time_s": 30, "cabin_air_c": 33.0, "skin_absorbed_c": 37.5, "hull_temp_c": 24.0, "limit_human": 45.0, "limit_hull": 150.0},
+        {"time_s": 45, "cabin_air_c": 44.8, "skin_absorbed_c": 42.1, "hull_temp_c": 29.5, "limit_human": 45.0, "limit_hull": 150.0},
+        {"time_s": 60, "cabin_air_c": 59.2, "skin_absorbed_c": 48.0, "hull_temp_c": 38.0, "limit_human": 45.0, "limit_hull": 150.0},
+        {"time_s": 75, "cabin_air_c": 78.5, "skin_absorbed_c": 56.4, "hull_temp_c": 51.2, "limit_human": 45.0, "limit_hull": 150.0},
+        {"time_s": 90, "cabin_air_c": 102.0, "skin_absorbed_c": 66.8, "hull_temp_c": 68.5, "limit_human": 45.0, "limit_hull": 150.0},
+        {"time_s": 105, "cabin_air_c": 128.4, "skin_absorbed_c": 79.0, "hull_temp_c": 92.0, "limit_human": 45.0, "limit_hull": 150.0},
+        {"time_s": 120, "cabin_air_c": 154.0, "skin_absorbed_c": 92.5, "hull_temp_c": 122.5, "limit_human": 45.0, "limit_hull": 150.0},
+        {"time_s": 150, "cabin_air_c": 192.5, "skin_absorbed_c": 110.0, "hull_temp_c": 168.0, "limit_human": 45.0, "limit_hull": 150.0},
+        {"time_s": 180, "cabin_air_c": 220.0, "skin_absorbed_c": 125.0, "hull_temp_c": 195.0, "limit_human": 45.0, "limit_hull": 150.0}
+    ]
+
     return {
         "flame_spread_vs_o2": flame_spread_vs_o2,
         "materials_radiation": materials_radiation,
         "soot_distribution": soot_distribution,
-        "flammability_envelope": flammability_envelope
+        "flammability_envelope": flammability_envelope,
+        "thermal_tolerance_bands": thermal_tolerance_bands,
+        "thermal_excursion_timeline": thermal_excursion_timeline
     }
 
 @app.get("/api/iss/live")

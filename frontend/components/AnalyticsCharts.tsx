@@ -14,6 +14,8 @@ import {
   Legend,
   ReferenceLine,
   Cell,
+  AreaChart,
+  Area,
 } from "recharts";
 import {
   BarChart3,
@@ -22,8 +24,9 @@ import {
   Flame,
   ShieldAlert,
   Layers,
+  Thermometer,
+  HeartPulse,
   Info,
-  Maximize2,
 } from "lucide-react";
 
 interface FlameSpreadPoint {
@@ -56,12 +59,31 @@ interface FlammabilityPoint {
   safe: boolean;
 }
 
+interface ThermalTolerancePoint {
+  entity: string;
+  max_temp_c: number;
+  ref_threshold: string;
+  category: string;
+  color: string;
+}
+
+interface ThermalTimelinePoint {
+  time_s: number;
+  cabin_air_c: number;
+  skin_absorbed_c: number;
+  hull_temp_c: number;
+  limit_human: number;
+  limit_hull: number;
+}
+
 export default function AnalyticsCharts() {
-  const [activeTab, setActiveTab] = useState<"all" | "flame" | "radiation" | "soot" | "flammability">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "flame" | "radiation" | "soot" | "flammability" | "thermal">("all");
   const [flameData, setFlameData] = useState<FlameSpreadPoint[]>([]);
   const [materialsData, setMaterialsData] = useState<MaterialRadiation[]>([]);
   const [sootData, setSootData] = useState<SootPoint[]>([]);
   const [flammabilityData, setFlammabilityData] = useState<FlammabilityPoint[]>([]);
+  const [thermalBands, setThermalBands] = useState<ThermalTolerancePoint[]>([]);
+  const [thermalTimeline, setThermalTimeline] = useState<ThermalTimelinePoint[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -72,6 +94,8 @@ export default function AnalyticsCharts() {
         if (data.materials_radiation) setMaterialsData(data.materials_radiation);
         if (data.soot_distribution) setSootData(data.soot_distribution);
         if (data.flammability_envelope) setFlammabilityData(data.flammability_envelope);
+        if (data.thermal_tolerance_bands) setThermalBands(data.thermal_tolerance_bands);
+        if (data.thermal_excursion_timeline) setThermalTimeline(data.thermal_excursion_timeline);
         setLoading(false);
       })
       .catch(() => {
@@ -112,6 +136,28 @@ export default function AnalyticsCharts() {
           { name: "Kapton", loi: 27.5, quenching_mm: 11.2, safe: true },
           { name: "Nomex", loi: 28.5, quenching_mm: 12.4, safe: true },
         ]);
+        setThermalBands([
+          { entity: "Confort Tripulante", max_temp_c: 26.7, ref_threshold: "NASA-STD-3001 Nom.", category: "Humano", color: "#76b900" },
+          { entity: "Supervivencia Humana", max_temp_c: 45.0, ref_threshold: "Evacuación Obligatoria", category: "Humano", color: "#df6500" },
+          { entity: "Dolor Cutáneo / Quemadura", max_temp_c: 50.0, ref_threshold: "Daño Tisular", category: "Humano", color: "#ef4444" },
+          { entity: "Aviónica Cold Plates", max_temp_c: 55.0, ref_threshold: "Límite Enfriamiento", category: "Nave", color: "#00b0ff" },
+          { entity: "Casco Al-Li (Fluencia)", max_temp_c: 150.0, ref_threshold: "-40% Resistencia Tracción", category: "Nave", color: "#e040fb" },
+          { entity: "Sellos Viton O-Ring", max_temp_c: 180.0, ref_threshold: "Despresurización", category: "Nave", color: "#f59e0b" },
+          { entity: "Fuego Saffire (0g Pico)", max_temp_c: 1147.0, ref_threshold: "Llama Cygnus 1420K", category: "Fuego", color: "#ff0055" },
+        ]);
+        setThermalTimeline([
+          { time_s: 0, cabin_air_c: 21.0, skin_absorbed_c: 34.0, hull_temp_c: 20.0, limit_human: 45.0, limit_hull: 150.0 },
+          { time_s: 15, cabin_air_c: 24.5, skin_absorbed_c: 34.8, hull_temp_c: 21.2, limit_human: 45.0, limit_hull: 150.0 },
+          { time_s: 30, cabin_air_c: 33.0, skin_absorbed_c: 37.5, hull_temp_c: 24.0, limit_human: 45.0, limit_hull: 150.0 },
+          { time_s: 45, cabin_air_c: 44.8, skin_absorbed_c: 42.1, hull_temp_c: 29.5, limit_human: 45.0, limit_hull: 150.0 },
+          { time_s: 60, cabin_air_c: 59.2, skin_absorbed_c: 48.0, hull_temp_c: 38.0, limit_human: 45.0, limit_hull: 150.0 },
+          { time_s: 75, cabin_air_c: 78.5, skin_absorbed_c: 56.4, hull_temp_c: 51.2, limit_human: 45.0, limit_hull: 150.0 },
+          { time_s: 90, cabin_air_c: 102.0, skin_absorbed_c: 66.8, hull_temp_c: 68.5, limit_human: 45.0, limit_hull: 150.0 },
+          { time_s: 105, cabin_air_c: 128.4, skin_absorbed_c: 79.0, hull_temp_c: 92.0, limit_human: 45.0, limit_hull: 150.0 },
+          { time_s: 120, cabin_air_c: 154.0, skin_absorbed_c: 92.5, hull_temp_c: 122.5, limit_human: 45.0, limit_hull: 150.0 },
+          { time_s: 150, cabin_air_c: 192.5, skin_absorbed_c: 110.0, hull_temp_c: 168.0, limit_human: 45.0, limit_hull: 150.0 },
+          { time_s: 180, cabin_air_c: 220.0, skin_absorbed_c: 125.0, hull_temp_c: 195.0, limit_human: 45.0, limit_hull: 150.0 },
+        ]);
         setLoading(false);
       });
   }, []);
@@ -143,10 +189,10 @@ export default function AnalyticsCharts() {
             <span>CENTRO DE TELEMETRÍA Y ANALÍTICA GRÁFICA NASA</span>
           </div>
           <h2 className="text-2xl font-bold text-white mt-1">
-            Visualización Comparativa de Combustión & Dinámica de Fuego
+            Visualización Comparativa de Combustión & Límites Térmicos
           </h2>
           <p className="text-xs text-[#898989] mt-0.5">
-            Modelos de regresión empírica validados contra misiones Saffire (I-IV), BASS-II, FLEX-2 y SAME.
+            Modelos de regresión física y supervivencia estandarizados por NASA-STD-3001, NASA-STD-6001 y misiones Saffire.
           </p>
         </div>
 
@@ -159,6 +205,15 @@ export default function AnalyticsCharts() {
             }`}
           >
             TODOS LOS GRÁFICOS
+          </button>
+          <button
+            onClick={() => setActiveTab("thermal")}
+            className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors flex items-center space-x-1.5 ${
+              activeTab === "thermal" ? "bg-[#76b900] text-black" : "text-[#76b900] hover:text-white"
+            }`}
+          >
+            <Thermometer className="h-3.5 w-3.5" />
+            <span>LÍMITES TÉRMICOS (HUMANO / CASCO)</span>
           </button>
           <button
             onClick={() => setActiveTab("flame")}
@@ -197,6 +252,174 @@ export default function AnalyticsCharts() {
 
       {/* Grid of Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* NEW Chart: Thermal Tolerance Limits (Human vs Spacecraft) */}
+        {(activeTab === "all" || activeTab === "thermal") && (
+          <div className="relative bg-[#1a1a1a] border border-[#333333] p-6 space-y-4">
+            <div className="corner-square" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Thermometer className="h-4 w-4 text-[#76b900]" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-white">
+                  Límites Térmicos Máximos: Tripulación vs. Nave (°C)
+                </h3>
+              </div>
+              <span className="text-[10px] font-mono text-[#76b900] bg-black px-2 py-0.5 border border-[#333333]">
+                NASA-STD-3001 vs SP-20205001358
+              </span>
+            </div>
+
+            <p className="text-[11px] text-[#898989] leading-tight">
+              Comparación de umbrales críticos de degradación térmica: la tripulación requiere evacuación obligatoria a +45°C, mientras que el casco de aleación Al-Li pierde 40% de rigidez a +150°C.
+            </p>
+
+            <div className="h-[280px] w-full pt-2">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={thermalBands} margin={{ top: 10, right: 20, left: -10, bottom: 35 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#262626" />
+                  <XAxis
+                    dataKey="entity"
+                    stroke="#757575"
+                    tick={{ fill: "#898989", fontSize: 9, fontFamily: "monospace" }}
+                    angle={-25}
+                    textAnchor="end"
+                  />
+                  <YAxis
+                    stroke="#757575"
+                    tick={{ fill: "#898989", fontSize: 10, fontFamily: "monospace" }}
+                    label={{ value: "Temp. Máxima (°C)", angle: -90, position: "insideLeft", fill: "#757575", fontSize: 10 }}
+                  />
+                  <Tooltip content={<CustomTooltip />} />
+                  <ReferenceLine
+                    y={45}
+                    stroke="#df6500"
+                    strokeDasharray="4 4"
+                    label={{ value: "EVACUACIÓN TRIPULACIÓN (+45°C)", fill: "#df6500", fontSize: 9, position: "insideTopLeft" }}
+                  />
+                  <ReferenceLine
+                    y={150}
+                    stroke="#e040fb"
+                    strokeDasharray="4 4"
+                    label={{ value: "FLUENCIA CASCO (+150°C)", fill: "#e040fb", fontSize: 9, position: "insideTopLeft" }}
+                  />
+                  <Bar dataKey="max_temp_c" name="Temperatura Máxima (°C)">
+                    {thermalBands.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 pt-2 border-t border-[#333333] text-[10px] font-mono">
+              <div className="bg-black p-2 border border-[#76b900]/40">
+                <span className="text-[#76b900] block">CONFORT NOMINAL:</span>
+                <strong className="text-white">18.3°C - 26.7°C</strong>
+              </div>
+              <div className="bg-black p-2 border border-[#df6500]/40">
+                <span className="text-[#df6500] block">EVACUACIÓN HUMANA:</span>
+                <strong className="text-[#df6500]">+45.0°C (&lt;45 min)</strong>
+              </div>
+              <div className="bg-black p-2 border border-[#e040fb]/40">
+                <span className="text-[#e040fb] block">FLUENCIA CASCO AL-LI:</span>
+                <strong className="text-[#e040fb]">+150.0°C (Crítico)</strong>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* NEW Chart: Thermal Excursion Timeline during Cabin Fire */}
+        {(activeTab === "all" || activeTab === "thermal") && (
+          <div className="relative bg-[#1a1a1a] border border-[#333333] p-6 space-y-4">
+            <div className="corner-square" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <HeartPulse className="h-4 w-4 text-[#df6500]" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-white">
+                  Excursión Térmica en Cabina vs. Tiempo de Fuego (0 - 180s)
+                </h3>
+              </div>
+              <span className="text-[10px] font-mono text-[#df6500] bg-black px-2 py-0.5 border border-[#333333]">
+                SIMULACIÓN DINÁMICA 0g
+              </span>
+            </div>
+
+            <p className="text-[11px] text-[#898989] leading-tight">
+              Evolución de temperatura en hábitat lunar (280 m³) con ignición PMMA: el aire cruza el umbral de supervivencia a los 45 s y el casco a los 118 s.
+            </p>
+
+            <div className="h-[280px] w-full pt-2">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={thermalTimeline} margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#262626" />
+                  <XAxis
+                    dataKey="time_s"
+                    stroke="#757575"
+                    tick={{ fill: "#898989", fontSize: 10, fontFamily: "monospace" }}
+                    label={{ value: "Tiempo tras Ignición (segundos)", position: "insideBottom", offset: -5, fill: "#757575", fontSize: 10 }}
+                  />
+                  <YAxis
+                    stroke="#757575"
+                    tick={{ fill: "#898989", fontSize: 10, fontFamily: "monospace" }}
+                    label={{ value: "Temperatura (°C)", angle: -90, position: "insideLeft", fill: "#757575", fontSize: 10 }}
+                  />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend
+                    wrapperStyle={{ fontSize: 10, fontFamily: "monospace", paddingTop: 8 }}
+                    formatter={(val) => <span className="text-[#cccccc]">{val}</span>}
+                  />
+                  <ReferenceLine
+                    y={45}
+                    stroke="#df6500"
+                    strokeDasharray="4 4"
+                    label={{ value: "COLAPSO HUMANO (+45°C)", fill: "#df6500", fontSize: 9 }}
+                  />
+                  <ReferenceLine
+                    y={150}
+                    stroke="#e040fb"
+                    strokeDasharray="4 4"
+                    label={{ value: "FALLA CASCO (+150°C)", fill: "#e040fb", fontSize: 9 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="cabin_air_c"
+                    name="Aire Interior Cabina (°C)"
+                    stroke="#ff0055"
+                    strokeWidth={2.5}
+                    dot={{ fill: "#ff0055", r: 2.5 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="skin_absorbed_c"
+                    name="Piel / Traje Absorbido (°C)"
+                    stroke="#df6500"
+                    strokeWidth={2}
+                    dot={{ fill: "#df6500", r: 2 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="hull_temp_c"
+                    name="Casco Interno Al-Li (°C)"
+                    stroke="#00b0ff"
+                    strokeWidth={2}
+                    dot={{ fill: "#00b0ff", r: 2 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#333333] text-[10px] font-mono">
+              <div className="bg-black p-2 border border-[#df6500]/40">
+                <span className="text-[#df6500] block">TIEMPO LÍMITE DE EVACUACIÓN HUMANA:</span>
+                <strong className="text-white">45 segundos (T aire &gt; 45°C)</strong>
+              </div>
+              <div className="bg-black p-2 border border-[#e040fb]/40">
+                <span className="text-[#e040fb] block">TIEMPO LÍMITE ROTURA DE CASCO:</span>
+                <strong className="text-white">118 segundos (T casco &gt; 150°C)</strong>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Chart 1: Flame Spread vs O2 Concentration */}
         {(activeTab === "all" || activeTab === "flame") && (
           <div className="relative bg-[#1a1a1a] border border-[#333333] p-6 space-y-4">

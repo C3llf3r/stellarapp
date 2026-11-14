@@ -47,4 +47,18 @@ export interface SimulationResult {
   cool_flame_risk: boolean;
   extinction_strategy: string;
   compliance_note: string;
+  material_loi?: number;
+  toxic_hazard?: string;
+  loi_exceeded?: boolean;
+  psi_calibrated?: boolean;
+  psi_sensor_context?: string;
+  frp_radiation_analysis?: any;
+}
+
+export interface PsiMaterial {
+  id: string;
+  nombre: string;
+  loi: number;
+  toxicidad: string;
+  notas: string;
 }
