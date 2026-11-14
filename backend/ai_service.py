@@ -82,25 +82,42 @@ class CombustionAIService:
                 "sources": ["NASA-STD-6001B", "NASA-SP-20205001358"]
             }
 
-        context_summary = json.dumps(self.dataset, indent=2)
+        # Smart RAG grounding: extract top 3 matching experiments to keep context lightweight & fast for local Qwen
+        q_lower = query.lower()
+        matched = [e for e in self.dataset if e.get("material", "").lower() in q_lower or e.get("mission", "").lower() in q_lower]
+        if not matched:
+            matched = self.dataset[:3]
+        else:
+            matched = matched[:3]
 
-        prompt = f"""You are the NASA Fire Safety & Combustion Science AI Specialist for human spaceflight missions (ISS, Artemis Lunar Base, Mars Transit).
-Use the following official NASA microgravity combustion experimental data (Saffire, BASS-II, FLEX-2, ACME) to answer the user inquiry accurately and technically.
+        context_summary = json.dumps([
+            {
+                "id": m.get("id"),
+                "mission": m.get("mission"),
+                "material": m.get("material"),
+                "environment": m.get("environment"),
+                "flame_shape": m.get("flame_shape"),
+                "spread_rate_mms": m.get("flame_spread_rate_mms"),
+                "loi_pct": m.get("limiting_oxygen_index_pct"),
+                "risk": m.get("safety_risk_level"),
+                "implication": m.get("spacecraft_implication"),
+                "suppression": m.get("recommended_suppression")
+            }
+            for m in matched
+        ], indent=1)
 
-CRITICAL GUARDRAIL: You are strictly scoped to NASA microgravity combustion science and astronaut fire safety. If the user asks anything outside this domain, politely refuse and redirect them to the project scope.
-
-NASA COMBUSTION DATA CONTEXT:
+        prompt = f"""Eres el Especialista de IA de la NASA para Seguridad contra Incendios en Microgravedad (ISS, Artemis, Marte).
+Responde a la consulta del astronauta o ingeniero de forma técnica, rigurosa y concisa (en 2 párrafos) en español.
+Básate en esta evidencia experimental de la NASA:
 {context_summary}
 
-USER QUESTION:
+CONSULTA DEL USUARIO:
 {query}
 
-INSTRUCTIONS:
-1. Provide a rigorous, data-driven answer citing specific NASA experiments (e.g., Saffire-I, BASS-II, FLEX-2).
-2. Explain the physical mechanism (e.g. lack of natural convection/buoyancy in 0g, diffusion flames, cool flame phenomenon, radiative heat loss, limiting oxygen index).
-3. Conclude with concrete operational recommendations for spacecraft crew and environmental control (ECLSS).
-4. Respond in Spanish (as requested by mission command).
-"""
+INSTRUCCIONES CLAVE:
+1. Explica el mecanismo físico exacto (falta de convección natural y empuje hidrostático en 0g, transporte por difusión lenta, llama esférica/azul o fenómenos de llama fría).
+2. Detalla las implicaciones para la atmósfera de la nave y la recomendación operacional de supresión para la tripulación (ECLSS).
+3. Responde siempre en español formal, citando al menos un experimento ({', '.join(m.get('id', '') for m in matched)})."""
 
         # 1. Try local Qwen model on Ollama (Local AI server)
         if self.ollama_host:
@@ -111,12 +128,11 @@ INSTRUCTIONS:
                     "prompt": prompt,
                     "stream": False,
                     "options": {
-                        "temperature": 0.3,
-                        "top_p": 0.9,
-                        "num_predict": 512
+                        "temperature": 0.25,
+                        "num_predict": 256
                     }
                 }
-                async with httpx.AsyncClient(timeout=45.0) as client:
+                async with httpx.AsyncClient(timeout=60.0) as client:
                     resp = await client.post(ollama_url, json=payload)
                     if resp.status_code == 200:
                         data = resp.json()
@@ -125,8 +141,8 @@ INSTRUCTIONS:
                             return {
                                 "answer": text,
                                 "grounded": True,
-                                "model": f"Qwen-2.5-3B (Ollama Servidor Local)",
-                                "sources": [item["id"] for item in self.dataset[:4]]
+                                "model": "Qwen-2.5-3B (Ollama Servidor Local)",
+                                "sources": [item["id"] for item in matched]
                             }
             except Exception as err:
                 print(f"Ollama Qwen local query error: {err}")
