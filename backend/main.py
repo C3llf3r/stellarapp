@@ -70,7 +70,17 @@ def root():
         "service": "NASA Microgravity Fire Safety Intelligence Engine",
         "team": "StellarApp",
         "challenge": "NASA Space Apps Challenge 2026",
-        "endpoints": ["/api/experiments", "/api/metrics", "/api/comparison", "/api/ai/ask", "/api/ai/simulate"]
+        "endpoints": ["/api/experiments", "/api/metrics", "/api/comparison", "/api/ai/ask", "/api/ai/simulate", "/health"]
+    }
+
+@app.get("/health")
+def health():
+    return {
+        "status": "healthy",
+        "service": "stellarapp-backend",
+        "version": "1.0.0",
+        "database_connected": bool(load_psi_database()),
+        "dataset_loaded": len(load_data()) > 0
     }
 
 @app.get("/api/metrics")

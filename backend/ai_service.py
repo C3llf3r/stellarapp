@@ -39,21 +39,27 @@ class CombustionAIService:
         Guardrail: Verifies that the query pertains strictly to NASA spaceflight,
         microgravity combustion, fire safety, or spacecraft ECLSS.
         """
+        import re
         domain_keywords = [
             "fuego", "fire", "combusti", "llama", "flame", "flames", "cool flame",
             "microgravedad", "microgravity", "0g", "gravedad", "gravity", "convecci", "buoyancy",
             "saffire", "bass", "flex", "acme", "same", "cir", "firms", "frp",
             "artemis", "marte", "mars", "luna", "moon", "iss", "cygnus", "orion", "gateway",
-            "oxigeno", "oxígeno", "o2", "presion", "presión", "flujo", "ventilaci", "aire",
+            "oxigeno", "oxígeno", "o2", "presion", "presión", "flujo", "ventilaci",
             "pmma", "nomex", "algodon", "algodón", "cotton", "kapton", "teflon", "etfe", "silicon", "heptan",
             "pbi", "ptfe", "kevlar", "loi", "psi", "psi-159", "psi159",
             "humo", "smoke", "soot", "hollin", "hollín", "aerosol",
             "extinci", "supresi", "nitrogeno", "nitrógeno", "co2", "apagar",
-            "kalman", "sensor", "monoxido", "monóxido", "co", "ppm", "toxic", "eclss",
-            "nasa", "std-6001", "astronauta", "tripulaci", "seguridad", "nave", "habitat", "hábitat"
+            "kalman", "sensor", "monoxido", "monóxido", "ppm", "toxic", "eclss",
+            "nasa", "std-6001", "astronauta", "tripulaci", "seguridad", "nave", "habitat", "hábitat", "casco"
         ]
         q = query.lower()
-        return any(kw in q for kw in domain_keywords)
+        if any(kw in q for kw in domain_keywords):
+            return True
+        # Check isolated word 'co'
+        if re.search(r'\bco\b', q):
+            return True
+        return False
 
     async def ask_safety_assistant(self, query: str) -> Dict[str, Any]:
         """
