@@ -45,58 +45,66 @@ export default function PitchLanding() {
 
   const valueProps = [
     {
-      title: "1. BÚSQUEDA Y CLASIFICACIÓN INSTANTÁNEA",
-      desc: "Convierte semanas de revisión bibliográfica en consultas en lenguaje natural de 2 segundos para ingenieros de hábitats espaciales.",
+      title: "1. DESBLOQUEO DE 40 AÑOS DE CIENCIA NASA & REPOSITORIO PSI",
+      desc: "Indexa y correlaciona misiones de vuelo espacial real (Saffire, BASS-II, FLEX-2, SAME, ACME) y 14 estudios oficiales de NASA Physical Sciences Informatics con 32 parámetros calibrados.",
     },
     {
-      title: "2. GEMELO DIGITAL DE PREDICCIÓN DE COMBUSTIÓN",
-      desc: "Modela la tasa de propagación antes de certificar polímeros o cableados bajo la norma aeroespacial NASA-STD-6001.",
+      title: "2. GEMELO DIGITAL DE MORFOLOGÍA Y PROPAGACIÓN EN 0G",
+      desc: "Modela la física sin flotabilidad (llamas esféricas isotrópicas, 'Cool Flames' invisibles y transferencia de calor radiativo hasta 42% a las paredes del hábitat).",
     },
     {
-      title: "3. ASISTENTE IA PARA PROTOCOLOS DE TRIPULACIÓN",
-      desc: "Proporciona pautas operativas precisas para el sistema ECLSS (corte inmediato de ventilación en lugar de abrir extintores a ciegas).",
+      title: "3. CERTIFICACIÓN DE RIESGO EN ATMÓSFERAS ARTEMIS (26%–34% O₂)",
+      desc: "Evalúa materiales estructurales bajo la norma NASA-STD-6001B frente a la aceleración de hasta +90% en la velocidad de llama en presiones reducidas (56.5 kPa).",
     },
     {
-      title: "4. PUENTE CIENTÍFICO NASA FIRMS & JUPYTER REPRODUCIBLE",
-      desc: "Integra modelos de potencia radiativa (FRP), telemetría ISS en vivo, filtro de Kalman de gases y un notebook Jupyter (.ipynb) auditable.",
+      title: "4. COPILOTO AUTÓNOMO AIR-GAPPED (<1 ms) PARA EL ECLSS",
+      desc: "Guía a la tripulación ante incendios súbitos sin depender de la Tierra (corte de ventilación forzada a <1.2 cm/s para auto-asfixia pasiva y aislamiento de mamparos).",
     },
   ];
 
   const pitchQuestions = [
     {
+      q: "¿Cuál es el objetivo primordial del proyecto StellarApp?",
+      a: "Proteger la vida de los astronautas y la integridad estructural de las naves en misiones de exploración profunda (Artemis en la Luna y hábitats en Marte), donde la física del fuego cambia drásticamente respecto a la Tierra, los métodos convencionales de extinción fallan y la evacuación es imposible.",
+    },
+    {
       q: "¿Por qué esto es vital para la NASA hoy y no hace 20 años?",
-      a: "Porque la ISS opera a 101 kPa y 21% de O₂ (igual que en la Tierra). Pero el programa Artemis (Luna) y los hábitats de Marte usarán 26%-32% de O₂ para permitir paseos espaciales (EVAs) sin descompresión. En este nuevo régimen, los materiales se queman con una violencia que nunca se vio en la Tierra.",
+      a: "Porque la ISS opera a 101 kPa y 21% de O₂ (igual que en la Tierra). Pero el programa Artemis (Luna) y los hábitats de Marte usarán 26%-32% de O₂ para permitir paseos espaciales (EVAs) sin descompresión. En este nuevo régimen, los materiales se queman con una violencia extrema que nunca se vio en la Tierra.",
     },
     {
       q: "¿Por qué se implementó un motor dual con inferencia sub-milisegundo y LLM local (Qwen-2.5)?",
       a: "En una misión a la Luna o Marte, la latencia de comunicación con la Tierra es de varios segundos a minutos (hasta 20 minutos en Marte). Un sistema de contingencia contra incendios no puede depender de APIs en la nube: debe operar 100% offline (air-gapped) dentro de la aviónica de la nave con respuestas deterministas instantáneas (<1 ms).",
     },
     {
-      q: "¿Cómo ayuda directamente a los astronautas y directores de vuelo?",
-      a: "Si ocurre un fuego en 0g, un extintor convencional puede esparcir material fundido por toda la cabina. StellarApp indica qué material se está quemando y cuál es su umbral de extinción por asfixia (cortando el flujo de aire por debajo de 1.2 cm/s).",
+      q: "¿Cómo se integra la base de datos oficial NASA Physical Sciences Informatics (PSI)?",
+      a: "StellarApp incorpora 14 investigaciones en órbita y 32 parámetros experimentales validados de la NASA (PSI-159, PSI-60, PSI-62, PSI-138), incluyendo ganancias de fotomultiplicadores PMT (8.0-10.0), flujos masivos estáticos MFCA1 y análisis pirométrico de más de 1600 imágenes de flama en la ISS.",
     },
     {
-      q: "¿Qué ventaja tecnológica aporta la IA frente a una base de datos estática?",
-      a: "No solo filtra tablas: predice la velocidad de propagación para combinaciones de gravedad parcial (0.166g Luna, 0.38g Marte) y alerta sobre 'Cool Flames' (fuegos fríos que continúan consumiendo oxígeno sin luz ni calor visible).",
+      q: "¿Cómo ayuda directamente a los astronautas y directores de vuelo ante un fuego?",
+      a: "Si ocurre un fuego en 0g, un extintor convencional puede esparcir gotas de polímero fundido por toda la cabina. StellarApp indica qué material arde, su umbral de extinción por asfixia (cortando el flujo de ventilación ECLSS a <1.2 cm/s) y los minutos exactos antes del colapso térmico humano (45°C) y del casco de Al-Li (150°C).",
     },
     {
-      q: "¿Cómo se conecta la observación de incendios terrestres (NASA FIRMS) con el fuego en una nave espacial?",
-      a: "Son los dos extremos de la física de la NASA. En la Tierra el fuego asciende por convección y los satélites miden su radiación FRP en MW. En microgravedad el calor no escapa y se transfiere por radiación directa a las paredes (hasta 42%). Conectar ambos mundos permite a StellarApp modelar el flujo térmico superficial (kW/m²) para proteger la aviónica.",
-    },
-    {
-      q: "¿Cómo garantiza el equipo la exactitud técnica de los algoritmos?",
-      a: "A través del ciclo de calidad Ralph Loop: 29 pruebas automatizadas verifican que las predicciones respeten las leyes de difusión esférica sin convección natural, los límites de oxígeno (LOI) de la norma NASA-STD-6001B y las curvas empíricas de los experimentos Saffire en la nave Cygnus.",
+      q: "¿Cómo garantiza el equipo la exactitud técnica y la ausencia de fallos de software?",
+      a: "A través del ciclo autónomo de calidad Ralph Loop: 35 pruebas automatizadas (100% aprobadas en 0.74s) verifican las ecuaciones de transporte difusivo sin convección, los límites de inflamabilidad (LOI) de NASA-STD-6001B y la calibración empírica con datos de Cygnus Saffire.",
     },
   ];
 
   const ralphLoopInnovations = [
     {
-      title: "Suite de Calidad Ralph Loop (29/29 Tests Automatizados)",
+      title: "Suite de Calidad Ralph Loop (35/35 Tests Automatizados)",
       desc: "Pruebas continuas de unidad e integración que cubren modelos de microgravedad, guardrails aeroespaciales, convergencia del filtro de Kalman y validación Pydantic estricta.",
-      metric: "29 / 29 PASS",
+      metric: "35 / 35 PASS",
       icon: ShieldCheck,
       color: "text-[#76b900]",
       badge: "100% APROBADO"
+    },
+    {
+      title: "Repositorio Oficial NASA PSI (14 Estudios & 32 Parámetros)",
+      desc: "Integración de la base de datos oficial NASA Physical Sciences Informatics: 14 estudios espaciales, calibración de sensores ópticos PMT, flujo estático MFCA1 y más de 1600 imágenes pirométricas en la ISS.",
+      metric: "14 Estudios / 32 Parámetros",
+      icon: Database,
+      color: "text-[#e040fb]",
+      badge: "CALIBRADO EN VUELO"
     },
     {
       title: "Motor Híbrido AeroEngine Dual (Sub-Milisegundo + Qwen 2.5 3B)",
@@ -119,7 +127,7 @@ export default function PitchLanding() {
       desc: "Agente HUD con avatar orbital que acompaña al astronauta en cualquier pantalla, dotado de aislamiento estricto de dominio aeroespacial y RAG inteligente sobre experimentos de la ISS.",
       metric: "Aero HUD",
       icon: Cpu,
-      color: "text-[#e040fb]",
+      color: "text-[#76b900]",
       badge: "INTERFAZ TRIPULACIÓN"
     }
   ];
@@ -161,7 +169,7 @@ export default function PitchLanding() {
 
           <div className="inline-flex items-center space-x-2 px-3 py-1 bg-black border border-[#76b900] text-[#76b900] text-xs font-bold uppercase tracking-widest">
             <Award className="h-3.5 w-3.5" />
-            <span>CHALLENGE: FLAME & FIRE BEHAVIOR IN MICROGRAVITY</span>
+            <span>CHALLENGE: FLAME &amp; FIRE BEHAVIOR IN MICROGRAVITY</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
@@ -171,6 +179,41 @@ export default function PitchLanding() {
           <p className="text-sm sm:text-base text-[#a7a7a7] max-w-2xl mx-auto leading-relaxed">
             StellarApp es la primera plataforma de <strong>inteligencia de combustión espacial</strong> que desbloquea, clasifica y modela con IA cuatro décadas de investigación de la NASA en microgravedad.
           </p>
+
+          {/* Mission Objective Callout */}
+          <div className="bg-black/90 border border-[#76b900]/60 p-4 sm:p-5 text-left font-mono space-y-1.5 shadow-lg shadow-black">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] uppercase font-bold text-[#76b900] tracking-wider">
+                // OBJETIVO PRIMORDIAL DE MISIÓN STELLARAPP
+              </span>
+              <span className="text-[9px] px-2 py-0.5 bg-[#76b900]/10 border border-[#76b900]/40 text-[#76b900]">
+                ARTEMIS &amp; MARS READY
+              </span>
+            </div>
+            <p className="text-xs text-white leading-relaxed">
+              Proteger la vida de los astronautas y la integridad estructural de la nave en <strong>bases lunares y hábitats marcianos</strong>, donde el fuego se comporta de forma radicalmente distinta a la Tierra, los extintores convencionales fallan y la evacuación es físicamente imposible.
+            </p>
+          </div>
+
+          {/* KPI Bar */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+            <div className="p-3 bg-black border border-[#333333] text-center">
+              <div className="text-xl sm:text-2xl font-bold font-mono text-[#76b900]">40 Años</div>
+              <div className="text-[10px] uppercase font-mono text-[#898989]">Ciencia NASA</div>
+            </div>
+            <div className="p-3 bg-black border border-[#333333] text-center">
+              <div className="text-xl sm:text-2xl font-bold font-mono text-[#00b0ff]">14 Estudios</div>
+              <div className="text-[10px] uppercase font-mono text-[#898989]">NASA PSI Repositorio</div>
+            </div>
+            <div className="p-3 bg-black border border-[#333333] text-center">
+              <div className="text-xl sm:text-2xl font-bold font-mono text-[#e040fb]">&lt; 1 ms</div>
+              <div className="text-[10px] uppercase font-mono text-[#898989]">Inferencia Air-Gapped</div>
+            </div>
+            <div className="p-3 bg-black border border-[#76b900]/40 text-center">
+              <div className="text-xl sm:text-2xl font-bold font-mono text-white">35 / 35</div>
+              <div className="text-[10px] uppercase font-mono text-[#76b900]">Tests Ralph Loop</div>
+            </div>
+          </div>
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
             <Link
@@ -200,7 +243,7 @@ export default function PitchLanding() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {problems.map((p, idx) => {
               const Icon = p.icon;
               return (
@@ -280,11 +323,11 @@ export default function PitchLanding() {
             </div>
             <div className="inline-flex items-center space-x-2 px-3 py-1 bg-[#1a1a1a] border border-[#333333] text-xs font-mono text-[#76b900]">
               <CheckCircle2 className="h-4 w-4" />
-              <span>TEST SUITE: 29 / 29 PASANDO</span>
+              <span>TEST SUITE: 35 / 35 PASANDO (100% VERIFICADO)</span>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {ralphLoopInnovations.map((item, idx) => {
               const Icon = item.icon;
               return (
@@ -349,6 +392,9 @@ export default function PitchLanding() {
                   </span>
                   <span className="px-2 py-1 bg-black border border-[#333333] text-[11px] font-mono text-[#a7a7a7]">
                     • Límite Térmico Humano (45°C) & Casco Al-Li (150°C)
+                  </span>
+                  <span className="px-2 py-1 bg-black border border-[#76b900]/40 text-[11px] font-mono text-[#76b900]">
+                    • 14 Estudios & 32 Parámetros NASA PSI Validados
                   </span>
                 </div>
               </div>
