@@ -17,14 +17,59 @@ class CombustionAIService:
             print(f"Error loading NASA dataset: {e}")
             return []
 
+    def _is_query_in_domain(self, query: str) -> bool:
+        """
+        Guardrail: Verifies that the query pertains strictly to NASA spaceflight,
+        microgravity combustion, fire safety, or spacecraft ECLSS.
+        """
+        domain_keywords = [
+            "fuego", "fire", "combusti", "llama", "flame", "flames", "cool flame",
+            "microgravedad", "microgravity", "0g", "gravedad", "gravity", "convecci", "buoyancy",
+            "saffire", "bass", "flex", "acme", "same", "cir", "firms", "frp",
+            "artemis", "marte", "mars", "luna", "moon", "iss", "cygnus", "orion", "gateway",
+            "oxigeno", "oxígeno", "o2", "presion", "presión", "flujo", "ventilaci", "aire",
+            "pmma", "nomex", "algodon", "algodón", "cotton", "kapton", "teflon", "etfe", "silicon", "heptan",
+            "humo", "smoke", "soot", "hollin", "hollín", "aerosol",
+            "extinci", "supresi", "nitrogeno", "nitrógeno", "co2", "apagar",
+            "kalman", "sensor", "monoxido", "monóxido", "co", "ppm", "toxic", "eclss",
+            "nasa", "std-6001", "astronauta", "tripulaci", "seguridad", "nave", "habitat", "hábitat"
+        ]
+        q = query.lower()
+        return any(kw in q for kw in domain_keywords)
+
     async def ask_safety_assistant(self, query: str) -> Dict[str, Any]:
         """
         Uses NASA combustion data as grounding context to answer astronaut fire safety queries.
+        Enforces strict domain guardrails.
         """
+        # Guardrail check
+        if not self._is_query_in_domain(query):
+            return {
+                "answer": (
+                    "⚠️ **CONTROL DE DOMINIO Y GUARDRAILS DE MISIÓN (NASA STELLARAPP):**\n\n"
+                    "Esta terminal de inteligencia artificial está **estrictamente restringida al perímetro técnico del proyecto**:\n"
+                    "• Física de combustión en microgravedad (0g, Lunar, Marciana).\n"
+                    "• Misiones de vuelo espacial NASA: Saffire, BASS-II, FLEX-2, ACME y SAME.\n"
+                    "• Atmósferas de exploración espacial y enriquecimiento de O₂ (Artemis 26% O₂).\n"
+                    "• Filtrado de ruido sensorial de gases tóxicos (Filtro de Kalman para CO).\n"
+                    "• Correlación y modelado radiativo entre incendios terrestres (NASA FIRMS) y naves espaciales.\n\n"
+                    "**Consultas sugeridas que puedes realizar:**\n"
+                    "1. *'¿Por qué las llamas son esféricas y azules en microgravedad?'*\n"
+                    "2. *'¿Qué peligro tiene la atmósfera al 26% de O₂ en la misión Artemis?'*\n"
+                    "3. *'¿Cómo detecta el experimento SAME las partículas de humo aglomeradas en la ISS?'*\n"
+                    "4. *'¿Por qué el Nomex es auto-extinguible según NASA-STD-6001?'*"
+                ),
+                "grounded": True,
+                "model": "NASA-Domain-Guardrails",
+                "sources": ["NASA-STD-6001B", "NASA-SP-20205001358"]
+            }
+
         context_summary = json.dumps(self.dataset, indent=2)
 
         prompt = f"""You are the NASA Fire Safety & Combustion Science AI Specialist for human spaceflight missions (ISS, Artemis Lunar Base, Mars Transit).
 Use the following official NASA microgravity combustion experimental data (Saffire, BASS-II, FLEX-2, ACME) to answer the user inquiry accurately and technically.
+
+CRITICAL GUARDRAIL: You are strictly scoped to NASA microgravity combustion science and astronaut fire safety. If the user asks anything outside this domain, politely refuse and redirect them to the project scope.
 
 NASA COMBUSTION DATA CONTEXT:
 {context_summary}

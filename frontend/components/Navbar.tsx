@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Flame, Compass, Sparkles, Presentation, Radio, Globe2 } from "lucide-react";
+import { Flame, Compass, Sparkles, Presentation, Radio, Globe2, BarChart3 } from "lucide-react";
 
 interface NavbarProps {
   onOpenAI: () => void;
   onOpenSimulator: () => void;
+  onOpenAnalytics?: () => void;
 }
 
 interface ISSTelemetry {
@@ -17,7 +18,7 @@ interface ISSTelemetry {
   is_live: boolean;
 }
 
-export default function Navbar({ onOpenAI, onOpenSimulator }: NavbarProps) {
+export default function Navbar({ onOpenAI, onOpenSimulator, onOpenAnalytics }: NavbarProps) {
   const [iss, setIss] = useState<ISSTelemetry | null>(null);
 
   useEffect(() => {
@@ -78,6 +79,16 @@ export default function Navbar({ onOpenAI, onOpenSimulator }: NavbarProps) {
             <Presentation className="h-3.5 w-3.5" />
             <span>PITCH</span>
           </Link>
+
+          {onOpenAnalytics && (
+            <button
+              onClick={onOpenAnalytics}
+              className="hidden md:inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white border border-[#333333] hover:border-white transition-colors"
+            >
+              <BarChart3 className="h-3.5 w-3.5 text-[#76b900]" />
+              <span>GRÁFICOS</span>
+            </button>
+          )}
 
           <button
             onClick={onOpenSimulator}

@@ -9,6 +9,8 @@ import KalmanTelemetry from "../components/KalmanTelemetry";
 import EarthSpaceBridge from "../components/EarthSpaceBridge";
 import ExperimentCard from "../components/ExperimentCard";
 import AIAssistantModal from "../components/AIAssistantModal";
+import AnalyticsCharts from "../components/AnalyticsCharts";
+import FloatingAIAgent from "../components/FloatingAIAgent";
 import { Experiment, MetricsData } from "../types";
 import { Search, Sparkles, Terminal, ChevronRight, AlertTriangle } from "lucide-react";
 
@@ -68,9 +70,18 @@ export default function Home() {
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
+  const scrollToAnalytics = () => {
+    const el = document.getElementById("analytics-section");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div className="min-h-screen bg-black text-[#cccccc] flex flex-col font-sans">
-      <Navbar onOpenAI={() => setAiModalOpen(true)} onOpenSimulator={scrollToSimulator} />
+      <Navbar
+        onOpenAI={() => setAiModalOpen(true)}
+        onOpenSimulator={scrollToSimulator}
+        onOpenAnalytics={scrollToAnalytics}
+      />
 
       <main className="flex-1 max-w-[1280px] w-full mx-auto px-6 py-10 space-y-16">
         {/* NVIDIA Hero Chapter */}
@@ -108,6 +119,13 @@ export default function Home() {
               >
                 WORKBENCH DE SIMULACIÓN
               </button>
+
+              <button
+                onClick={scrollToAnalytics}
+                className="px-6 py-3 bg-black text-[#76b900] border border-[#76b900] hover:bg-[#76b900] hover:text-black font-bold text-xs uppercase tracking-wider transition-colors"
+              >
+                DASHBOARD DE GRÁFICOS
+              </button>
             </div>
           </div>
         </section>
@@ -137,7 +155,12 @@ export default function Home() {
           <EarthSpaceBridge />
         </section>
 
-        {/* 6. Filterable Experiment Catalog */}
+        {/* 6. Scientific Analytics & Charts Dashboard */}
+        <section>
+          <AnalyticsCharts />
+        </section>
+
+        {/* 7. Filterable Experiment Catalog */}
         <section className="space-y-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#333333]">
             <div>
@@ -216,6 +239,7 @@ export default function Home() {
       </footer>
 
       <AIAssistantModal isOpen={aiModalOpen} onClose={() => setAiModalOpen(false)} />
+      <FloatingAIAgent />
     </div>
   );
 }

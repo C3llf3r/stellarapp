@@ -169,6 +169,68 @@ def get_scenarios():
 def get_kalman_telemetry(req: KalmanRequest):
     return engine.compute_telemetry(req.scenario_id, req.o2_pct)
 
+@app.get("/api/analytics/charts")
+def get_analytics_charts():
+    """
+    Returns pre-computed scientific chart series for microgravity fire safety dashboard.
+    """
+    # 1. Flame spread rate vs O2 concentration across gravities
+    o2_levels = [16.0, 18.0, 20.0, 21.0, 23.0, 26.0, 28.0, 32.0, 36.0]
+    flame_spread_vs_o2 = []
+    for o2 in o2_levels:
+        # Physical modeling:
+        # Microgravity 0g with Cygnus ventilation (15 cm/s): steady flame anchoring
+        spread_0g = round(max(0.0, (o2 - 15.5) * 0.165), 2)
+        spread_lunar = round(max(0.0, (o2 - 16.0) * 0.145), 2)
+        spread_mars = round(max(0.0, (o2 - 16.5) * 0.13), 2)
+        spread_1g = round(max(0.0, (o2 - 17.0) * 0.11), 2)
+        flame_spread_vs_o2.append({
+            "o2_pct": o2,
+            "microgravity_0g": spread_0g,
+            "lunar_016g": spread_lunar,
+            "mars_038g": spread_mars,
+            "earth_1g": spread_1g,
+            "artemis_baseline": 26.0
+        })
+
+    # 2. Materials FRP and thermal radiative flux comparison
+    materials_radiation = [
+        {"material": "PMMA (Acrílico)", "frp_kw": 18.4, "flux_kw_m2": 24.2, "loi_pct": 17.3, "risk": "Extremo"},
+        {"material": "SIBL Algodón/Vidrio", "frp_kw": 12.8, "flux_kw_m2": 16.5, "loi_pct": 16.5, "risk": "Crítico"},
+        {"material": "Silicona RTV", "frp_kw": 7.2, "flux_kw_m2": 9.4, "loi_pct": 22.0, "risk": "Moderado"},
+        {"material": "ETFE Cableado", "frp_kw": 4.1, "flux_kw_m2": 5.8, "loi_pct": 25.0, "risk": "Moderado"},
+        {"material": "Kapton Película", "frp_kw": 2.6, "flux_kw_m2": 3.7, "loi_pct": 27.5, "risk": "Bajo"},
+        {"material": "Nomex Textil", "frp_kw": 0.8, "flux_kw_m2": 1.2, "loi_pct": 28.5, "risk": "Auto-extinguible"}
+    ]
+
+    # 3. Aerosol Soot Particle Size Distribution (SAME Experiment vs 1g Earth)
+    soot_distribution = [
+        {"size_um": "0.05", "earth_1g": 42.0, "microgravity_0g": 4.5},
+        {"size_um": "0.10", "earth_1g": 34.0, "microgravity_0g": 9.2},
+        {"size_um": "0.25", "earth_1g": 14.5, "microgravity_0g": 18.0},
+        {"size_um": "0.50", "earth_1g": 6.2, "microgravity_0g": 26.5},
+        {"size_um": "1.00", "earth_1g": 2.1, "microgravity_0g": 22.4},
+        {"size_um": "2.50", "earth_1g": 0.9, "microgravity_0g": 12.8},
+        {"size_um": "5.00+", "earth_1g": 0.3, "microgravity_0g": 6.6}
+    ]
+
+    # 4. Flammability Matrix: LOI vs Quenching Distance
+    flammability_envelope = [
+        {"name": "SIBL (Algodón)", "loi": 16.5, "quenching_mm": 6.8, "safe": False},
+        {"name": "PMMA", "loi": 17.3, "quenching_mm": 5.2, "safe": False},
+        {"name": "Silicona", "loi": 22.0, "quenching_mm": 8.5, "safe": False},
+        {"name": "ETFE", "loi": 25.0, "quenching_mm": 9.8, "safe": False},
+        {"name": "Kapton", "loi": 27.5, "quenching_mm": 11.2, "safe": True},
+        {"name": "Nomex", "loi": 28.5, "quenching_mm": 12.4, "safe": True}
+    ]
+
+    return {
+        "flame_spread_vs_o2": flame_spread_vs_o2,
+        "materials_radiation": materials_radiation,
+        "soot_distribution": soot_distribution,
+        "flammability_envelope": flammability_envelope
+    }
+
 @app.get("/api/iss/live")
 async def get_iss_telemetry():
     url = "https://api.wheretheiss.at/v1/satellites/25544"
