@@ -109,3 +109,21 @@ def test_firms_summary_endpoint(client):
     data = response.json()
     assert "planetary_monitoring" in data
     assert "spacecraft_monitoring" in data
+
+def test_thermal_limits_endpoint(client):
+    response = client.get("/api/thermal-limits")
+    assert response.status_code == 200
+    data = response.json()
+    assert "thermal_tolerance_bands" in data
+    assert "thermal_excursion_timeline" in data
+    assert data["human_critical_temp_c"] == 45.0
+    assert data["hull_yield_temp_c"] == 150.0
+
+def test_simulation_validation_errors(client):
+    # O2 > 100% must return HTTP 422 Unprocessable Entity
+    invalid_payload = {
+        "material": "PMMA",
+        "oxygen_concentration_pct": 150.0
+    }
+    response = client.post("/api/ai/simulate", json=invalid_payload)
+    assert response.status_code == 422

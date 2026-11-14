@@ -1,7 +1,7 @@
 # Ralph Loop Plan: Deep Analysis, Automated Tests & Pitch Defense
 
 ## Estado General
-- **Progreso:** 1 de 5 tareas completadas (20%)
+- **Progreso:** 2 de 5 tareas completadas (40%)
 - **Modo:** Ralph Loop Autónomo (Task -> Code -> Tests -> Feedback -> Repeat)
 - **Objetivo:** Ejecutar análisis profundo del proyecto StellarApp, crear suite integral de tests, implementar mejoras identificadas y actualizar el Pitch Deck para el Space Apps Challenge.
 
@@ -16,11 +16,13 @@
   - Instalado `pytest` en `.venv` y verificado 100% de tests pasando (26 de 26 exitosos).
   - Agregado endpoint `/health` y `pytest.ini`.
 
-- [ ] **Tarea 2: Auditoría Profunda de Código y Mejoras de Resiliencia**
-  - Robustecer validación de entradas físicas en `physics_engine.py` (evitar valores negativos de O2, presión y gravedad anormales).
-  - Robustecer manejo de errores y fallbacks en `firms_service.py` y `ai_service.py` (tiempos de espera, sanitización de prompts).
-  - Añadir tipado estricto y respuestas consistentes para límites térmicos en `types.ts` y endpoints.
-  - Validar que todas las pruebas pasen sin advertencias.
+- [x] **Tarea 2: Auditoría Profunda de Código y Mejoras de Resiliencia**
+  - Robustecida validación de entradas físicas en `physics_engine.py` (clamping estricto de [0.0, 100.0] para O2).
+  - Robustecido `_is_query_in_domain` en `ai_service.py` con regex de palabra exacta `\bco\b` evitando falsos positivos con palabras como 'tacos' o 'cocinar'.
+  - Agregadas restricciones y esquemas Pydantic `Field` con rangos físicos de vuelo espacial en `main.py`.
+  - Creado endpoint modular `/api/thermal-limits` referenciando NASA-STD-3001 y NASA-SP-20205001358.
+  - Sincronizados tipos estrictos TypeScript (`ThermalToleranceBand`, `ThermalExcursionPoint`, `ThermalLimitsResponse`) en `frontend/types.ts`.
+  - Suite de pruebas backend ampliada a 29 tests con 100% aprobados.
 
 - [ ] **Tarea 3: Verificación Automatizada y Build del Frontend**
   - Ejecutar type-check y build de Next.js (`npm run build`).

@@ -55,3 +55,15 @@ def test_fire_safety_engine_unknown_scenario_fallback():
     engine = FireSafetyEngine()
     result = engine.compute_telemetry("non_existent_module", o2_pct=21.0)
     assert result["scenario"]["id"] == "iss"
+
+def test_fire_safety_engine_boundary_clamping():
+    engine = FireSafetyEngine()
+    # Negative O2 should clamp to 0.0
+    res_neg = engine.compute_telemetry("iss", o2_pct=-15.0)
+    assert res_neg["o2_percentage"] == 0.0
+    assert res_neg["safety_level"] == "NOMINAL"
+
+    # Excess O2 should clamp to 100.0
+    res_excess = engine.compute_telemetry("iss", o2_pct=150.0)
+    assert res_excess["o2_percentage"] == 100.0
+    assert res_excess["safety_level"] == "CRÍTICO"

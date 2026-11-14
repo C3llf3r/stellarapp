@@ -83,6 +83,9 @@ class FireSafetyEngine:
         scen = SCENARIOS.get(scenario_id, SCENARIOS["iss"])
         kf = self.filters[scen.id]
 
+        # Validación y restricción física (Límites de atmósfera espacial 0.0% a 100.0%)
+        o2_pct = max(0.0, min(100.0, float(o2_pct)))
+
         # Simulación de lectura con ruido gaussiano del sensor IoT
         base_co = max(0.0, (o2_pct - 16.5) * 5.8 * scen.co_multiplier)
         noise = random.gauss(0, 3.5)

@@ -62,3 +62,28 @@ export interface PsiMaterial {
   toxicidad: string;
   notas: string;
 }
+
+export interface ThermalToleranceBand {
+  entity: string;
+  max_temp_c: number;
+  ref_threshold: string;
+  category: "Humano" | "Nave" | "Fuego";
+  color: string;
+}
+
+export interface ThermalExcursionPoint {
+  time_s: number;
+  cabin_air_c: number;
+  skin_absorbed_c: number;
+  hull_temp_c: number;
+  limit_human: number;
+  limit_hull: number;
+}
+
+export interface ThermalLimitsResponse {
+  thermal_tolerance_bands: ThermalToleranceBand[];
+  thermal_excursion_timeline: ThermalExcursionPoint[];
+  standards_referenced: string[];
+  human_critical_temp_c: number;
+  hull_yield_temp_c: number;
+}

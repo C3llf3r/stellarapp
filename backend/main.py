@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Optional, List, Dict, Any
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
 from ai_service import CombustionAIService
@@ -49,19 +49,19 @@ def load_psi_database() -> Dict[str, Any]:
         return {}
 
 class QueryRequest(BaseModel):
-    query: str
+    query: str = Field(..., min_length=1, max_length=2000, description="Consulta del astronauta o ingeniero")
 
 class SimulationRequest(BaseModel):
-    material: str = "PMMA"
-    gravity_g: float = 0.0001
-    oxygen_concentration_pct: float = 21.0
-    pressure_kpa: float = 101.3
-    air_flow_velocity_cms: float = 5.0
+    material: str = Field(default="PMMA", max_length=100)
+    gravity_g: float = Field(default=0.0001, ge=0.0, le=10.0, description="Nivel de gravedad (g)")
+    oxygen_concentration_pct: float = Field(default=21.0, ge=0.0, le=100.0, description="Concentración de O2 (%)")
+    pressure_kpa: float = Field(default=101.3, ge=0.1, le=500.0, description="Presión atmosférica (kPa)")
+    air_flow_velocity_cms: float = Field(default=5.0, ge=0.0, le=200.0, description="Flujo de aire forzado (cm/s)")
 
 class MaterialEvalRequest(BaseModel):
-    material: str = "Nomex"
-    oxygen_pct: float = 21.0
-    gravity_g: float = 0.0001
+    material: str = Field(default="Nomex", max_length=100)
+    oxygen_pct: float = Field(default=21.0, ge=0.0, le=100.0)
+    gravity_g: float = Field(default=0.0001, ge=0.0, le=10.0)
 
 @app.get("/")
 def root():
@@ -166,10 +166,10 @@ async def simulate_risk(req: SimulationRequest):
     return result
 
 class FrpRequest(BaseModel):
-    material: str = "PMMA"
-    spread_rate_mms: float = 1.45
-    oxygen_concentration_pct: float = 21.0
-    gravity_g: float = 0.0001
+    material: str = Field(default="PMMA", max_length=100)
+    spread_rate_mms: float = Field(default=1.45, ge=0.0, le=100.0)
+    oxygen_concentration_pct: float = Field(default=21.0, ge=0.0, le=100.0)
+    gravity_g: float = Field(default=0.0001, ge=0.0, le=10.0)
 
 @app.get("/api/firms/summary")
 def get_firms_summary():
@@ -185,8 +185,8 @@ def calculate_frp(req: FrpRequest):
     )
 
 class KalmanRequest(BaseModel):
-    scenario_id: str = "iss"
-    o2_pct: float = 21.0
+    scenario_id: str = Field(default="iss", max_length=50)
+    o2_pct: float = Field(default=21.0, ge=0.0, le=100.0)
 
 @app.get("/api/scenarios")
 def get_scenarios():
@@ -358,6 +358,21 @@ def get_analytics_charts():
         "flammability_envelope": flammability_envelope,
         "thermal_tolerance_bands": thermal_tolerance_bands,
         "thermal_excursion_timeline": thermal_excursion_timeline
+    }
+
+@app.get("/api/thermal-limits")
+def get_thermal_limits():
+    """
+    Returns NASA-STD-3001 (Human Tolerance) and NASA-SP-20205001358 (Spacecraft Hull Integrity) limits
+    along with dynamic 180s cabin fire thermal excursion timeline.
+    """
+    charts = get_analytics_charts()
+    return {
+        "thermal_tolerance_bands": charts["thermal_tolerance_bands"],
+        "thermal_excursion_timeline": charts["thermal_excursion_timeline"],
+        "standards_referenced": ["NASA-STD-3001 Vol 2 Rev B", "NASA-SP-20205001358", "NASA-STD-6001B"],
+        "human_critical_temp_c": 45.0,
+        "hull_yield_temp_c": 150.0
     }
 
 @app.get("/api/iss/live")
