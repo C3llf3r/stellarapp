@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { X, Send, Sparkles, Terminal, BookOpen } from "lucide-react";
+import MarkdownRenderer from "./MarkdownRenderer";
 
 interface AIAssistantModalProps {
   isOpen: boolean;
@@ -118,7 +119,11 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
                     : "bg-[#1a1a1a] border border-[#333333] text-[#cccccc] whitespace-pre-wrap"
                 }`}
               >
-                {m.content}
+                {m.role === "assistant" ? (
+                  <MarkdownRenderer content={m.content} />
+                ) : (
+                  m.content
+                )}
                 {m.sources && m.sources.length > 0 && (
                   <div className="mt-3 pt-2 border-t border-[#333333] flex items-center space-x-1.5 text-[10px] text-[#76b900] font-mono">
                     <BookOpen className="h-3 w-3" />

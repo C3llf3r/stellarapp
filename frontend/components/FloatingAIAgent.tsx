@@ -13,6 +13,7 @@ import {
   RotateCcw,
   BookOpen,
 } from "lucide-react";
+import MarkdownRenderer from "./MarkdownRenderer";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -277,7 +278,11 @@ export default function FloatingAIAgent() {
                           : "bg-[#1a1a1a] text-[#cccccc] border border-[#333333]"
                       }`}
                     >
-                      <div className="whitespace-pre-wrap font-sans">{msg.content}</div>
+                      {msg.role === "assistant" ? (
+                        <MarkdownRenderer content={msg.content} />
+                      ) : (
+                        <div className="whitespace-pre-wrap font-sans">{msg.content}</div>
+                      )}
 
                       {msg.sources && msg.sources.length > 0 && (
                         <div className="mt-2.5 pt-2 border-t border-[#333333] flex flex-wrap items-center gap-1.5 text-[9px] font-mono">

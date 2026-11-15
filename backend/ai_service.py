@@ -225,9 +225,9 @@ INSTRUCCIONES CLAVE:
             return {
                 "answer": (
                     "⚠️ **Peligro Crítico en Atmósfera de Exploración Artemis (26% O₂ • 56.5 kPa):**\n\n"
-                    "1. **Aceleración Drástica de la Llama:** Para acortar los protocolos de descompresión pre-EVA, Artemis usa una atmósfera de $26\\%\\text{ de } O_2$ a $56.5\\text{ kPa}$ ($8.2\\text{ psi}$). Experimentos en Cygnus (**Saffire-IV**) demostraron que la velocidad de propagación de llama sobre polímeros estructurales (como PMMA) se incrementa de $0.91\\text{ mm/s}$ a **$1.73\\text{ mm/s}$ (+90% más rápido)**.\n\n"
-                    "2. **Reducción de Distancia de Quenching:** La distancia de extinción térmica se reduce de $10.5\\text{ mm}$ a $<5.2\\text{ mm}$, permitiendo que el fuego penetre en rendijas estrechas de aviónica y paneles de control.\n\n"
-                    "3. **Requisito NASA-STD-6001B:** Ningún material con Índice de Oxígeno Límite (LOI) inferior a $26.0\\%$ está autorizado en la cabina habitable de la nave Orion ni en la base lunar."
+                    "1. **Aceleración Drástica de la Llama:** Para acortar los protocolos de descompresión pre-EVA, Artemis usa una atmósfera de 26% de O₂ a 56.5 kPa (8.2 psi). Experimentos en Cygnus (**Saffire-IV**) demostraron que la velocidad de propagación de llama sobre polímeros estructurales (como PMMA) se incrementa de 0.91 mm/s a **1.73 mm/s (+90% más rápido)**.\n\n"
+                    "2. **Reducción de Distancia de Quenching:** La distancia de extinción térmica se reduce de 10.5 mm a <5.2 mm, permitiendo que el fuego penetre en rendijas estrechas de aviónica y paneles de control.\n\n"
+                    "3. **Requisito NASA-STD-6001B:** Ningún material con Índice de Oxígeno Límite (LOI) inferior a 26.0% está autorizado en la cabina habitable de la nave Orion ni en la base lunar."
                 ),
                 "grounded": True,
                 "model": "StellarApp-AeroEngine (Inferencia Instantánea NASA)",
