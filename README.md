@@ -58,3 +58,24 @@ cd frontend
 npm run dev
 ```
 *Panel interactivo disponible en:* `http://localhost:3000`
+
+---
+
+## 🌐 Internacionalización (ES / EN)
+
+La interfaz está disponible en español e inglés mediante [`next-intl`](https://next-intl.dev) con rutas por idioma.
+
+| Ruta | Idioma |
+| --- | --- |
+| `/` | Redirige según el navegador (cookie `NEXT_LOCALE`) |
+| `/es`, `/es/pitch` | Español (idioma por defecto) |
+| `/en`, `/en/pitch` | Inglés |
+
+- El selector **ES / EN** está en el navbar (escritorio y menú móvil) y en la cabecera del pitch.
+- La detección inicial usa `Accept-Language`; la elección manual se guarda un año en la cookie `NEXT_LOCALE`.
+- Los textos viven en `frontend/messages/es.json` y `frontend/messages/en.json`, organizados por namespace (`nav`, `hero`, `catalog`, `footer`, `metadata`, `localeSwitcher`).
+- Configuración: `frontend/locales.ts`, `frontend/i18n.ts`, `frontend/middleware.ts` y `frontend/navigation.ts` (helpers `Link`/`useRouter` con prefijo de idioma).
+
+Para añadir un texto nuevo, agrega la misma clave en **ambos** archivos JSON; `next build` falla si una clave falta en el idioma que se renderiza.
+
+> Estado: Fase 0 completada (infraestructura, navbar, hero, catálogo, footer y metadata). Los componentes internos de la home, el contenido del pitch y las respuestas del agente IA siguen en español (fases 1–3).

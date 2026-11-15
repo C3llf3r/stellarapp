@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import KalmanTelemetry from "../../components/KalmanTelemetry";
+import KalmanTelemetry from "../../../components/KalmanTelemetry";
+import LocaleSwitcher from "../../../components/LocaleSwitcher";
 import { 
   Flame, 
   Database, 
@@ -225,6 +226,8 @@ export default function PitchLanding() {
 
           {/* Desktop Actions */}
           <div className="hidden sm:flex items-center space-x-3">
+            <LocaleSwitcher className="rounded-[2px]" />
+
             <a
               href="#kalman"
               className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider bg-black hover:bg-[#111111] text-[#76b900] border border-[#76b900]/40 transition-colors"
@@ -252,6 +255,7 @@ export default function PitchLanding() {
 
           {/* Mobile Hamburger & Actions */}
           <div className="flex sm:hidden items-center space-x-2">
+            <LocaleSwitcher className="rounded-[2px]" />
             <button
               onClick={() => setShowQRModal(true)}
               className="p-1.5 bg-[#0088cc] text-white rounded-[2px] border border-[#0099e6]"

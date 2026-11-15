@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Activity, ShieldAlert, Cpu, AlertTriangle, ArrowRight, Gauge, Send, Radio, Thermometer, Zap } from "lucide-react";
+import { Activity, ShieldAlert, Cpu, AlertTriangle, ArrowRight, Gauge, Send, Radio, Thermometer, Zap, Monitor } from "lucide-react";
+import Esp32CockpitMirror from "./Esp32CockpitMirror";
 
 interface Scenario {
   id: string;
@@ -50,6 +51,7 @@ export default function KalmanTelemetry() {
   // Hardware-in-the-loop state
   const [hardware, setHardware] = useState<HardwareState | null>(null);
   const [useHardwareSync, setUseHardwareSync] = useState(true);
+  const [viewMode, setViewMode] = useState<"dual" | "mirror" | "analytics">("dual");
 
   // Poll hardware telemetry every 1.2s
   useEffect(() => {
@@ -223,6 +225,34 @@ export default function KalmanTelemetry() {
           </div>
         </div>
 
+        {/* View Mode Switcher */}
+        <div className="flex items-center space-x-1 bg-[#111111] p-1 border border-[#333333]">
+          <button
+            onClick={() => setViewMode("dual")}
+            className={`px-2.5 py-1 text-[11px] font-mono uppercase font-bold transition-colors ${
+              viewMode === "dual" ? "bg-[#76b900] text-black" : "text-[#888888] hover:text-white"
+            }`}
+          >
+            ⚡ Vista Dual
+          </button>
+          <button
+            onClick={() => setViewMode("mirror")}
+            className={`px-2.5 py-1 text-[11px] font-mono uppercase font-bold transition-colors ${
+              viewMode === "mirror" ? "bg-[#76b900] text-black" : "text-[#888888] hover:text-white"
+            }`}
+          >
+            🖥️ Pantalla ESP32
+          </button>
+          <button
+            onClick={() => setViewMode("analytics")}
+            className={`px-2.5 py-1 text-[11px] font-mono uppercase font-bold transition-colors ${
+              viewMode === "analytics" ? "bg-[#76b900] text-black" : "text-[#888888] hover:text-white"
+            }`}
+          >
+            📊 Analítica Kalman
+          </button>
+        </div>
+
         {isLiveHardware && (
           <div className="flex items-center gap-3">
             <div className="flex items-center space-x-1.5 bg-[#111111] px-2.5 py-1 border border-[#333333] text-xs font-mono">
@@ -247,7 +277,15 @@ export default function KalmanTelemetry() {
         )}
       </div>
 
+      {/* ESP32 Cockpit Digital Twin Mirror */}
+      {(viewMode === "dual" || viewMode === "mirror") && (
+        <div className="mt-6 mb-8">
+          <Esp32CockpitMirror hardwareData={hardware} onTriggerPurge={broadcastToAudience} />
+        </div>
+      )}
+
       {/* Main Grid */}
+      {(viewMode === "dual" || viewMode === "analytics") && (
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
         {/* Controls */}
         <div className="lg:col-span-5 space-y-4">
@@ -417,6 +455,7 @@ export default function KalmanTelemetry() {
           )}
         </div>
       </div>
+      )}
     </div>
   );
 }

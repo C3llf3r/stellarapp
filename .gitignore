@@ -9,6 +9,7 @@ env/
 out/
 build/
 dist/
+*.tsbuildinfo
 
 # Python cache
 __pycache__/
@@ -34,3 +35,6 @@ deploy.tar.gz
 # OS files
 .DS_Store
 Thumbs.db
+
+hardware/esp32_cockpit/.pio/
+hardware/**/.pio/
