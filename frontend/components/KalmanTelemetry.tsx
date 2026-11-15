@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Activity, ShieldAlert, Cpu, AlertTriangle, ArrowRight, Gauge, Send, Radio } from "lucide-react";
+import { Activity, ShieldAlert, Cpu, AlertTriangle, ArrowRight, Gauge, Send, Radio, Thermometer, Zap } from "lucide-react";
 
 interface Scenario {
   id: string;
@@ -26,6 +26,19 @@ interface TelemetryResult {
   critical_evac_time: string;
 }
 
+interface HardwareState {
+  active: boolean;
+  is_live: boolean;
+  device: string;
+  chip_temp_c: number;
+  o2_raw: number;
+  o2_kalman: number;
+  co_ppm: number;
+  k_gain: number;
+  status: string;
+  seconds_ago?: number;
+}
+
 export default function KalmanTelemetry() {
   const [scenarioId, setScenarioId] = useState("rover");
   const [o2Pct, setO2Pct] = useState(26.0);
@@ -33,6 +46,38 @@ export default function KalmanTelemetry() {
   const [loading, setLoading] = useState(false);
   const [broadcasting, setBroadcasting] = useState(false);
   const [broadcastStatus, setBroadcastStatus] = useState<string | null>(null);
+
+  // Hardware-in-the-loop state
+  const [hardware, setHardware] = useState<HardwareState | null>(null);
+  const [useHardwareSync, setUseHardwareSync] = useState(true);
+
+  // Poll hardware telemetry every 1.2s
+  useEffect(() => {
+    let isMounted = true;
+    const checkHardware = async () => {
+      try {
+        const resp = await fetch("/api/telemetry/hardware");
+        if (resp.ok) {
+          const hw: HardwareState = await resp.json();
+          if (isMounted) {
+            setHardware(hw);
+            if (hw.is_live && useHardwareSync && hw.o2_kalman) {
+              setO2Pct(parseFloat(hw.o2_kalman.toFixed(1)));
+            }
+          }
+        }
+      } catch {
+        // Fallback or ignore
+      }
+    };
+
+    checkHardware();
+    const interval = setInterval(checkHardware, 1200);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [useHardwareSync]);
 
   const broadcastToAudience = async () => {
     if (!data) return;
@@ -115,6 +160,8 @@ export default function KalmanTelemetry() {
     fetchTelemetry();
   }, [scenarioId, o2Pct]);
 
+  const isLiveHardware = hardware?.is_live ?? false;
+
   return (
     <div id="kalman-section" className="relative bg-[#1a1a1a] border border-[#333333] p-6 lg:p-8">
       {/* Corner Square */}
@@ -160,6 +207,46 @@ export default function KalmanTelemetry() {
         </div>
       </div>
 
+      {/* Hardware-in-the-Loop Status Bar */}
+      <div className="mt-4 p-3 bg-black border border-[#333333] flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center space-x-3">
+          <span className={`h-2.5 w-2.5 rounded-full ${isLiveHardware ? "bg-[#76b900] animate-pulse" : "bg-[#555555]"}`} />
+          <div className="text-xs">
+            <span className="font-bold uppercase tracking-wider text-white">
+              {isLiveHardware ? "Hardware-in-the-Loop Activo" : "Modo Simulación Sintética"}
+            </span>
+            <span className="text-[#888888] ml-2 font-mono">
+              {isLiveHardware
+                ? `[${hardware?.device || "Raspberry Pi Pico W"} en USB COM6]`
+                : "[Conecta el Pico W y ejecuta el puente para telemetría real]"}
+            </span>
+          </div>
+        </div>
+
+        {isLiveHardware && (
+          <div className="flex items-center gap-3">
+            <div className="flex items-center space-x-1.5 bg-[#111111] px-2.5 py-1 border border-[#333333] text-xs font-mono">
+              <Thermometer className="h-3.5 w-3.5 text-[#ff8800]" />
+              <span className="text-[#888888]">Chip Sensor:</span>
+              <span className={`font-bold ${hardware && hardware.chip_temp_c >= 40 ? "text-[#e52020]" : "text-[#76b900]"}`}>
+                {hardware?.chip_temp_c.toFixed(1)}°C
+              </span>
+            </div>
+
+            <button
+              onClick={() => setUseHardwareSync(!useHardwareSync)}
+              className={`px-2.5 py-1 text-[11px] font-mono uppercase font-bold border transition-colors ${
+                useHardwareSync
+                  ? "border-[#76b900] bg-[#76b900]/20 text-[#76b900]"
+                  : "border-[#444444] text-[#888888] hover:text-white"
+              }`}
+            >
+              {useHardwareSync ? "⚡ Sincronizado en Vivo" : "Pausar Sincronía"}
+            </button>
+          </div>
+        )}
+      </div>
+
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
         {/* Controls */}
@@ -170,7 +257,9 @@ export default function KalmanTelemetry() {
                 Oxígeno Ambiental ({o2Pct}%)
               </span>
               <span className="text-xs font-mono text-[#76b900] font-bold">
-                {o2Pct >= 26 ? "Artemis EVA Habitat" : "Estándar ISS"}
+                {isLiveHardware && useHardwareSync
+                  ? "📡 Controlado por Pico W"
+                  : o2Pct >= 26 ? "Artemis EVA Habitat" : "Estándar ISS"}
               </span>
             </div>
             <input
@@ -182,6 +271,7 @@ export default function KalmanTelemetry() {
               onChange={(e) => {
                 const val = parseFloat(e.target.value);
                 setO2Pct(val);
+                if (useHardwareSync) setUseHardwareSync(false);
                 fetchTelemetry(scenarioId, val);
               }}
               className="w-full h-1 bg-[#1a1a1a] appearance-none cursor-pointer accent-[#76b900]"
@@ -197,18 +287,27 @@ export default function KalmanTelemetry() {
           {data && (
             <div className="grid grid-cols-2 gap-3">
               <div className="p-4 bg-black border border-[#333333]">
-                <span className="text-[10px] font-bold uppercase text-[#757575] block">Sensor Bruto (Ruido IoT)</span>
+                <span className="text-[10px] font-bold uppercase text-[#757575] block">
+                  {isLiveHardware ? "Sensor Crudo (RP2040)" : "Sensor Bruto (Ruido IoT)"}
+                </span>
                 <div className="text-xl font-mono font-bold text-white mt-1">
-                  {data.raw_co_ppm} <span className="text-xs text-[#757575]">ppm</span>
+                  {isLiveHardware && hardware ? hardware.co_ppm.toFixed(1) : data.raw_co_ppm}{" "}
+                  <span className="text-xs text-[#757575]">ppm</span>
                 </div>
-                <span className="text-[10px] text-[#df6500] font-mono mt-1 block">Oscilación ±3.5σ</span>
+                <span className="text-[10px] text-[#df6500] font-mono mt-1 block">
+                  {isLiveHardware && hardware ? `O₂ Bruto: ${hardware.o2_raw.toFixed(1)}%` : "Oscilación ±3.5σ"}
+                </span>
               </div>
               <div className="p-4 bg-black border border-[#76b900]">
-                <span className="text-[10px] font-bold uppercase text-[#76b900] block">Estimación Kalman (Real)</span>
+                <span className="text-[10px] font-bold uppercase text-[#76b900] block">
+                  Estimación Kalman ({isLiveHardware ? "Hardware" : "Real"})
+                </span>
                 <div className="text-xl font-mono font-bold text-[#76b900] mt-1">
                   {data.filtered_co_ppm} <span className="text-xs text-[#76b900]">ppm</span>
                 </div>
-                <span className="text-[10px] text-[#898989] font-mono mt-1 block">K-Gain: {data.kalman_gain}</span>
+                <span className="text-[10px] text-[#898989] font-mono mt-1 block">
+                  K-Gain: {isLiveHardware && hardware ? hardware.k_gain : data.kalman_gain}
+                </span>
               </div>
             </div>
           )}

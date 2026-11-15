@@ -1,5 +1,6 @@
 import os
 import json
+import time
 import httpx
 from pathlib import Path
 from typing import Optional, List, Dict, Any
@@ -209,6 +210,30 @@ class TelegramBroadcastRequest(BaseModel):
     severity: str = Field(default="CRITICAL", max_length=20)
     details: Optional[Dict[str, Any]] = None
 
+class HardwareTelemetryRequest(BaseModel):
+    device: str = Field(default="Raspberry Pi Pico W", max_length=80)
+    chip_temp_c: float = 25.0
+    o2_raw: float = 21.0
+    o2_kalman: float = 21.0
+    co_ppm: float = 25.0
+    k_gain: float = 0.167
+    status: str = Field(default="NOMINAL", max_length=60)
+    scenario_id: str = Field(default="rover", max_length=50)
+    broadcast_to_telegram: Optional[bool] = False
+
+_latest_hardware: Dict[str, Any] = {
+    "active": False,
+    "device": "Raspberry Pi Pico W",
+    "chip_temp_c": 0.0,
+    "o2_raw": 21.0,
+    "o2_kalman": 21.0,
+    "co_ppm": 0.0,
+    "k_gain": 0.167,
+    "status": "OFFLINE",
+    "scenario_id": "rover",
+    "last_seen": 0.0
+}
+
 @app.get("/api/scenarios")
 def get_scenarios():
     return [s.to_dict() for s in SCENARIOS.values()]
@@ -417,6 +442,55 @@ async def get_kalman_telemetry(req: KalmanRequest):
             }
         )
     return result
+
+@app.post("/api/telemetry/hardware")
+async def post_hardware_telemetry(req: HardwareTelemetryRequest):
+    global _latest_hardware
+    now = time.time()
+    _latest_hardware = {
+        "active": True,
+        "device": req.device,
+        "chip_temp_c": req.chip_temp_c,
+        "o2_raw": req.o2_raw,
+        "o2_kalman": req.o2_kalman,
+        "co_ppm": req.co_ppm,
+        "k_gain": req.k_gain,
+        "status": req.status,
+        "scenario_id": req.scenario_id,
+        "last_seen": now
+    }
+    result = engine.compute_telemetry(req.scenario_id, req.o2_kalman)
+    result["hardware"] = {
+        "device": req.device,
+        "chip_temp_c": req.chip_temp_c,
+        "live": True,
+        "last_seen": now
+    }
+    if req.broadcast_to_telegram:
+        await telegram_service.broadcast_alert(
+            title=f"🚨 ALERTA HARDWARE // {req.device}",
+            message=f"Estado Sensor: {req.status}\nDiagnóstico: {result['diagnosis']}",
+            severity="CRITICAL" if result["safety_level"] == "CRÍTICO" else "WARNING",
+            details={
+                "Temp Chip": f"{req.chip_temp_c} °C",
+                "O₂ Kalman": f"{req.o2_kalman} %",
+                "CO Sensor": f"{req.co_ppm} ppm",
+                "Ganancia K": f"{req.k_gain}",
+                "Evacuación": result["critical_evac_time"]
+            }
+        )
+    return result
+
+@app.get("/api/telemetry/hardware")
+def get_hardware_telemetry():
+    now = time.time()
+    last_seen = _latest_hardware.get("last_seen", 0.0)
+    is_live = (now - last_seen) < 8.0
+    return {
+        **_latest_hardware,
+        "is_live": is_live,
+        "seconds_ago": round(now - last_seen, 1) if last_seen > 0 else None
+    }
 
 @app.get("/api/analytics/charts")
 def get_analytics_charts():
