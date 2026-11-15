@@ -263,6 +263,28 @@ export default function KalmanTelemetry() {
 
               {/* Telegram Audience Broadcast Action */}
               <div className="pt-3 border-t border-[#333333] space-y-2">
+                {/* Mini QR card for Audience Sync */}
+                <div className="flex items-center space-x-3 p-2.5 bg-black/90 border border-[#0088cc]/50">
+                  <div className="bg-white p-1 shrink-0 border border-[#0088cc]">
+                    <img
+                      src="/images/telegram-bot-qr.png"
+                      alt="QR Telegram"
+                      className="w-12 h-12 object-contain"
+                    />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="flex items-center space-x-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#76b900] animate-pulse" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#0088cc]">
+                        ¿ESTÁS EN EL AUDITORIO O ERES JUEZ?
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-[#cccccc] leading-tight">
+                      Escanea este código con tu teléfono para vincularte a la cabina y recibir la alarma en vivo.
+                    </p>
+                  </div>
+                </div>
+
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
                   <button
                     onClick={broadcastToAudience}

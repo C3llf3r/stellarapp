@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Flame, Compass, Sparkles, Presentation, Radio, Globe2, BarChart3 } from "lucide-react";
+import Image from "next/image";
+import { Flame, Compass, Sparkles, Presentation, Radio, Globe2, BarChart3, Send, X, QrCode } from "lucide-react";
 
 interface NavbarProps {
   onOpenSimulator: () => void;
@@ -20,6 +21,15 @@ interface ISSTelemetry {
 
 export default function Navbar({ onOpenAI, onOpenSimulator, onOpenAnalytics }: NavbarProps) {
   const [iss, setIss] = useState<ISSTelemetry | null>(null);
+  const [showQRModal, setShowQRModal] = useState(false);
+  const [subCount, setSubCount] = useState<number | null>(null);
+
+  const fetchSubscribers = () => {
+    fetch("/api/telegram/status")
+      .then((res) => res.json())
+      .then((data) => setSubCount(data.subscribers_count))
+      .catch(() => {});
+  };
 
   useEffect(() => {
     const fetchISS = () => {
@@ -72,6 +82,17 @@ export default function Navbar({ onOpenAI, onOpenSimulator, onOpenAnalytics }: N
 
         {/* Actions */}
         <div className="flex items-center space-x-2 sm:space-x-3">
+          <button
+            onClick={() => {
+              setShowQRModal(true);
+              fetchSubscribers();
+            }}
+            className="inline-flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider bg-[#0088cc] hover:bg-[#0077b5] text-white border border-[#0099e6] shadow-sm shadow-[#0088cc]/30 transition-colors"
+          >
+            <Send className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+            <span>BOT EN VIVO</span>
+          </button>
+
           <Link
             href="/pitch"
             className="inline-flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#76b900] border border-[#76b900] hover:bg-[#76b900] hover:text-black transition-colors"
@@ -99,6 +120,97 @@ export default function Navbar({ onOpenAI, onOpenSimulator, onOpenAnalytics }: N
           </button>
         </div>
       </div>
+
+      {/* Live Telegram Audience QR Modal */}
+      {showQRModal && (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="relative w-full max-w-md bg-[#111111] border border-[#0088cc] p-6 space-y-4 shadow-2xl shadow-[#0088cc]/30">
+            <div className="corner-square border-[#0088cc]" />
+            
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-[#333333] pb-3">
+              <div className="flex items-center space-x-2 text-white">
+                <div className="h-6 w-6 bg-[#0088cc] flex items-center justify-center text-white">
+                  <Send className="h-3.5 w-3.5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-white">
+                    CONEXIÓN EN VIVO // AUDITORIO Y JUECES
+                  </h3>
+                  <span className="text-[10px] font-mono text-[#0088cc]">
+                    @Stellar_App_bot • TELEMETRÍA IOT
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowQRModal(false)}
+                className="p-1 text-[#898989] hover:text-white transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* QR Center */}
+            <div className="flex flex-col items-center justify-center space-y-3 py-2">
+              <div className="relative bg-white p-3 border-2 border-[#0088cc] shadow-lg shadow-[#0088cc]/20">
+                <Image
+                  src="/images/telegram-bot-qr.png"
+                  alt="QR Telegram Bot"
+                  width={220}
+                  height={220}
+                  className="object-contain"
+                />
+                <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-[#0088cc] text-white font-mono text-[9px] font-bold uppercase whitespace-nowrap">
+                  ESCANEAR CON LA CÁMARA
+                </div>
+              </div>
+
+              {/* Status pill */}
+              <div className="flex items-center space-x-2 px-3 py-1 bg-black border border-[#333333] text-[11px] font-mono">
+                <span className="h-2 w-2 rounded-full bg-[#76b900] animate-pulse" />
+                <span className="text-[#a7a7a7]">
+                  {subCount !== null ? `${subCount} tripulantes enlazados` : "Webhook activo"}
+                </span>
+              </div>
+            </div>
+
+            {/* Instructions */}
+            <div className="space-y-1.5 text-xs text-[#cccccc] bg-black/60 p-3 border border-[#333333]">
+              <div className="flex items-start space-x-2">
+                <span className="text-[#0088cc] font-bold">1.</span>
+                <span>Apunta la cámara de tu teléfono móvil al código QR.</span>
+              </div>
+              <div className="flex items-start space-x-2">
+                <span className="text-[#0088cc] font-bold">2.</span>
+                <span>Presiona <strong>Iniciar (/start)</strong> en Telegram.</span>
+              </div>
+              <div className="flex items-start space-x-2">
+                <span className="text-[#0088cc] font-bold">3.</span>
+                <span>Tu teléfono recibirá las alarmas de cabina y telemetría al instante.</span>
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex flex-col sm:flex-row gap-2 pt-2">
+              <a
+                href="https://t.me/Stellar_App_bot"
+                target="_blank"
+                rel="noreferrer"
+                className="flex-1 inline-flex items-center justify-center space-x-2 px-4 py-2.5 bg-[#0088cc] hover:bg-[#0077b5] text-white text-xs font-bold uppercase tracking-wider transition-colors"
+              >
+                <Send className="h-4 w-4" />
+                <span>ABRIR DIRECTO EN TELEGRAM</span>
+              </a>
+              <button
+                onClick={() => setShowQRModal(false)}
+                className="px-4 py-2.5 bg-black border border-[#333333] hover:border-white text-white text-xs font-bold uppercase tracking-wider transition-colors"
+              >
+                CERRAR
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
