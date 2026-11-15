@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Activity, ShieldAlert, Cpu, AlertTriangle, ArrowRight, Gauge, Send, Radio, Thermometer, Zap, Monitor } from "lucide-react";
 import Esp32CockpitMirror from "./Esp32CockpitMirror";
 
@@ -43,6 +43,7 @@ interface HardwareState {
 
 export default function KalmanTelemetry() {
   const t = useTranslations("kalman");
+  const locale = useLocale();
   const [scenarioId, setScenarioId] = useState("rover");
   const [o2Pct, setO2Pct] = useState(26.0);
   const [data, setData] = useState<TelemetryResult | null>(null);
@@ -123,7 +124,7 @@ export default function KalmanTelemetry() {
       const resp = await fetch("/api/telemetry/kalman", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ scenario_id: scen, o2_pct: o2 }),
+        body: JSON.stringify({ scenario_id: scen, o2_pct: o2, lang: locale }),
       });
       if (resp.ok) {
         const json = await resp.json();
@@ -162,7 +163,7 @@ export default function KalmanTelemetry() {
 
   useEffect(() => {
     fetchTelemetry();
-  }, [scenarioId, o2Pct]);
+  }, [scenarioId, o2Pct, locale]);
 
   const isLiveHardware = hardware?.is_live ?? false;
 

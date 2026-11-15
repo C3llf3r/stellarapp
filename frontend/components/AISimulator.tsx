@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { SimulationResult } from "../types";
 import { Cpu, Play, Flame, ShieldAlert, AlertCircle } from "lucide-react";
 
 export default function AISimulator() {
   const t = useTranslations("simulator");
+  const locale = useLocale();
   const [material, setMaterial] = useState("PMMA");
   const [gravity, setGravity] = useState(0.0001);
   const [o2, setO2] = useState(21.0);
@@ -27,6 +28,7 @@ export default function AISimulator() {
           oxygen_concentration_pct: o2,
           pressure_kpa: pressure,
           air_flow_velocity_cms: airFlow,
+          lang: locale,
         }),
       });
 

@@ -631,6 +631,7 @@
   "pitch": {
     "nav": {
       "badge": "PITCH 2026",
+      "deck3d": "DECK 3D EN VIVO",
       "hardware": "SONDA HARDWARE",
       "hardwareShort": "SONDA HARDWARE (COM6)",
       "bot": "BOT EN VIVO",
@@ -670,7 +671,12 @@
       "kpiTests": "35 / 35",
       "kpiTestsLabel": "Tests Ralph Loop",
       "ctaDashboard": "PROBAR DASHBOARD EN VIVO",
-      "ctaDefense": "DEFENSA ANTE LOS JUECES"
+      "ctaDefense": "DEFENSA ANTE LOS JUECES",
+      "deckBadge": "PRESENTACIÓN 3D INTERACTIVA · PITCH DECK HIL",
+      "deckTitle": "Diapositivas 3D en Vivo para Jueces y Auditorio",
+      "deckDesc": "Física de llama 0g con Three.js, telemetría Hardware-in-the-Loop (Pico W + ESP32) y QR interactivo de Telegram.",
+      "ctaDeck": "INICIAR PRESENTACIÓN 3D (PANTALLA COMPLETA)",
+      "ctaDeckWindow": "ABRIR EN NUEVA PESTAÑA"
     },
     "problem": {
       "eyebrow": "DIAGNÓSTICO DEL PROBLEMA",

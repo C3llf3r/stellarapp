@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { X, Send, Sparkles, Terminal, BookOpen } from "lucide-react";
 import MarkdownRenderer from "./MarkdownRenderer";
 
@@ -18,6 +18,7 @@ interface ChatMessage {
 
 export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalProps) {
   const t = useTranslations("ai.assistant");
+  const locale = useLocale();
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: "assistant",
@@ -49,7 +50,7 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
       const resp = await fetch("/api/ai/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: q }),
+        body: JSON.stringify({ query: q, lang: locale }),
       });
 
       if (resp.ok) {

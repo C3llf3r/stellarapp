@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   Sparkles,
   Terminal,
@@ -25,6 +25,7 @@ interface ChatMessage {
 
 export default function FloatingAIAgent() {
   const t = useTranslations("ai.floating");
+  const locale = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [input, setInput] = useState("");
@@ -78,7 +79,7 @@ export default function FloatingAIAgent() {
       const resp = await fetch("/api/ai/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: q }),
+        body: JSON.stringify({ query: q, lang: locale }),
       });
 
       if (resp.ok) {

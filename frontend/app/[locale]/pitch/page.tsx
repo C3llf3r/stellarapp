@@ -28,7 +28,8 @@ import {
   Play,
   Film,
   ZoomIn,
-  ExternalLink
+  ExternalLink,
+  Presentation
 } from "lucide-react";
 
 export default function PitchLanding() {
@@ -210,6 +211,16 @@ export default function PitchLanding() {
             <LocaleSwitcher className="rounded-[2px]" />
 
             <a
+              href="/pitch-deck.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="h-8 inline-flex items-center space-x-1.5 px-3 text-xs font-bold uppercase tracking-wider bg-[#76b900] hover:bg-[#5a8d00] text-black rounded-[2px] box-border transition-colors shadow-sm shadow-[#76b900]/20"
+            >
+              <Presentation className="h-3.5 w-3.5" />
+              <span>{t("nav.deck3d")}</span>
+            </a>
+
+            <a
               href="#kalman"
               className="h-8 inline-flex items-center space-x-1.5 px-3 text-xs font-bold uppercase tracking-wider bg-black hover:bg-[#111111] text-[#76b900] border border-[#76b900] rounded-[2px] box-border transition-colors"
             >
@@ -257,6 +268,20 @@ export default function PitchLanding() {
         {/* Mobile Drawer */}
         {isMobileMenuOpen && (
           <div className="sm:hidden bg-[#0d0d0d] border-b border-[#333333] px-5 py-4 space-y-2.5 animate-in slide-in-from-top-2 duration-200">
+            <a
+              href="/pitch-deck.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full flex items-center justify-between px-3.5 py-2.5 bg-[#76b900] text-black text-xs font-bold uppercase tracking-wider hover:bg-[#5a8d00] transition-colors rounded-[2px]"
+            >
+              <div className="flex items-center space-x-2">
+                <Presentation className="h-4 w-4" />
+                <span>{t("nav.deck3d")}</span>
+              </div>
+              <ChevronRight className="h-4 w-4" />
+            </a>
+
             <a
               href="#kalman"
               onClick={() => setIsMobileMenuOpen(false)}
@@ -499,6 +524,50 @@ export default function PitchLanding() {
             <div className="p-3 bg-black border border-[#76b900]/40 text-center">
               <div className="text-xl sm:text-2xl font-bold font-mono text-white">{t("hero.kpiTests")}</div>
               <div className="text-[10px] uppercase font-mono text-[#76b900]">{t("hero.kpiTestsLabel")}</div>
+            </div>
+          </div>
+
+          {/* Interactive 3D Pitch Deck Card */}
+          <div className="relative bg-[#0b101d] border-2 border-[#76b900] p-6 sm:p-7 text-left space-y-4 shadow-2xl shadow-[#76b900]/15">
+            <div className="corner-square border-[#76b900]" />
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#76b900]/30 pb-3">
+              <div className="flex items-center space-x-2 text-[#76b900]">
+                <Presentation className="h-5 w-5 animate-pulse" />
+                <span className="text-xs font-mono font-bold uppercase tracking-wider">
+                  {t("hero.deckBadge")}
+                </span>
+              </div>
+              <span className="text-[10px] font-mono px-2 py-0.5 bg-[#76b900]/20 text-[#76b900] border border-[#76b900]/50 rounded-[2px] w-fit">
+                8 SLIDES · 0g THREE.JS · HIL TELEMETRY
+              </span>
+            </div>
+
+            <div className="space-y-1">
+              <h3 className="text-lg sm:text-xl font-bold text-white">
+                {t("hero.deckTitle")}
+              </h3>
+              <p className="text-xs sm:text-sm text-[#a7a7a7] leading-relaxed">
+                {t("hero.deckDesc")}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <a
+                href="/pitch-deck.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-2.5 bg-[#76b900] hover:bg-[#5a8d00] text-black font-bold text-xs uppercase tracking-wider transition-colors inline-flex items-center space-x-2 rounded-[2px]"
+              >
+                <Play className="h-4 w-4 fill-black" />
+                <span>{t("hero.ctaDeck")}</span>
+              </a>
+              <a
+                href="/pitch-deck.html"
+                className="px-4 py-2.5 bg-black hover:bg-[#111111] text-white border border-[#333333] hover:border-[#76b900] font-bold text-xs uppercase tracking-wider transition-colors inline-flex items-center space-x-1.5 rounded-[2px]"
+              >
+                <ExternalLink className="h-3.5 w-3.5 text-[#76b900]" />
+                <span>{t("hero.ctaDeckWindow")}</span>
+              </a>
             </div>
           </div>
 

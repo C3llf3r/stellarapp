@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Globe2, Orbit, Flame, ShieldAlert, Cpu, Layers, Radio, BarChart3 } from "lucide-react";
 
 interface FirmsData {
@@ -28,6 +28,7 @@ interface FirmsData {
 
 export default function EarthSpaceBridge() {
   const t = useTranslations("bridge");
+  const locale = useLocale();
   const [data, setData] = useState<FirmsData | null>(null);
   const [selectedScale, setSelectedScale] = useState<"earth" | "space">("earth");
   const [material, setMaterial] = useState("PMMA");
@@ -38,7 +39,7 @@ export default function EarthSpaceBridge() {
   } | null>(null);
 
   useEffect(() => {
-    fetch("/api/firms/summary")
+    fetch(`/api/firms/summary?lang=${locale}`)
       .then((res) => res.json())
       .then((d) => setData(d))
       .catch(() => {
@@ -67,7 +68,7 @@ export default function EarthSpaceBridge() {
 
     // Default FRP calculation
     calcFrp("PMMA");
-  }, []);
+  }, [locale]);
 
   const calcFrp = async (mat: string) => {
     setMaterial(mat);
@@ -80,6 +81,7 @@ export default function EarthSpaceBridge() {
           spread_rate_mms: mat === "PMMA" ? 2.85 : 0.8,
           oxygen_concentration_pct: 26.0,
           gravity_g: 0.0001,
+          lang: locale,
         }),
       });
       if (resp.ok) {
