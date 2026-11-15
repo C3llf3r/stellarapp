@@ -57,14 +57,13 @@ export default function ThemeToggle({ className = "" }: ThemeToggleProps) {
         aria-pressed={theme === "dark"}
         aria-label={t("switchToNight")}
         title={t("switchToNight")}
-        className={`h-full px-2.5 flex items-center justify-center space-x-1.5 text-[11px] font-bold uppercase tracking-wider transition-colors ${
+        className={`h-full w-8 flex items-center justify-center text-[11px] font-bold uppercase tracking-wider transition-colors ${
           theme === "dark"
             ? "bg-[#76b900] text-black"
             : "text-[#a7a7a7] hover:text-white hover:bg-[#1f1f1f]"
         }`}
       >
-        <Moon className="h-3.5 w-3.5" />
-        <span className="hidden xl:inline">{t("night")}</span>
+        <Moon className="h-4 w-4" />
       </button>
       <button
         type="button"
@@ -72,14 +71,13 @@ export default function ThemeToggle({ className = "" }: ThemeToggleProps) {
         aria-pressed={theme === "light"}
         aria-label={t("switchToDay")}
         title={t("switchToDay")}
-        className={`h-full px-2.5 flex items-center justify-center space-x-1.5 text-[11px] font-bold uppercase tracking-wider transition-colors ${
+        className={`h-full w-8 flex items-center justify-center text-[11px] font-bold uppercase tracking-wider transition-colors ${
           theme === "light"
             ? "bg-[#76b900] text-black"
             : "text-[#a7a7a7] hover:text-white hover:bg-[#1f1f1f]"
         }`}
       >
-        <Sun className="h-3.5 w-3.5" />
-        <span className="hidden xl:inline">{t("day")}</span>
+        <Sun className="h-4 w-4" />
       </button>
     </div>
   );

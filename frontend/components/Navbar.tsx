@@ -113,10 +113,11 @@ export default function Navbar({ onOpenAI, onOpenSimulator, onOpenAnalytics }: N
           {onOpenAnalytics && (
             <button
               onClick={onOpenAnalytics}
-              className="hidden lg:inline-flex items-center space-x-1.5 h-8 px-3 text-xs font-bold uppercase tracking-wider text-white border border-[#333333] hover:border-white rounded-[2px] box-border transition-colors"
+              aria-label={t("charts")}
+              title={t("charts")}
+              className="h-8 w-8 inline-flex items-center justify-center text-white border border-[#333333] hover:border-white rounded-[2px] box-border transition-colors"
             >
-              <BarChart3 className="h-3.5 w-3.5 text-[#76b900]" />
-              <span>{t("charts")}</span>
+              <BarChart3 className="h-4 w-4 text-[#76b900]" />
             </button>
           )}
 
