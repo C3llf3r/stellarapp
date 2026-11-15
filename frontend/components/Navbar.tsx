@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Flame, Compass, Sparkles, Presentation, Radio, Globe2, BarChart3, Send, X, QrCode } from "lucide-react";
+import { Flame, Compass, Sparkles, Presentation, Radio, Globe2, BarChart3, Send, X, QrCode, Menu } from "lucide-react";
 
 interface NavbarProps {
   onOpenSimulator: () => void;
@@ -23,6 +23,7 @@ export default function Navbar({ onOpenAI, onOpenSimulator, onOpenAnalytics }: N
   const [iss, setIss] = useState<ISSTelemetry | null>(null);
   const [showQRModal, setShowQRModal] = useState(false);
   const [subCount, setSubCount] = useState<number | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const fetchSubscribers = () => {
     fetch("/api/telegram/status")
@@ -80,8 +81,8 @@ export default function Navbar({ onOpenAI, onOpenSimulator, onOpenAnalytics }: N
           )}
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center space-x-2 sm:space-x-3">
+        {/* Desktop Actions */}
+        <div className="hidden sm:flex items-center space-x-2 sm:space-x-3">
           <button
             onClick={() => {
               setShowQRModal(true);
@@ -113,13 +114,99 @@ export default function Navbar({ onOpenAI, onOpenSimulator, onOpenAnalytics }: N
 
           <button
             onClick={onOpenSimulator}
-            className="hidden sm:inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white border border-[#333333] hover:border-white transition-colors"
+            className="hidden md:inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white border border-[#333333] hover:border-white transition-colors"
           >
             <Compass className="h-3.5 w-3.5" />
             <span>SIMULADOR</span>
           </button>
         </div>
+
+        {/* Mobile Hamburger Button */}
+        <div className="flex sm:hidden items-center space-x-2">
+          <button
+            onClick={() => {
+              setShowQRModal(true);
+              fetchSubscribers();
+            }}
+            className="p-1.5 bg-[#0088cc] text-white rounded-[2px] border border-[#0099e6]"
+            aria-label="Abrir QR Telegram"
+          >
+            <Send className="h-4 w-4" />
+          </button>
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-1.5 text-white hover:text-[#76b900] border border-[#333333] bg-[#111111] transition-colors rounded-[2px]"
+            aria-label="Abrir menú de navegación"
+          >
+            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Drawer */}
+      {isMobileMenuOpen && (
+        <div className="sm:hidden bg-[#0d0d0d] border-b border-[#333333] px-5 py-4 space-y-2.5 animate-in slide-in-from-top-2 duration-200">
+          <button
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              setShowQRModal(true);
+              fetchSubscribers();
+            }}
+            className="w-full flex items-center justify-between px-3.5 py-2.5 bg-[#0088cc] hover:bg-[#0077b5] text-white text-xs font-bold uppercase tracking-wider transition-colors rounded-[2px]"
+          >
+            <div className="flex items-center space-x-2">
+              <Send className="h-4 w-4" />
+              <span>CONECTAR BOT TELEGRAM</span>
+            </div>
+            <span className="text-[10px] font-mono bg-black/40 px-2 py-0.5 rounded">
+              {subCount !== null ? `${subCount} tripulantes` : "EN VIVO"}
+            </span>
+          </button>
+
+          <Link
+            href="/pitch"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="w-full flex items-center space-x-2 px-3.5 py-2.5 border border-[#76b900] text-[#76b900] text-xs font-bold uppercase tracking-wider bg-black/60 rounded-[2px]"
+          >
+            <Presentation className="h-4 w-4" />
+            <span>PITCH DECK NASA 2026</span>
+          </Link>
+
+          {onOpenAnalytics && (
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                onOpenAnalytics();
+              }}
+              className="w-full flex items-center space-x-2 px-3.5 py-2.5 border border-[#333333] text-white text-xs font-bold uppercase tracking-wider bg-black/60 hover:border-white transition-colors rounded-[2px]"
+            >
+              <BarChart3 className="h-4 w-4 text-[#76b900]" />
+              <span>CENTRO DE GRÁFICOS & NASA PSI</span>
+            </button>
+          )}
+
+          <button
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              onOpenSimulator();
+            }}
+            className="w-full flex items-center space-x-2 px-3.5 py-2.5 border border-[#333333] text-white text-xs font-bold uppercase tracking-wider bg-black/60 hover:border-white transition-colors rounded-[2px]"
+          >
+            <Compass className="h-4 w-4 text-white" />
+            <span>SIMULADOR DE COMBUSTIÓN 0G</span>
+          </button>
+
+          {iss && (
+            <div className="pt-2 border-t border-[#222222] flex items-center justify-between text-[10px] font-mono text-[#898989]">
+              <span className="flex items-center text-[#76b900]">
+                <Radio className="h-3 w-3 mr-1 animate-pulse" />
+                ISS ORBITAL
+              </span>
+              <span>ALT: {iss.altitude_km} km | VEL: {iss.velocity_kmh} km/h</span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Live Telegram Audience QR Modal */}
       {showQRModal && (
