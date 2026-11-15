@@ -134,7 +134,7 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 <p class="sub in" style="--d:.6s">Casi invisible. Hasta <b>90 % más rápida</b>. Los detectores terrestres no la ven.</p></section>
 
 <section class="s"><span class="k in">El tiempo de decisión</span>
-<div class="duo in" style="--d:.1s"><div><div class="big" style="color:var(--amber)">45<small> s</small></div><div class="cap">para evacuar</div></div><div><div class="big" style="color:var(--red)">118<small> s</small></div><div class="cap">el casco cede</div></div></div>
+<div class="duo in" style="--d:.1s"><div><div class="big" style="color:var(--amber)"><span id="cnt-evac">45</span><small> s</small></div><div class="cap">para evacuar</div></div><div><div class="big" style="color:var(--red)"><span id="cnt-hull">118</span><small> s</small></div><div class="cap">el casco cede</div></div></div>
 <svg id="th" class="in" style="--d:.3s;max-width:900px" viewBox="0 0 800 300" role="img" aria-label="Temperatura del aire y del casco frente al tiempo"></svg>
 <p class="cap">Hábitat lunar de 280 m³ · ignición de PMMA · trayectorias ilustrativas, cruces calculados por StellarApp</p></section>
 
@@ -197,7 +197,7 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 
 <section class="s"><span class="k in">Base científica</span><h2 class="in" style="--d:.1s">Cuatro décadas de fuego,<br><span class="g">en una sola mente.</span></h2>
 <svg id="or" class="in" style="--d:.3s;max-width:780px" viewBox="0 0 700 440" role="img" aria-label="Misiones NASA orbitando StellarApp"></svg>
-<div class="duo in" style="--d:.5s;gap:5vw"><div><div class="big" style="font-size:clamp(34px,6vw,72px)">40</div><div class="cap">años de datos</div></div><div><div class="big" style="font-size:clamp(34px,6vw,72px)">14</div><div class="cap">estudios NASA PSI</div></div><div><div class="big" style="font-size:clamp(34px,6vw,72px)">32</div><div class="cap">parámetros</div></div></div></section>
+<div class="duo in" style="--d:.5s;gap:5vw"><div><div class="big" style="font-size:clamp(34px,6vw,72px)"><span id="cnt-years">40</span></div><div class="cap">años de datos</div></div><div><div class="big" style="font-size:clamp(34px,6vw,72px)"><span id="cnt-studies">14</span></div><div class="cap">estudios NASA PSI</div></div><div><div class="big" style="font-size:clamp(34px,6vw,72px)"><span id="cnt-params">32</span></div><div class="cap">parámetros</div></div></div></section>
 
 <section class="s"><span class="k in">Cómo decide</span><h2 class="in" style="--d:.1s">Cuatro pasos. <span class="g">Sin la Tierra.</span></h2>
 <div class="pl in" style="--d:.3s">
@@ -224,6 +224,7 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 <nav id="nav" aria-label="Navegación"><button id="pv" aria-label="Anterior">◀</button><div id="dots"></div><button id="nx" aria-label="Siguiente">▶</button></nav>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script>
 let lang='es';const $=id=>document.getElementById(id),cl=(v,a,b)=>Math.max(a,Math.min(b,v));
 /* Gráfica térmica */
@@ -244,7 +245,35 @@ O.forEach(([rx,ry,d,a,b],i)=>{const p=`M${cx-rx} ${cy}a${rx} ${ry} 0 1 0 ${2*rx}
 const S=[...document.querySelectorAll('.s')];let cur=-1;
 $('dots').innerHTML=S.map((_,i)=>`<i data-i="${i}"></i>`).join('');$('dots').onclick=e=>{if(e.target.dataset.i)go(+e.target.dataset.i)};
 function go(i){i=cl(i,0,S.length-1);if(i===cur)return;if(i>0&&T<OP)T=OP;cur=i;S.forEach((s,k)=>s.classList.toggle('on',k===i));document.body.classList.toggle('d',i>0);[...$('dots').children].forEach((d,k)=>d.classList.toggle('on',k===i));
- if(i===0)T=0;}
+ if(i===0)T=0;
+ if(window.gsap&&i>0){
+   const s=S[i],targets=s.querySelectorAll('.k, h2, h1, .sub, .hw-chassis, .win, .duo, .pl, .cta, .chips, svg:not(#th):not(#or)');
+   if(targets.length)gsap.fromTo(targets,{y:20,opacity:0},{y:0,opacity:1,duration:.55,stagger:.07,ease:"power3.out",overwrite:"auto"});
+   if(i===2){
+     const eEl=$('cnt-evac'),hEl=$('cnt-hull');
+     if(eEl)gsap.fromTo({v:0},{v:45,duration:1.1,ease:"power2.out",onUpdate:function(){eEl.textContent=Math.round(this.targets()[0].v)}});
+     if(hEl)gsap.fromTo({v:0},{v:118,duration:1.4,ease:"power2.out",onUpdate:function(){hEl.textContent=Math.round(this.targets()[0].v)}});
+   }
+   if(i===4){
+     const ch=s.querySelector('.hw-chassis'),gl=s.querySelector('.hw-glare'),cd=s.querySelectorAll('.hw-card');
+     if(ch)gsap.fromTo(ch,{scale:.94,opacity:0},{scale:1,opacity:1,duration:.75,ease:"back.out(1.4)",overwrite:"auto"});
+     if(gl)gsap.fromTo(gl,{opacity:.8,x:-100},{opacity:0,x:220,duration:.8,ease:"power2.out"});
+     if(cd.length)gsap.fromTo(cd,{y:15,opacity:0},{y:0,opacity:1,duration:.45,stagger:.08,ease:"power2.out",delay:.15});
+   }
+   if(i===5){
+     const yEl=$('cnt-years'),sEl=$('cnt-studies'),pEl=$('cnt-params');
+     if(yEl)gsap.fromTo({v:0},{v:40,duration:1.1,ease:"power2.out",onUpdate:function(){yEl.textContent=Math.round(this.targets()[0].v)}});
+     if(sEl)gsap.fromTo({v:0},{v:14,duration:1.3,ease:"power2.out",onUpdate:function(){sEl.textContent=Math.round(this.targets()[0].v)}});
+     if(pEl)gsap.fromTo({v:0},{v:32,duration:1.5,ease:"power2.out",onUpdate:function(){pEl.textContent=Math.round(this.targets()[0].v)}});
+   }
+   if(i===6){
+     const nds=s.querySelectorAll('.nd');
+     if(nds.length){
+       gsap.fromTo(nds,{scale:.85,opacity:0},{scale:1,opacity:1,duration:.5,stagger:.1,ease:"back.out(1.5)"});
+       gsap.fromTo(s.querySelectorAll('.nd i'),{boxShadow:"0 0 45px rgba(110,200,255,0.85)"},{boxShadow:"0 0 20px rgba(110,200,255,0.2)",duration:.7,stagger:.12,ease:"power2.out",delay:.25});
+     }
+   }
+ }}
 $('nx').onclick=()=>go(cur+1);$('pv').onclick=()=>go(cur-1);
 addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key))go(cur+1);if(['ArrowLeft','PageUp'].includes(e.key))go(cur-1)});
 let sx=0;addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>60)go(cur+(d<0?1:-1))},{passive:true});
@@ -410,19 +439,26 @@ let sl='';try{sl=localStorage.getItem('lang')||''}catch(e){}if(sl==='en')setLang
   if(btn){
     btn.onclick=()=>{
       simulated=!simulated;
-      btn.style.transform='scale(.97)';
-      btn.style.background='#00d2ff';
-      btn.style.color='#04101a';
-      setTimeout(()=>{
-        btn.style.transform='none';
-        btn.style.background='#141926';
-        btn.style.color='#fff';
-      },250);
+      if(window.gsap){
+        gsap.fromTo(btn,{scale:.94},{scale:1,duration:.6,ease:"elastic.out(1.2,0.4)"});
+        gsap.fromTo('#hw-screen',{boxShadow:"0 0 50px rgba(0,210,255,.9)"},{boxShadow:"inset 0 0 30px rgba(0,0,0,.8)",duration:1.2,ease:"power2.out"});
+      }else{
+        btn.style.transform='scale(.97)';
+        btn.style.background='#00d2ff';
+        btn.style.color='#04101a';
+        setTimeout(()=>{btn.style.transform='none';btn.style.background='#141926';btn.style.color='#fff';},250);
+      }
       if(simulated){
         btn.innerHTML='⚡ PURGA ACTIVADA · INYECCIÓN N₂ EN CURSO';
-        if(tempEl)tempEl.textContent='24.2';
-        if(o2El)o2El.textContent='17.5';
-        if(coEl)coEl.textContent='9';
+        if(window.gsap&&tempEl){
+          gsap.to({temp:parseFloat(tempEl.textContent)||38.5},{temp:24.2,duration:1.4,ease:"power2.out",onUpdate:function(){tempEl.textContent=this.targets()[0].temp.toFixed(1)}});
+          gsap.to({o2:parseFloat(o2El.textContent)||21.0},{o2:17.5,duration:1.4,ease:"power2.out",onUpdate:function(){o2El.textContent=this.targets()[0].o2.toFixed(1)}});
+          gsap.to({co:parseFloat(coEl.textContent)||22},{co:9,duration:1.4,ease:"power2.out",onUpdate:function(){coEl.textContent=Math.round(this.targets()[0].co)}});
+        }else{
+          if(tempEl)tempEl.textContent='24.2';
+          if(o2El)o2El.textContent='17.5';
+          if(coEl)coEl.textContent='9';
+        }
         if(pillEl){
           pillEl.style.color='#5fd6a0';
           pillEl.innerHTML='<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#5fd6a0;margin-right:5px"></span>PURGA N₂';
