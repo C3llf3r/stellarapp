@@ -863,7 +863,12 @@
     "weightsNote": "The score is the weighted sum of the four factors. Weights are shown so any result is reproducible.",
     "loading": "Computing ranking…",
     "empty": "No investigations for this profile.",
-    "profileAtmosphere": "{o2}% O₂ · {pressure} kPa · {gravity} g"
+    "profileAtmosphere": "{o2}% O₂ · {pressure} kPa · {gravity} g",
+    "collapse": "Collapse section",
+    "expand": "Expand section",
+    "showAll": "Show all investigations ({total})",
+    "showLess": "Show Top 3 only",
+    "collapsedSummary": "{total} evaluated investigations · Profile: {profile}"
   },
   "impact": {
     "eyebrow": "RETURN TO EARTH",

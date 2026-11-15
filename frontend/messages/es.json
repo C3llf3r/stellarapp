@@ -863,7 +863,12 @@
     "weightsNote": "La puntuación es la suma ponderada de los cuatro factores. Los pesos se muestran para que cualquier resultado sea reproducible.",
     "loading": "Calculando ranking…",
     "empty": "No hay investigaciones para este perfil.",
-    "profileAtmosphere": "{o2}% O₂ · {pressure} kPa · {gravity} g"
+    "profileAtmosphere": "{o2}% O₂ · {pressure} kPa · {gravity} g",
+    "collapse": "Plegar sección",
+    "expand": "Desplegar sección",
+    "showAll": "Ver todas las investigaciones ({total})",
+    "showLess": "Mostrar sólo Top 3",
+    "collapsedSummary": "{total} investigaciones evaluadas · Perfil: {profile}"
   },
   "impact": {
     "eyebrow": "RETORNO A LA TIERRA",
