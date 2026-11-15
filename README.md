@@ -38,6 +38,19 @@ Live demo: <https://stellarapp.nerosystem.solutions>
 7. **NASA PSI Database**
    - 14 official Physical Sciences Informatics studies and 32 validated parameters.
 
+8. **Explainable Investigation Ranking**
+   - Ranks every investigation for a selected habitat profile (ISS, Artemis, lunar base, pressurized rover, EVA suit).
+   - 0–100 score built from four auditable factors: flammability (LOI vs ambient O₂), flame spread, detection difficulty and gravity relevance.
+
+9. **Earth Impact & Lessons Learned**
+   - Official NASA spinoffs linked to fire safety (water-mist extinguishers, smoke detection, firefighter air tanks and protective clothing).
+   - A 1967→Artemis timeline covering Apollo 1, Apollo 13, the Mir fire, Saffire and Artemis II.
+
+10. **NASA Challenge Reference Library**
+   - All 10 official sources from the challenge Resources tab (PSI, NASA Glenn, ScienceCasts, Researcher's Guide, historical cases and spinoffs), with PDF/EPUB downloads.
+   - An investigation map of 15 studies (dataset, brief-cited, active and future such as FM2 and LUCI), ISS facilities (CIR, MDCA, MSG, Cygnus) and verified facts.
+   - The partial-gravity data gap is stated explicitly.
+
 ---
 
 ## Technology Stack
@@ -110,7 +123,7 @@ The interface is available in Spanish and English through [`next-intl`](https://
 
 When adding a new string, add the same key to **both** JSON files. Namespaces are verified 1:1.
 
-The backend also accepts a `lang=es|en` parameter (query string or JSON body) on the content-generating endpoints: `/api/ai/ask`, `/api/ai/simulate`, `/api/telemetry/kalman`, `/api/firms/summary`, `/api/firms/frp`, `/api/experiments` and `/api/scenarios`. The frontend forwards the active locale on every call, so AI answers, diagnostics, experiment narratives and chart data arrive already localized.
+The backend also accepts a `lang=es|en` parameter (query string or JSON body) on the content-generating endpoints: `/api/ai/ask`, `/api/ai/simulate`, `/api/telemetry/kalman`, `/api/firms/summary`, `/api/firms/frp`, `/api/experiments`, `/api/ranking`, `/api/resources` and `/api/scenarios`. The frontend forwards the active locale on every call, so AI answers, diagnostics, experiment narratives and chart data arrive already localized.
 
 > Status: **full ES/EN localization of the web interface and backend-generated content** — UI, AI answers, simulator diagnostics, Kalman telemetry, NASA FIRMS bridge and experiment narratives. Official NASA PSI study descriptions remain in their source language (English), and the Telegram bot uses its own conversational language. Risk levels are returned as stable codes (`Extreme`, `Critical`, `Moderate`, `Low`) and translated by the UI.
 

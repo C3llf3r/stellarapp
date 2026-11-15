@@ -38,6 +38,19 @@ Demo en vivo: <https://stellarapp.nerosystem.solutions>
 7. **Base de Datos NASA PSI**
    - 14 estudios oficiales de Physical Sciences Informatics y 32 parámetros validados.
 
+8. **Ranking Explicable de Investigaciones**
+   - Ordena cada investigación para un perfil de hábitat (ISS, Artemis, base lunar, rover presurizado, traje EVA).
+   - Puntuación de 0 a 100 con cuatro factores auditables: inflamabilidad (LOI vs O₂ ambiental), propagación de llama, dificultad de detección y relevancia gravitatoria.
+
+9. **Impacto en la Tierra y Lecciones Aprendidas**
+   - Spinoffs oficiales de la NASA vinculados a la seguridad contra incendios (agua nebulizada, detección de humo, tanques de aire y ropa protectora para bomberos).
+   - Línea temporal 1967→Artemis con Apolo 1, Apolo 13, el incendio de la Mir, Saffire y Artemis II.
+
+10. **Biblioteca de Referencia del Reto**
+   - Las 10 fuentes oficiales de la pestaña Resources (PSI, NASA Glenn, ScienceCasts, guía del investigador, casos históricos y spinoffs), con descargas PDF/EPUB.
+   - Mapa de 15 investigaciones (dataset, citadas en el brief, activas y futuras como FM2 y LUCI), instalaciones de la ISS (CIR, MDCA, MSG, Cygnus) y hechos verificados.
+   - Se declara explícitamente el vacío de datos de gravedad parcial.
+
 ---
 
 ## Stack Tecnológico
@@ -110,7 +123,7 @@ La interfaz está disponible en español e inglés mediante [`next-intl`](https:
 
 Para añadir un texto nuevo, agrega la misma clave en **ambos** archivos JSON. Los namespaces se verifican 1:1.
 
-El backend también acepta el parámetro `lang=es|en` (query string o cuerpo JSON) en los endpoints que generan contenido: `/api/ai/ask`, `/api/ai/simulate`, `/api/telemetry/kalman`, `/api/firms/summary`, `/api/firms/frp`, `/api/experiments` y `/api/scenarios`. El frontend envía el idioma activo en cada llamada, de modo que las respuestas de la IA, los diagnósticos, las narrativas de experimentos y los datos de gráficos llegan ya localizados.
+El backend también acepta el parámetro `lang=es|en` (query string o cuerpo JSON) en los endpoints que generan contenido: `/api/ai/ask`, `/api/ai/simulate`, `/api/telemetry/kalman`, `/api/firms/summary`, `/api/firms/frp`, `/api/experiments`, `/api/ranking`, `/api/resources` y `/api/scenarios`. El frontend envía el idioma activo en cada llamada, de modo que las respuestas de la IA, los diagnósticos, las narrativas de experimentos y los datos de gráficos llegan ya localizados.
 
 > Estado: **localización ES/EN completa de la interfaz web y del contenido generado por el backend** — UI, respuestas de IA, diagnósticos del simulador, telemetría Kalman, puente NASA FIRMS y narrativas de experimentos. Las descripciones de los estudios oficiales NASA PSI permanecen en su idioma de origen (inglés), y el bot de Telegram usa su propio lenguaje conversacional. Los niveles de riesgo se devuelven como códigos estables (`Extreme`, `Critical`, `Moderate`, `Low`) y la interfaz los traduce.
 

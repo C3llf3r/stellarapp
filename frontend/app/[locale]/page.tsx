@@ -12,6 +12,10 @@ import ExperimentCard from "../../components/ExperimentCard";
 import AIAssistantModal from "../../components/AIAssistantModal";
 import AnalyticsCharts from "../../components/AnalyticsCharts";
 import FloatingAIAgent from "../../components/FloatingAIAgent";
+import RankingTable from "../../components/RankingTable";
+import EarthImpact from "../../components/EarthImpact";
+import FireHistoryTimeline from "../../components/FireHistoryTimeline";
+import ResourcesSection from "../../components/ResourcesSection";
 import { Experiment, MetricsData } from "../../types";
 import { useLocale, useTranslations } from "next-intl";
 import { Search, Sparkles, Terminal, ChevronRight, AlertTriangle } from "lucide-react";
@@ -145,6 +149,11 @@ export default function Home() {
           <MetricsCards metrics={metrics} />
         </section>
 
+        {/* 1.5 Explainable investigation ranking */}
+        <section>
+          <RankingTable />
+        </section>
+
         {/* 2. Physical Comparison (1g vs 0g) */}
         <section>
           <ComparisonViewer />
@@ -166,6 +175,17 @@ export default function Home() {
         {/* 5. Earth-to-Space Fire Bridge (NASA FIRMS & FRP) */}
         <section>
           <EarthSpaceBridge />
+        </section>
+
+        {/* 5.5 Terrestrial impact (NASA spinoffs) */}
+        <EarthImpact />
+
+        {/* 5.6 Lessons learned timeline */}
+        <FireHistoryTimeline />
+
+        {/* 5.7 NASA reference library (challenge Resources tab) */}
+        <section>
+          <ResourcesSection />
         </section>
 
         {/* 6. Scientific Analytics & Charts Dashboard */}

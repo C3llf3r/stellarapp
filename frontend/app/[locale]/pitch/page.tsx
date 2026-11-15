@@ -6,6 +6,8 @@ import { useTranslations } from "next-intl";
 import { Link } from "../../../navigation";
 import KalmanTelemetry from "../../../components/KalmanTelemetry";
 import LocaleSwitcher from "../../../components/LocaleSwitcher";
+import FireHistoryTimeline from "../../../components/FireHistoryTimeline";
+import EarthImpact from "../../../components/EarthImpact";
 import { 
   Flame, 
   Database, 
@@ -990,6 +992,10 @@ export default function PitchLanding() {
         </section>
 
         {/* 4. Defensa ante Jueces */}
+        <FireHistoryTimeline />
+
+        <EarthImpact />
+
         <section id="defensa" className="space-y-6">
           <div>
             <span className="text-[11px] font-bold text-[#76b900] uppercase tracking-widest block">
@@ -1036,6 +1042,23 @@ export default function PitchLanding() {
 
       <footer className="border-t border-[#333333] bg-black py-8 text-center text-xs text-[#757575]">
         <p>{t("footer")}</p>
+        <p className="mt-2 text-[10px] font-mono text-[#5c5c5c] flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+          <a href="https://www.spaceappschallenge.org/2026/challenges/flame-in-freefall/" target="_blank" rel="noreferrer" className="hover:text-[#76b900] underline-offset-2 hover:underline">
+            Flame in Freefall
+          </a>
+          <span>·</span>
+          <a href="https://psi.nasa.gov/physci/repo/search?q=combustion" target="_blank" rel="noreferrer" className="hover:text-[#76b900] underline-offset-2 hover:underline">
+            NASA PSI
+          </a>
+          <span>·</span>
+          <a href="https://www.nasa.gov/glenn/glenn-expertise-space-exploration/physical-sciences-program/combustion-science/" target="_blank" rel="noreferrer" className="hover:text-[#76b900] underline-offset-2 hover:underline">
+            NASA Combustion Science
+          </a>
+          <span>·</span>
+          <a href="https://www.nasa.gov/missions/station/a-researchers-guide-to-combustion-science/" target="_blank" rel="noreferrer" className="hover:text-[#76b900] underline-offset-2 hover:underline">
+            Researcher&apos;s Guide (2015)
+          </a>
+        </p>
       </footer>
     </div>
   );
