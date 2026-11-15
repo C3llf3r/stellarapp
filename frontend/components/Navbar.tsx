@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Flame, Compass, Sparkles, Presentation, Radio, Globe2, BarChart3, Send, X, QrCode, Menu } from "lucide-react";
 import { Link } from "../navigation";
 import LocaleSwitcher from "./LocaleSwitcher";
+import ThemeToggle from "./ThemeToggle";
 
 interface NavbarProps {
   onOpenSimulator: () => void;
@@ -86,6 +87,7 @@ export default function Navbar({ onOpenAI, onOpenSimulator, onOpenAnalytics }: N
 
         {/* Desktop Actions */}
         <div className="hidden sm:flex items-center gap-2 sm:gap-2.5">
+          <ThemeToggle className="rounded-[2px]" />
           <LocaleSwitcher className="rounded-[2px]" />
 
           <button
@@ -201,11 +203,9 @@ export default function Navbar({ onOpenAI, onOpenSimulator, onOpenAnalytics }: N
             <span>{t("simulator0g")}</span>
           </button>
 
-          {/* Language toggle (mobile) */}
-          <div className="flex items-center justify-between px-1 pt-1">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[#898989]">
-              {t("brandSuffix")}
-            </span>
+          {/* Controls toggle (mobile) */}
+          <div className="flex items-center justify-between px-1 pt-1 gap-2">
+            <ThemeToggle className="rounded-[2px]" />
             <LocaleSwitcher className="rounded-[2px]" />
           </div>
 

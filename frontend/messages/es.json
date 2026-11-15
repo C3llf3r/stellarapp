@@ -8,6 +8,13 @@
     "es": "ES",
     "en": "EN"
   },
+  "themeToggle": {
+    "label": "Tema visual",
+    "day": "Día",
+    "night": "Noche",
+    "switchToDay": "Cambiar a Modo Día",
+    "switchToNight": "Cambiar a Modo Noche"
+  },
   "nav": {
     "brandSuffix": "NASA SPACE APPS",
     "issLive": "ISS LIVE:",
