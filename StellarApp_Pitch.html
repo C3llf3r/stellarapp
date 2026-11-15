@@ -28,8 +28,8 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 .in{opacity:0;transform:translateY(18px)}.on .in{opacity:1;transform:none;transition:all .9s cubic-bezier(.2,.7,.2,1) var(--d,0s)}
 /* hook */
 #s0 .tt{position:absolute;left:0;right:0;bottom:15vh;padding:0 6vw}
-#s0 .sub{margin:14px auto 0;opacity:0;transition:opacity 1.2s}#s0.t2 .sub{opacity:1}
-#s0 h1{opacity:0;transition:opacity 1.4s}#s0.t1 h1{opacity:1}
+#s0 .sub{margin:10px auto 0;opacity:1}
+#s0 h1{opacity:1}
 /* flames */
 .fl{animation:fk .18s infinite alternate;transform-box:fill-box;transform-origin:50% 100%}
 @keyframes fk{to{transform:scale(.97,1.04) skewX(1.5deg)}}
@@ -70,9 +70,11 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 #dots{display:flex;gap:7px}#dots i{width:8px;height:8px;border-radius:50%;background:#2c3a58;cursor:pointer}#dots i.on{background:var(--blue);transform:scale(1.35)}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 @media(max-width:760px){.wb{grid-template-columns:1fr}.ou{border-left:0;border-top:1px solid var(--line)}.pl{grid-template-columns:1fr 1fr}.pl::before{display:none}.top a{display:none}.s{overflow:auto;justify-content:flex-start}}
-.s.op{padding:0;display:block;pointer-events:none}.fx{position:fixed;inset:0;pointer-events:none}
-.vig{background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.7))}#black{background:#000}#flash{opacity:0}
-#hook{position:fixed;inset:0;display:grid;place-content:center;text-align:center;padding:24px;opacity:0;font-size:clamp(38px,8.5vw,120px)}
+.s.op{padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:auto}.fx{position:fixed;inset:0;pointer-events:none}
+.vig{background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.7))}#black{display:none}#flash{opacity:0}
+#hook{position:relative;z-index:3;max-width:980px;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:32px 36px;background:radial-gradient(circle at center,rgba(5,9,20,.7) 0%,rgba(3,5,11,.45) 85%);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(110,200,255,.2);border-radius:28px;box-shadow:0 30px 80px rgba(0,0,0,.75),0 0 50px rgba(110,200,255,.1);opacity:1;transition:opacity .6s}
+#hook h1{text-shadow:0 4px 35px rgba(0,0,0,.95)}#hook .sub{text-shadow:0 2px 14px rgba(0,0,0,.9)}
+#hook button{transition:transform .2s,box-shadow .2s}#hook button:hover{transform:scale(1.04)}#hook button:active{transform:scale(.97)}
 #cap{position:fixed;left:24px;bottom:calc(96px + env(safe-area-inset-bottom,0px));max-width:min(620px,calc(100vw - 48px));font-size:clamp(20px,2.6vw,32px);line-height:1.25;font-weight:300;text-shadow:0 2px 18px #000;animation:cp .8s both;text-align:left}
 @keyframes cp{from{opacity:0;transform:translateY(8px)}}
 #ban{position:fixed;top:72px;left:50%;transform:translateX(-50%);padding:8px 22px;border-radius:999px;font-weight:700;opacity:0;transition:opacity .4s;border:1px solid;white-space:nowrap;font-size:14px}
@@ -116,7 +118,33 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 <div class="bg"></div><canvas id="cv" aria-label="Una llama esférica nace en órbita"></canvas>
 <header class="top"><b>Stellar<i>App</i></b><a href="https://stellarapp.nerosystem.solutions/" target="_blank" rel="noopener">Software en vivo ↗</a><div id="lang" role="group" aria-label="Idioma / Language"><button data-l="es" class="on">ESPAÑOL</button><button data-l="en">ENGLISH</button></div></header>
 
-<section class="s op" id="s0"><div class="fx vig"></div><div class="fx" id="grain"></div><div class="fx" id="bt"></div><div class="fx" id="bb"></div><div class="fx" id="black"></div><h1 id="hook">En órbita no hay <span class="g">bomberos.</span></h1>
+<section class="s op on" id="s0"><div class="fx vig"></div><div class="fx" id="grain"></div><div class="fx" id="bt"></div><div class="fx" id="bb"></div>
+  <div id="hook" class="in" style="transform:none;opacity:1">
+    <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:999px;background:rgba(110,200,255,.12);border:1px solid rgba(110,200,255,.35);font-size:12px;font-weight:700;letter-spacing:2px;color:#6ec8ff;text-transform:uppercase;box-shadow:0 0 24px rgba(110,200,255,.25)">
+      <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#5fd6a0;box-shadow:0 0 8px #5fd6a0"></span>
+      <span>NASA Space Apps Challenge 2026</span>
+    </div>
+    <h1 style="font-size:clamp(40px,7.5vw,94px);font-weight:900;line-height:1.02;letter-spacing:-0.03em;margin:4px 0">
+      En órbita no hay <span class="g">bomberos.</span>
+    </h1>
+    <p class="sub" style="font-size:clamp(16px,2vw,22px);color:#c3cee4;max-width:760px;line-height:1.45;margin:0">
+      A 400 km de la Tierra, un conato de incendio en microgravedad se extingue a bordo o no se extingue. <b>StellarApp</b> detecta la llama fría y actúa en menos de 1 ms.
+    </p>
+    <div class="chips" style="margin-top:4px">
+      <span>40 años datos NASA PSI</span>
+      <span>Hardware ESP32 + Pico W</span>
+      <span>0 g Offline &lt; 1 ms</span>
+      <span>Bot Telegram en Vivo</span>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+      <button onclick="go(1)" type="button" style="background:var(--blue);color:#04101a;font:inherit;font-weight:800;font-size:14px;letter-spacing:.05em;padding:12px 28px;border:0;border-radius:999px;cursor:pointer;box-shadow:0 0 30px rgba(110,200,255,.45);display:flex;align-items:center;gap:8px">
+        INICIAR PRESENTACIÓN ▶
+      </button>
+      <button onclick="playSimulation()" id="btn-sim" type="button" style="background:rgba(18,24,38,.85);color:#fff;border:1px solid rgba(150,180,230,.3);font:inherit;font-weight:700;font-size:13px;letter-spacing:.03em;padding:12px 22px;border-radius:999px;cursor:pointer;backdrop-filter:blur(10px);display:flex;align-items:center;gap:8px">
+        ⚡ SIMULAR CONATO EN CABINA
+      </button>
+    </div>
+  </div>
 <div id="hud"><small>Tiempo de evacuación</small><b id="hn">45</b><span>s</span></div><div id="ban" role="status"></div><div id="cap" role="status" aria-live="polite"></div><div id="toast"><b id="tb"></b><small id="ts"></small></div><div class="fx" id="flash"></div></section>
 
 <section class="s"><span class="k in">Gravedad cero</span><h2 class="in" style="--d:.1s">El fuego cambia de forma.<br><span class="g">Y de reglas.</span></h2>
@@ -245,7 +273,7 @@ O.forEach(([rx,ry,d,a,b],i)=>{const p=`M${cx-rx} ${cy}a${rx} ${ry} 0 1 0 ${2*rx}
 const S=[...document.querySelectorAll('.s')];let cur=-1;
 $('dots').innerHTML=S.map((_,i)=>`<i data-i="${i}"></i>`).join('');$('dots').onclick=e=>{if(e.target.dataset.i)go(+e.target.dataset.i)};
 function go(i){i=cl(i,0,S.length-1);if(i===cur)return;if(i>0&&T<OP)T=OP;cur=i;S.forEach((s,k)=>s.classList.toggle('on',k===i));document.body.classList.toggle('d',i>0);[...$('dots').children].forEach((d,k)=>d.classList.toggle('on',k===i));
- if(i===0)T=0;
+ if(i===0){T=0;simMode=false;const h=$('hook');if(h){h.style.opacity='1';h.style.pointerEvents='auto';}const b=$('btn-sim');if(b)b.textContent=lang==='en'?'⚡ SIMULATE CABIN DRILL':'⚡ SIMULAR CONATO EN CABINA';}
  if(window.gsap&&i>0){
    const s=S[i],targets=s.querySelectorAll('.k, h2, h1, .sub, .hw-chassis, .win, .duo, .pl, .cta, .chips, svg:not(#th):not(#or)');
    if(targets.length)gsap.fromTo(targets,{y:20,opacity:0},{y:0,opacity:1,duration:.55,stagger:.07,ease:"power3.out",overwrite:"auto"});
@@ -331,7 +359,7 @@ for(let z=-LEN/2;z<=LEN/2;z+=4){const p=[];for(let i=0;i<=64;i++){const a=i/64*6
 const rkT=tex(256,128,(x,w,h)=>{x.fillStyle='#161f35';x.fillRect(0,0,w,h);for(let j=0;j<6;j++){x.fillStyle='#0a101e';x.fillRect(8,8+j*20,w-16,16);for(let i=0;i<12;i++){const r=Math.random();x.fillStyle=r<.15?'#ffb347':r<.6?'#5fd6a0':'#6ec8ff';x.fillRect(14+i*18,12+j*20,6,6)}}});
 const rackEdge=new THREE.LineBasicMaterial({color:0x6a8cc4,transparent:true,opacity:.8}),rackFill=new THREE.MeshStandardMaterial({map:rkT,emissiveMap:rkT,emissive:0xffffff,emissiveIntensity:.7,roughness:.5,metalness:.5});
 for(let i=0;i<8;i++){const a=i/8*6.283+.2,g=new THREE.BoxGeometry(2.4,1.4,3.4),m=new THREE.Mesh(g,rackFill);m.add(new THREE.LineSegments(new THREE.EdgesGeometry(g),rackEdge));m.position.set(Math.cos(a)*4.2,Math.sin(a)*4.2,(i%2?-4:4));m.rotation.z=a+Math.PI/2;IN.add(m);const m2=m.clone();m2.position.z=-m.position.z*.4;IN.add(m2)}
-const fl=[];for(let i=0;i<9;i++){const m=new THREE.Mesh(i%2?new THREE.CylinderGeometry(.12,.12,.5,16):new THREE.BoxGeometry(.5,.05,.35),new THREE.MeshStandardMaterial({color:i%2?0x9fd0ff:0x222a3a,roughness:.3,metalness:.5}));const a=Math.random()*6.28,r=1+Math.random()*2.2;m.position.set(Math.cos(a)*r,Math.sin(a)*r,(Math.random()-.5)*10);m.userData={w:[Math.random()-.5,Math.random()-.5,Math.random()-.5],v:(Math.random()-.5)*.15};IN.add(m);fl.push(m)}
+const debris=[];for(let i=0;i<9;i++){const m=new THREE.Mesh(i%2?new THREE.CylinderGeometry(.12,.12,.5,16):new THREE.BoxGeometry(.5,.05,.35),new THREE.MeshStandardMaterial({color:i%2?0x9fd0ff:0x222a3a,roughness:.3,metalness:.5}));const a=Math.random()*6.28,r=1+Math.random()*2.2;m.position.set(Math.cos(a)*r,Math.sin(a)*r,(Math.random()-.5)*10);m.userData={w:[Math.random()-.5,Math.random()-.5,Math.random()-.5],v:(Math.random()-.5)*.15};IN.add(m);debris.push(m)}
 const fm=(c,o)=>new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:o,blending:THREE.AdditiveBlending,depthWrite:false});
 const shellMat=new THREE.ShaderMaterial({uniforms:{t:{value:0},h:{value:0},a:{value:1}},transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
  vertexShader:'varying vec3 n;varying vec3 p;void main(){n=normalize(normalMatrix*normal);p=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
@@ -350,32 +378,57 @@ const M=50,dpp=new Float32Array(M*3),dvv=new Float32Array(M*3),dg=new THREE.Buff
 function ds(i){const j=i*3,a=Math.random()*6.283,b=Math.acos(2*Math.random()-1),s=.3+Math.random()*.6;dpp[j]=F.x;dpp[j+1]=F.y;dpp[j+2]=F.z;dvv[j]=Math.sin(b)*Math.cos(a)*s;dvv[j+1]=Math.cos(b)*s;dvv[j+2]=Math.sin(b)*Math.sin(a)*s}
 for(let i=0;i<M;i++){ds(i);for(let k=0;k<3;k++)dpp[i*3+k]+=dvv[i*3+k]*Math.random()*8}
 const drops=new THREE.Points(dg,new THREE.PointsMaterial({color:0xffa040,size:.16,map:dot(1),transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));IN.add(drops);
-let capI=-1,tI=-1;
+let capI=-1,tI=-1,simMode=false;
+window.playSimulation=function(){
+  simMode=true;
+  T=0;
+  const h=$('hook');
+  if(h){h.style.opacity='0';h.style.pointerEvents='none';}
+  const btn=$('btn-sim');
+  if(btn)btn.textContent=lang==='en'?'SIMULATING CABIN DRILL...':'SIMULANDO CONATO...';
+};
 function fr(now){requestAnimationFrame(fr);const dt=Math.min((now-last)/1000,.1);last=now;if(cur!==0)return;
- T+=dt;if(T>=OP){go(1);return}
- const inside=T>=CUT,size=K(SZ,T),heat=K(HEAT,T),sm=K(SM,T),alert=T>=8.2&&T<14;
- EXT.visible=!inside;IN.visible=inside;ship.rotation.y=T*.16;earth.rotation.y=T*.004;clouds.rotation.y=T*.008;fl.forEach(m=>{m.rotation.x+=m.userData.w[0]*dt;m.rotation.y+=m.userData.w[1]*dt;m.position.z+=m.userData.v*dt});
- winM.emissiveIntensity=(T>=4.8&&T<CUT?(.35+.65*(Math.sin(T*14)>0?1:.2)):0)*2;
- const r=.18+size*1.1,fl=Math.sin(T*7)*.02;flame.visible=size>.004;shell.scale.set(r*(1+fl),r*(1+fl),r*(1+fl));body.scale.copy(shell.scale);core.scale.copy(shell.scale);
+ if(simMode){
+   T+=dt;
+   if(T>=OP){
+     simMode=false;
+     const h=$('hook');
+     if(h){h.style.opacity='1';h.style.pointerEvents='auto';}
+     const btn=$('btn-sim');
+     if(btn)btn.textContent=lang==='en'?'⚡ SIMULATE CABIN DRILL':'⚡ SIMULAR CONATO EN CABINA';
+     go(1);
+     return;
+   }
+ }else{
+   T+=dt*0.4;
+ }
+ const inside=simMode&&T>=CUT,size=simMode?K(SZ,T):0,heat=simMode?K(HEAT,T):0,sm=simMode?K(SM,T):0,alert=simMode&&T>=8.2&&T<14;
+ EXT.visible=!inside;IN.visible=inside;ship.rotation.y=T*.22;earth.rotation.y=T*.005;clouds.rotation.y=T*.009;debris.forEach(m=>{m.rotation.x+=m.userData.w[0]*dt;m.rotation.y+=m.userData.w[1]*dt;m.position.z+=m.userData.v*dt});
+ winM.emissiveIntensity=(simMode&&T>=4.8&&T<CUT?(.35+.65*(Math.sin(T*14)>0?1:.2)):0)*2;
+ const r=.18+size*1.1,flk=Math.sin(T*7)*.02;flame.visible=size>.004;shell.scale.set(r*(1+flk),r*(1+flk),r*(1+flk));body.scale.copy(shell.scale);core.scale.copy(shell.scale);
  shellMat.uniforms.t.value=T;shellMat.uniforms.h.value=heat;shellMat.uniforms.a.value=clamp(.45+size*1.3,0,1);bodyMat.opacity=.5*heat;coreMat.opacity=.7*heat;halo.scale.setScalar(r*7);halo.material.opacity=.5*heat;drops.material.opacity=heat*.9;for(let i=0;i<M;i++){const j=i*3;dpp[j]+=dvv[j]*dt;dpp[j+1]+=dvv[j+1]*dt;dpp[j+2]+=dvv[j+2]*dt;const dx=dpp[j]-F.x,dy=dpp[j+1]-F.y,dz=dpp[j+2]-F.z;if(dx*dx+dy*dy+dz*dz>64)ds(i)}dg.attributes.position.needsUpdate=true;
- light.intensity=(size>0?.5+size*6*(.3+heat):0)+K([[CUT+.1,0],[CUT+.3,14],[CUT+1.2,0]],T);light.color.setHex(heat>.35?0xff9a4a:0x6ec8ff);
+ light.intensity=(size>0?.5+size*6*(.3+heat):0)+(simMode?K([[CUT+.1,0],[CUT+.3,14],[CUT+1.2,0]],T):0);light.color.setHex(heat>.35?0xff9a4a:0x6ec8ff);
  const vm=T<13.5?2.4:1;
  for(let i=0;i<N;i++){const j=i*3;sp[j]+=sv[j]*dt*vm;sp[j+1]+=sv[j+1]*dt*vm;sp[j+2]+=sv[j+2]*dt*vm;const dx=sp[j]-F.x,dy=sp[j+1]-F.y,dz=sp[j+2]-F.z;if(dx*dx+dy*dy+dz*dz>81)spawn(i)}
  smg.attributes.position.needsUpdate=true;smoke.material.opacity=Math.min(.7,sm*.95);
  rackEdge.color.setHex(size>.5?0xff9a6a:0x6a8cc4);amb.color.setHex(alert?0xb03a30:0x6680aa);amb.intensity=alert?.5+.3*Math.sin(T*9):.55;
- const k=innerWidth<860?1.5:1,sh=K([[CUT+.2,.55],[CUT+1.6,0]],T);
+ const k=innerWidth<860?1.5:1,sh=simMode?K([[CUT+.2,.55],[CUT+1.6,0]],T):0;
  if(inside){const rad=K([[CUT,15],[12,11],[14,9.5],[OP,11]],T)*k,yy=.5+(T-CUT)*.035,pt=.14;
   cam.position.set(IN.position.x+Math.sin(yy)*Math.cos(pt)*rad+(Math.random()-.5)*sh,Math.sin(pt)*rad+(Math.random()-.5)*sh,IN.position.z+Math.cos(yy)*Math.cos(pt)*rad);cam.lookAt(IN.position.x+.5,0,IN.position.z)}
- else{const rad=K([[0,20],[CUT,8.5]],T)*k,yy=.9-T*.06,pt=.12;cam.position.set(Math.sin(yy)*Math.cos(pt)*rad,Math.sin(pt)*rad,Math.cos(yy)*Math.cos(pt)*rad);cam.lookAt(0,-.4,0);cam.rotateZ(.05*Math.sin(T*.35))}
+ else{const rad=(simMode?K([[0,20],[CUT,8.5]],T):21)*k,yy=.9-(simMode?T*.06:(T*.04)%6.28),pt=.14;cam.position.set(Math.sin(yy)*Math.cos(pt)*rad,Math.sin(pt)*rad,Math.cos(yy)*Math.cos(pt)*rad);cam.lookAt(0,-.4,0);cam.rotateZ(.04*Math.sin(T*.35))}
  R.render(scene,cam);
- let ci=-1;CAPS.forEach((c,i)=>{if(T>=c[0]&&T<c[1])ci=i});
- if(ci!==capI){capI=ci;const c=$('cap');c.textContent=ci<0?'':(lang==='en'?CAPE[ci]:CAPS[ci][2]);c.style.animation='none';void c.offsetWidth;c.style.animation=''}
- let ti=-1;TOASTS.forEach((c,i)=>{if(T>=c[0])ti=i});if(T>=19.6)ti=-1;
- if(ti!==tI){tI=ti;if(ti>=0){$('tb').textContent=lang==='en'?TOASTE[ti][0]:TOASTS[ti][1];$('ts').textContent=lang==='en'?TOASTE[ti][1]:TOASTS[ti][2]}$('toast').classList.toggle('on',ti>=0)}
- const b=$('ban');if(alert){b.className='r';b.textContent=lang==='en'?'Alert: cabin fire':'Alerta: incendio en cabina'}else if(T>=18.2){b.className='g';b.textContent=lang==='en'?'Fire under control':'Incendio controlado'}else b.className='';
- $('hud').style.opacity=alert?1:0;$('hn').textContent=Math.max(9,Math.round(45-36*clamp((T-8.2)/5.8,0,1)));
- $('black').style.opacity=K([[0,1],[2.4,1],[3.8,0]],T);$('hook').style.opacity=clamp(Math.min(T/.5,(3-T)/.5),0,1);
- const fa=Math.max(0,1-Math.abs(T-CUT)/.4);$('flash').style.opacity=fa*.9;$('flash').style.background='#ff7a5a'}
+ if(simMode){
+   let ci=-1;CAPS.forEach((c,i)=>{if(T>=c[0]&&T<c[1])ci=i});
+   if(ci!==capI){capI=ci;const c=$('cap');c.textContent=ci<0?'':(lang==='en'?CAPE[ci]:CAPS[ci][2]);c.style.animation='none';void c.offsetWidth;c.style.animation=''}
+   let ti=-1;TOASTS.forEach((c,i)=>{if(T>=c[0])ti=i});if(T>=19.6)ti=-1;
+   if(ti!==tI){tI=ti;if(ti>=0){$('tb').textContent=lang==='en'?TOASTE[ti][0]:TOASTS[ti][1];$('ts').textContent=lang==='en'?TOASTE[ti][1]:TOASTS[ti][2]}$('toast').classList.toggle('on',ti>=0)}
+   const b=$('ban');if(alert){b.className='r';b.textContent=lang==='en'?'Alert: cabin fire':'Alerta: incendio en cabina'}else if(T>=18.2){b.className='g';b.textContent=lang==='en'?'Fire under control':'Incendio controlado'}else b.className='';
+   $('hud').style.opacity=alert?1:0;$('hn').textContent=Math.max(9,Math.round(45-36*clamp((T-8.2)/5.8,0,1)));
+   const fa=Math.max(0,1-Math.abs(T-CUT)/.4);$('flash').style.opacity=fa*.9;$('flash').style.background='#ff7a5a';
+ }else{
+   $('hud').style.opacity=0;$('ban').className='';$('cap').textContent='';$('toast').classList.remove('on');$('flash').style.opacity=0;
+ }
+}
 requestAnimationFrame(fr);go(0);
 /* Idioma ES / EN */
 const CAPE=["400 km above Earth, a fire gets put out on board or it doesn’t get put out.","Short circuit in an electrical rack.","At first you can barely see it: a cold flame. Nobody detects it.","Without gravity it doesn’t rise: it becomes a sphere that grows in every direction.","Now, with StellarApp."],
@@ -397,7 +450,15 @@ const EN={"Software en vivo ↗":"Live software ↗","En órbita no hay":"In orb
 "AUDITORIO Y JUECES EN VIVO":"LIVE AUDIENCE & JUDGES","Escanea con tu teléfono":"Scan with your phone",
 "Vincula tu móvil con el bot de cabina para recibir la alarma y protocolos en vivo.":"Link your phone with the cockpit bot to receive live alerts and protocols.",
 "Cómo decide":"How it decides","Cuatro pasos.":"Four steps.","Sin la Tierra.":"No Earth required.","Detecta":"Detects","la llama que no se ve":"the flame you can’t see","Clasifica":"Classifies","esfera, hollín, régimen":"sphere, soot, regime","Predice":"Predicts","hacia dónde avanza":"where it spreads","Actúa":"Acts","la orden exacta":"the exact order","Respuesta en menos de 1 ms":"Response in under 1 ms","IA local":"Local AI",
-"Cada segundo":"Every second","cuenta.":"counts.","StellarApp convierte cuatro décadas de ciencia NASA en la acción correcta, antes de que el fuego decida por la tripulación.":"StellarApp turns four decades of NASA science into the right action, before the fire decides for the crew.","Abrir StellarApp":"Open StellarApp","Equipo StellarApp":"StellarApp Team"};
+"Cada segundo":"Every second","cuenta.":"counts.","StellarApp convierte cuatro décadas de ciencia NASA en la acción correcta, antes de que el fuego decida por la tripulación.":"StellarApp turns four decades of NASA science into the right action, before the fire decides for the crew.","Abrir StellarApp":"Open StellarApp","Equipo StellarApp":"StellarApp Team",
+"INICIAR PRESENTACIÓN ▶":"START PRESENTATION ▶",
+"⚡ SIMULAR CONATO EN CABINA":"⚡ SIMULATE CABIN DRILL",
+"SIMULANDO CONATO...":"SIMULATING CABIN DRILL...",
+"A 400 km de la Tierra, un conato de incendio en microgravedad se extingue a bordo o no se extingue. StellarApp detecta la llama fría y actúa en menos de 1 ms.":"400 km above Earth, a fire in microgravity gets put out on board or it doesn't. StellarApp detects the cold flame and acts in under 1 ms.",
+"40 años datos NASA PSI":"40 years NASA PSI data",
+"Hardware ESP32 + Pico W":"ESP32 + Pico W Hardware",
+"0 g Offline < 1 ms":"0 g Offline < 1 ms",
+"Bot Telegram en Vivo":"Live Telegram Bot"};
 const orig=new Map(),tn=[],tw=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
 while(tw.nextNode()){const n=tw.currentNode;if(n.nodeValue.trim()&&!n.parentNode.closest('script,style,#cap,#ban,#toast,#hn,#lang')){tn.push(n);orig.set(n,n.nodeValue)}}
 function setLang(l){lang=l;document.documentElement.lang=l;tn.forEach(n=>{const o=orig.get(n),t=o.trim();n.nodeValue=l==='en'&&EN[t]!==undefined?o.replace(t,EN[t]):o});
