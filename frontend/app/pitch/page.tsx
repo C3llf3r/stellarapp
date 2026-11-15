@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { 
@@ -23,12 +23,73 @@ import {
   Menu,
   X,
   Play,
-  Film
+  Film,
+  ZoomIn,
+  ExternalLink
 } from "lucide-react";
 
 export default function PitchLanding() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showQRModal, setShowQRModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<{
+    src: string;
+    title: string;
+    badge: string;
+    badgeColor: string;
+    desc: string;
+    nasaId: string;
+    nasaUrl: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSelectedImage(null);
+        setShowQRModal(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const nasaPhotos = [
+    {
+      src: "/media/nasa/saffire-iv-pmma-flame.jpg",
+      title: "Combustión de Acrílico (PMMA) en Cygnus",
+      badge: "PMMA • SAFFIRE-IV",
+      badgeColor: "text-[#76b900] border-[#76b900]/40",
+      desc: "Frente de llama extendido sobre polímero estructural en el carguero Cygnus a presión y concentración controlada. Evidencia empírica de avance de llama sin corrientes convectivas.",
+      nasaId: "jsc2023e046631",
+      nasaUrl: "https://images.nasa.gov/details/jsc2023e046631"
+    },
+    {
+      src: "/media/nasa/saffire-iv-fabric-flame.jpg",
+      title: "Propagación de Llama en Tejido de Nave",
+      badge: "TEJIDO • SAFFIRE-IV",
+      badgeColor: "text-[#df6500] border-[#df6500]/40",
+      desc: "Muestra de tejido ardiendo bajo flujo forzado de 20 cm/s en atmósfera enriquecida con oxígeno. Demuestra que los tejidos estructurales arden con alta violencia en microgravedad.",
+      nasaId: "jsc2023e046375",
+      nasaUrl: "https://images.nasa.gov/details/jsc2023e046375"
+    },
+    {
+      src: "/media/nasa/bass-ii-acrylic-flame.jpg",
+      title: "Llama Esférica en la Estación Espacial (0G)",
+      badge: "BASS-II • ISS",
+      badgeColor: "text-[#00b0ff] border-[#00b0ff]/40",
+      desc: "Placa acrílica de 4 mm quemada en el Microgravity Science Glovebox a bordo de la ISS. Muestra la esfericidad isotrópica y la emisión azul tenue por radicales C2/CH.",
+      nasaId: "iss040e072900",
+      nasaUrl: "https://images.nasa.gov/details/iss040e072900"
+    },
+    {
+      src: "/media/nasa/bass-ii-reduced-o2-flame.jpg",
+      title: "Combustión en Presión Parcial Reducida de O₂",
+      badge: "ATMÓSFERA SUB-NOMINAL",
+      badgeColor: "text-[#e040fb] border-[#e040fb]/40",
+      desc: "Ensayo card 15 bajo presiones y concentraciones de oxígeno equivalentes a atmósferas de exploración espacial de próxima generación (Artemis / Marte).",
+      nasaId: "iss040e086481",
+      nasaUrl: "https://images.nasa.gov/details/iss040e086481"
+    }
+  ];
 
   const problems = [
     {
@@ -291,6 +352,91 @@ export default function PitchLanding() {
               >
                 CERRAR
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Lightbox Modal for NASA Photo Enlargement */}
+      {selectedImage && (
+        <div
+          onClick={() => setSelectedImage(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-md animate-in fade-in duration-200"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-4xl bg-[#111111] border-2 border-[#76b900] shadow-[0_0_50px_rgba(0,0,0,0.9)] flex flex-col max-h-[94vh] overflow-hidden rounded-[2px]"
+          >
+            <div className="corner-square border-[#76b900]" />
+
+            {/* Modal Header */}
+            <div className="p-3 sm:p-4 bg-[#1a1a1a] border-b border-[#333333] flex items-center justify-between select-none">
+              <div className="flex items-center space-x-2.5 min-w-0">
+                <span className={`text-[10px] font-mono px-2 py-0.5 bg-black border shrink-0 ${selectedImage.badgeColor}`}>
+                  {selectedImage.badge}
+                </span>
+                <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-white truncate">
+                  {selectedImage.title}
+                </h3>
+              </div>
+              <div className="flex items-center space-x-2 shrink-0">
+                <a
+                  href={selectedImage.src}
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Abrir imagen original"
+                  className="p-1.5 text-[#898989] hover:text-[#76b900] hover:bg-black transition-colors border border-[#333333]"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+                <button
+                  onClick={() => setSelectedImage(null)}
+                  className="p-1.5 text-[#898989] hover:text-white hover:bg-[#262626] transition-colors border border-[#333333]"
+                  title="Cerrar (Esc)"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Enlarged Image Display */}
+            <div className="flex-1 bg-black p-2 sm:p-4 flex items-center justify-center overflow-hidden min-h-[300px]">
+              <img
+                src={selectedImage.src}
+                alt={selectedImage.title}
+                className="max-h-[60vh] sm:max-h-[68vh] w-auto max-w-full object-contain border border-[#222222] shadow-2xl"
+              />
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-3 sm:p-4 bg-[#141414] border-t border-[#333333] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+              <div className="space-y-1">
+                <p className="text-[#cccccc] text-[11px] sm:text-xs leading-relaxed max-w-2xl">
+                  {selectedImage.desc}
+                </p>
+                <div className="flex items-center space-x-3 text-[10px] font-mono text-[#898989]">
+                  <span>NASA ID: <strong className="text-[#76b900]">{selectedImage.nasaId}</strong></span>
+                  <span>•</span>
+                  <span>DOMINIO PÚBLICO OFICIAL</span>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2 shrink-0 w-full sm:w-auto justify-end">
+                <a
+                  href={selectedImage.nasaUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#1a1a1a] hover:bg-black text-[#76b900] hover:text-white border border-[#76b900]/40 text-[11px] font-mono font-bold uppercase transition-colors"
+                >
+                  <span>NASA.gov</span>
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+                <button
+                  onClick={() => setSelectedImage(null)}
+                  className="px-3.5 py-1.5 bg-[#76b900] hover:bg-[#5a8d00] text-black font-bold uppercase text-[11px] tracking-wider transition-colors"
+                >
+                  CERRAR
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -725,87 +871,41 @@ export default function PitchLanding() {
             </div>
           </div>
 
-          {/* High-Res Photo Gallery */}
+          {/* High-Res Photo Gallery (Clickable / Expandable Lightbox) */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {/* Foto 1: Saffire-IV PMMA */}
-            <div className="bg-[#141414] border border-[#333333] p-2.5 space-y-2">
-              <div className="relative aspect-video sm:aspect-square bg-black overflow-hidden border border-[#2a2a2a]">
-                <img
-                  src="/media/nasa/saffire-iv-pmma-flame.jpg"
-                  alt="Saffire-IV Fuego en PMMA"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-                <span className="absolute bottom-1 left-1 px-1.5 py-0.5 bg-black/80 text-[9px] font-mono text-[#76b900] border border-[#76b900]/40">
-                  PMMA • SAFFIRE-IV
-                </span>
+            {nasaPhotos.map((photo, pIdx) => (
+              <div
+                key={pIdx}
+                onClick={() => setSelectedImage(photo)}
+                className="group bg-[#141414] hover:bg-[#1a1a1a] border border-[#333333] hover:border-[#76b900] p-2.5 space-y-2 cursor-pointer transition-all duration-200 select-none"
+              >
+                <div className="relative aspect-video sm:aspect-square bg-black overflow-hidden border border-[#2a2a2a] group-hover:border-[#76b900]/60">
+                  <img
+                    src={photo.src}
+                    alt={photo.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  {/* Hover Overlay with Zoom Indicator */}
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                    <span className="px-2 py-1 bg-black/90 border border-[#76b900] text-[#76b900] text-[10px] font-mono font-bold flex items-center space-x-1 shadow-lg transform -translate-y-1 group-hover:translate-y-0 transition-transform">
+                      <ZoomIn className="h-3.5 w-3.5" />
+                      <span>AMPLIAR</span>
+                    </span>
+                  </div>
+                  <span className={`absolute bottom-1 left-1 px-1.5 py-0.5 bg-black/85 text-[9px] font-mono border ${photo.badgeColor}`}>
+                    {photo.badge}
+                  </span>
+                </div>
+                <div>
+                  <h4 className="text-[11px] font-bold text-white group-hover:text-[#76b900] transition-colors uppercase leading-snug">
+                    {photo.title}
+                  </h4>
+                  <p className="text-[10px] text-[#898989] leading-tight mt-0.5 line-clamp-2">
+                    {photo.desc}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h4 className="text-[11px] font-bold text-white uppercase">Combustión de Acrílico</h4>
-                <p className="text-[10px] text-[#898989] leading-tight mt-0.5">
-                  Frente de llama sobre polímero estructural en cabina Cygnus.
-                </p>
-              </div>
-            </div>
-
-            {/* Foto 2: Saffire-IV Fabric */}
-            <div className="bg-[#141414] border border-[#333333] p-2.5 space-y-2">
-              <div className="relative aspect-video sm:aspect-square bg-black overflow-hidden border border-[#2a2a2a]">
-                <img
-                  src="/media/nasa/saffire-iv-fabric-flame.jpg"
-                  alt="Saffire-IV Fuego en Tejido"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-                <span className="absolute bottom-1 left-1 px-1.5 py-0.5 bg-black/80 text-[9px] font-mono text-[#df6500] border border-[#df6500]/40">
-                  TEJIDO • SAFFIRE-IV
-                </span>
-              </div>
-              <div>
-                <h4 className="text-[11px] font-bold text-white uppercase">Propagación en Tejido</h4>
-                <p className="text-[10px] text-[#898989] leading-tight mt-0.5">
-                  Muestra de tela en atmósfera enriquecida ardiendo bajo flujo de 20 cm/s.
-                </p>
-              </div>
-            </div>
-
-            {/* Foto 3: BASS-II Acrylic */}
-            <div className="bg-[#141414] border border-[#333333] p-2.5 space-y-2">
-              <div className="relative aspect-video sm:aspect-square bg-black overflow-hidden border border-[#2a2a2a]">
-                <img
-                  src="/media/nasa/bass-ii-acrylic-flame.jpg"
-                  alt="BASS-II Llama en ISS"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-                <span className="absolute bottom-1 left-1 px-1.5 py-0.5 bg-black/80 text-[9px] font-mono text-[#00b0ff] border border-[#00b0ff]/40">
-                  BASS-II • ISS
-                </span>
-              </div>
-              <div>
-                <h4 className="text-[11px] font-bold text-white uppercase">Llama en la ISS (0G)</h4>
-                <p className="text-[10px] text-[#898989] leading-tight mt-0.5">
-                  Placa acrílica de 4 mm quemada en el Microgravity Science Glovebox.
-                </p>
-              </div>
-            </div>
-
-            {/* Foto 4: BASS-II Reduced O2 */}
-            <div className="bg-[#141414] border border-[#333333] p-2.5 space-y-2">
-              <div className="relative aspect-video sm:aspect-square bg-black overflow-hidden border border-[#2a2a2a]">
-                <img
-                  src="/media/nasa/bass-ii-reduced-o2-flame.jpg"
-                  alt="BASS-II Presión Reducida"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-                <span className="absolute bottom-1 left-1 px-1.5 py-0.5 bg-black/80 text-[9px] font-mono text-[#e040fb] border border-[#e040fb]/40">
-                  ATMÓSFERA SUB-NOMINAL
-                </span>
-              </div>
-              <div>
-                <h4 className="text-[11px] font-bold text-white uppercase">Presión Reducida O₂</h4>
-                <p className="text-[10px] text-[#898989] leading-tight mt-0.5">
-                  Ensayo bajo presiones y concentraciones de oxígeno controladas.
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </section>
 
