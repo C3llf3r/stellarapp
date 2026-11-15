@@ -485,7 +485,7 @@ async def post_hardware_telemetry(req: HardwareTelemetryRequest):
 def get_hardware_telemetry():
     now = time.time()
     last_seen = _latest_hardware.get("last_seen", 0.0)
-    is_live = (now - last_seen) < 8.0
+    is_live = (now - last_seen) < 30.0
     return {
         **_latest_hardware,
         "is_live": is_live,
