@@ -21,7 +21,9 @@ import {
   Radio,
   QrCode,
   Menu,
-  X
+  X,
+  Play,
+  Film
 } from "lucide-react";
 
 export default function PitchLanding() {
@@ -615,6 +617,193 @@ export default function PitchLanding() {
                     </p>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Evidencia en Video y Fotografía Oficial NASA */}
+        <section className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-[#333333] pb-4">
+            <div>
+              <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 bg-black border border-[#76b900] text-[#76b900] text-[10px] font-bold uppercase tracking-wider mb-2">
+                <Film className="h-3 w-3" />
+                <span>EVIDENCIA OFICIAL DE VUELO ESPACIAL (DOMINIO PÚBLICO NASA)</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">
+                Metraje de Video y Fotografía de Combustión en Microgravedad
+              </h2>
+              <p className="text-xs text-[#a7a7a7] mt-1">
+                Archivos oficiales obtenidos de <strong>images.nasa.gov</strong> de las misiones de fuego real Saffire (carguero Cygnus) e ISS (BASS-II y SoFIE).
+              </p>
+            </div>
+            <span className="text-[10px] font-mono text-[#898989] shrink-0">
+              NASA GLENN &amp; JSC ARCHIVES
+            </span>
+          </div>
+
+          {/* Video Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Video 1: Saffire-V */}
+            <div className="bg-[#1a1a1a] border border-[#333333] p-4 space-y-3 relative">
+              <div className="corner-square" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Play className="h-4 w-4 text-[#76b900]" />
+                  <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+                    Experimento Saffire-V (Cygnus) // Fuego Real
+                  </h3>
+                </div>
+                <span className="px-1.5 py-0.5 text-[9px] font-mono bg-black border border-[#76b900]/40 text-[#76b900]">
+                  VIDEO OFICIAL
+                </span>
+              </div>
+              <div className="relative rounded overflow-hidden bg-black border border-[#222222]">
+                <video
+                  src="/media/nasa/saffire-v-pmma-flame.mp4"
+                  controls
+                  preload="metadata"
+                  className="w-full aspect-video object-cover"
+                />
+              </div>
+              <div className="space-y-1 font-sans">
+                <p className="text-[11px] text-[#cccccc] leading-relaxed">
+                  Combustión sobre una muestra de PMMA (plexiglás) con ventilación forzada en el interior del carguero Cygnus tras desacoplarse de la ISS. Muestra cómo el fuego se ancla y avanza sin corrientes ascendentes.
+                </p>
+                <div className="flex items-center justify-between text-[10px] font-mono text-[#757575] pt-1 border-t border-[#2a2a2a]">
+                  <span>ID: GRC-2021-CN-00008</span>
+                  <a
+                    href="https://images.nasa.gov/details/GRC-2021-CN-00008"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[#76b900] hover:underline"
+                  >
+                    Ver en NASA.gov ↗
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Video 2: SoFIE-GEL */}
+            <div className="bg-[#1a1a1a] border border-[#333333] p-4 space-y-3 relative">
+              <div className="corner-square" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Play className="h-4 w-4 text-[#00b0ff]" />
+                  <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+                    Experimento SoFIE-GEL (ISS) // Llama Esférica
+                  </h3>
+                </div>
+                <span className="px-1.5 py-0.5 text-[9px] font-mono bg-black border border-[#00b0ff]/40 text-[#00b0ff]">
+                  VIDEO OFICIAL
+                </span>
+              </div>
+              <div className="relative rounded overflow-hidden bg-black border border-[#222222]">
+                <video
+                  src="/media/nasa/sofie-flame-extinction.mp4"
+                  controls
+                  preload="metadata"
+                  className="w-full aspect-video object-cover"
+                />
+              </div>
+              <div className="space-y-1 font-sans">
+                <p className="text-[11px] text-[#cccccc] leading-relaxed">
+                  Ignición y extinción de combustible sólido en microgravedad. Se observa la llama esférica girando sobre sí misma hasta alcanzar el límite crítico de autoextinción por asfixia radiativa.
+                </p>
+                <div className="flex items-center justify-between text-[10px] font-mono text-[#757575] pt-1 border-t border-[#2a2a2a]">
+                  <span>ID: SoFIE-GEL</span>
+                  <a
+                    href="https://images.nasa.gov/details/SoFIE-GEL"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[#00b0ff] hover:underline"
+                  >
+                    Ver en NASA.gov ↗
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* High-Res Photo Gallery */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            {/* Foto 1: Saffire-IV PMMA */}
+            <div className="bg-[#141414] border border-[#333333] p-2.5 space-y-2">
+              <div className="relative aspect-video sm:aspect-square bg-black overflow-hidden border border-[#2a2a2a]">
+                <img
+                  src="/media/nasa/saffire-iv-pmma-flame.jpg"
+                  alt="Saffire-IV Fuego en PMMA"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+                <span className="absolute bottom-1 left-1 px-1.5 py-0.5 bg-black/80 text-[9px] font-mono text-[#76b900] border border-[#76b900]/40">
+                  PMMA • SAFFIRE-IV
+                </span>
+              </div>
+              <div>
+                <h4 className="text-[11px] font-bold text-white uppercase">Combustión de Acrílico</h4>
+                <p className="text-[10px] text-[#898989] leading-tight mt-0.5">
+                  Frente de llama sobre polímero estructural en cabina Cygnus.
+                </p>
+              </div>
+            </div>
+
+            {/* Foto 2: Saffire-IV Fabric */}
+            <div className="bg-[#141414] border border-[#333333] p-2.5 space-y-2">
+              <div className="relative aspect-video sm:aspect-square bg-black overflow-hidden border border-[#2a2a2a]">
+                <img
+                  src="/media/nasa/saffire-iv-fabric-flame.jpg"
+                  alt="Saffire-IV Fuego en Tejido"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+                <span className="absolute bottom-1 left-1 px-1.5 py-0.5 bg-black/80 text-[9px] font-mono text-[#df6500] border border-[#df6500]/40">
+                  TEJIDO • SAFFIRE-IV
+                </span>
+              </div>
+              <div>
+                <h4 className="text-[11px] font-bold text-white uppercase">Propagación en Tejido</h4>
+                <p className="text-[10px] text-[#898989] leading-tight mt-0.5">
+                  Muestra de tela en atmósfera enriquecida ardiendo bajo flujo de 20 cm/s.
+                </p>
+              </div>
+            </div>
+
+            {/* Foto 3: BASS-II Acrylic */}
+            <div className="bg-[#141414] border border-[#333333] p-2.5 space-y-2">
+              <div className="relative aspect-video sm:aspect-square bg-black overflow-hidden border border-[#2a2a2a]">
+                <img
+                  src="/media/nasa/bass-ii-acrylic-flame.jpg"
+                  alt="BASS-II Llama en ISS"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+                <span className="absolute bottom-1 left-1 px-1.5 py-0.5 bg-black/80 text-[9px] font-mono text-[#00b0ff] border border-[#00b0ff]/40">
+                  BASS-II • ISS
+                </span>
+              </div>
+              <div>
+                <h4 className="text-[11px] font-bold text-white uppercase">Llama en la ISS (0G)</h4>
+                <p className="text-[10px] text-[#898989] leading-tight mt-0.5">
+                  Placa acrílica de 4 mm quemada en el Microgravity Science Glovebox.
+                </p>
+              </div>
+            </div>
+
+            {/* Foto 4: BASS-II Reduced O2 */}
+            <div className="bg-[#141414] border border-[#333333] p-2.5 space-y-2">
+              <div className="relative aspect-video sm:aspect-square bg-black overflow-hidden border border-[#2a2a2a]">
+                <img
+                  src="/media/nasa/bass-ii-reduced-o2-flame.jpg"
+                  alt="BASS-II Presión Reducida"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+                <span className="absolute bottom-1 left-1 px-1.5 py-0.5 bg-black/80 text-[9px] font-mono text-[#e040fb] border border-[#e040fb]/40">
+                  ATMÓSFERA SUB-NOMINAL
+                </span>
+              </div>
+              <div>
+                <h4 className="text-[11px] font-bold text-white uppercase">Presión Reducida O₂</h4>
+                <p className="text-[10px] text-[#898989] leading-tight mt-0.5">
+                  Ensayo bajo presiones y concentraciones de oxígeno controladas.
+                </p>
               </div>
             </div>
           </div>
