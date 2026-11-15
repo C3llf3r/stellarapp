@@ -151,11 +151,6 @@ export default function FloatingAIAgent() {
               alt="Astronauta Asistente NASA"
               className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(118,185,0,0.85)] group-hover:scale-110 transition-transform duration-300"
             />
-            {/* Green Online Beacon */}
-            <span className="absolute -top-1 -right-1 flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#76b900] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#76b900] border-2 border-black" />
-            </span>
           </div>
 
           <div className="flex flex-col text-left drop-shadow-[0_2px_5px_rgba(0,0,0,0.95)]">
@@ -168,8 +163,6 @@ export default function FloatingAIAgent() {
               ASTRONAUTA • EN ÓRBITA
             </span>
           </div>
-
-          <Sparkles className="h-4 w-4 text-[#76b900] group-hover:rotate-12 transition-transform drop-shadow-[0_0_8px_#76b900] ml-0.5" />
         </button>
       )}
 
