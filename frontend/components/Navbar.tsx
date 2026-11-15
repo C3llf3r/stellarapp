@@ -95,10 +95,11 @@ export default function Navbar({ onOpenAI, onOpenSimulator, onOpenAnalytics }: N
               setShowQRModal(true);
               fetchSubscribers();
             }}
-            className="h-8 inline-flex items-center space-x-1.5 px-3 text-xs font-bold uppercase tracking-wider bg-[#0088cc] hover:bg-[#0077b5] text-white border border-[#0099e6] rounded-[2px] box-border transition-colors"
+            aria-label={t("telegramLive")}
+            title={t("telegramLive")}
+            className="h-8 w-8 inline-flex items-center justify-center bg-[#0088cc] hover:bg-[#0077b5] text-white border border-[#0099e6] rounded-[2px] box-border transition-colors"
           >
-            <Send className="h-3.5 w-3.5" />
-            <span>{t("telegramLive")}</span>
+            <Send className="h-4 w-4" />
           </button>
 
           <Link
