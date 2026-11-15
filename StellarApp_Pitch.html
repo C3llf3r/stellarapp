@@ -90,6 +90,26 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 #lang button{background:none;border:0;color:var(--tx);font:700 14px/1 "Segoe UI",system-ui,sans-serif;letter-spacing:.08em;padding:12px 22px;cursor:pointer;transition:background .25s}
 #lang button.on{background:var(--blue);color:#04101a}
 @media(max-width:760px){.top{padding:12px 14px}#lang button{padding:11px 16px}}
+/* Hardware Chassis & LCD Mirror */
+.hw-chassis{position:relative;width:min(860px,100%);padding:14px 18px 16px;background:#090d16;border:2px solid #233044;border-radius:18px;box-shadow:0 25px 70px rgba(0,0,0,.85),0 0 40px rgba(118,185,0,.15);font-family:Consolas,monospace;user-select:none;text-align:left}
+.hw-screw{position:absolute;width:12px;height:12px;border-radius:50%;background:#1a2334;border:1px solid rgba(212,175,55,.6);display:flex;align-items:center;justify-content:center}
+.hw-screw::after{content:"";width:8px;height:1.5px;background:rgba(212,175,55,.8);transform:rotate(45deg)}
+.hw-screw.tr{top:10px;right:10px}.hw-screw.tr::after{transform:rotate(-45deg)}
+.hw-screw.tl{top:10px;left:10px}
+.hw-screw.bl{bottom:10px;left:10px}.hw-screw.bl::after{transform:rotate(-45deg)}
+.hw-screw.br{bottom:10px;right:10px}
+.hw-silk{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:11px;color:#7e8ea6;letter-spacing:1px;text-transform:uppercase}
+.hw-screen{position:relative;width:100%;background:#0b0f19;border:1px solid #1c2638;border-radius:10px;padding:14px 18px 12px;overflow:hidden;box-shadow:inset 0 0 30px rgba(0,0,0,.8)}
+.hw-glare{position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.05) 0%,transparent 60%)}
+.hw-top{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #202b3d;padding-bottom:8px;margin-bottom:10px}
+.hw-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+.hw-card{background:#121826;border:1px solid #222d40;border-radius:8px;padding:10px 12px;text-align:left;display:flex;flex-direction:column;justify-content:space-between}
+.hw-num{font-size:clamp(22px,3.2vw,38px);font-weight:900;line-height:1;margin:4px 0}
+.hw-bar{height:6px;background:#090d16;border:1px solid #222d40;border-radius:4px;overflow:hidden;margin:6px 0}
+.hw-bar-fill{height:100%;background:#76b900;width:45%;transition:width .4s}
+.hw-btn{width:100%;padding:10px;background:#141926;border:2px solid #00d2ff;color:#fff;border-radius:8px;font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 0 20px rgba(0,210,255,.2);transition:all .15s}
+.hw-btn:active{transform:scale(.98);background:#00d2ff;color:#000}
+@media(max-width:760px){.hw-cards{grid-template-columns:1fr}.hw-silk span.ext{display:none}}
 </style>
 </head>
 <body>
@@ -124,30 +144,56 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 <div class="ou"><svg class="gau" viewBox="0 0 200 200"><defs><linearGradient id="gg"><stop offset="0" stop-color="#ffb347"/><stop offset="1" stop-color="#ff5a47"/></linearGradient></defs><circle cx="100" cy="100" r="80" stroke="rgba(150,180,230,.14)"/><circle class="gv" cx="100" cy="100" r="80" pathLength="100" transform="rotate(-90 100 100)"/><text x="100" y="96" text-anchor="middle" fill="#ff5a47" font-size="22" font-weight="800">EXTREMO</text><text x="100" y="122" text-anchor="middle" fill="#8d9dbb" font-size="13">1.73 mm/s · +90 %</text></svg>
 <div class="act">Cortar ventilación a menos de 1.2 cm/s y purgar con N₂</div></div></div></div></section>
 
-<section class="s"><span class="k in">Hardware en Vivo</span><h2 class="in" style="--d:.1s">Sonda IoT y Cabina <span class="g">ESP32-S3</span></h2>
-<div class="duo in" style="--d:.3s;gap:3vw;max-width:960px">
-  <div style="flex:1;min-width:280px;background:rgba(8,12,24,.86);border:1px solid rgba(110,200,255,.3);border-radius:12px;padding:22px;text-align:left;box-shadow:0 10px 40px rgba(0,0,0,.6)">
-    <div style="font-size:11px;color:#76b900;font-weight:700;letter-spacing:1px;text-transform:uppercase">Sonda de Silicio (COM6)</div>
-    <div style="font-size:22px;font-weight:800;color:#fff;margin:6px 0">Raspberry Pi Pico W</div>
-    <div style="font-size:13px;color:#8d9dbb;margin-bottom:12px">MicroPython · Sensor ADC4 Térmico</div>
-    <div style="font-family:Consolas,monospace;font-size:12px;background:#05070e;padding:12px;border-radius:6px;border:1px solid rgba(255,255,255,.08);line-height:1.6">
-      <div style="color:#5fd6a0">● FILTRO DE KALMAN (K=0.167)</div>
-      <div style="color:#c3cee4">Ruido estocástico IoT: ±3.5σ</div>
-      <div style="color:#ffb347">Disparo de alarma: &gt; 42.0 °C</div>
-    </div>
+<section class="s"><span class="k in">Hardware en Vivo</span><h2 class="in" style="--d:.1s">Cabina de Astronauta <span class="g">ESP32-8048S043</span></h2>
+<div class="hw-chassis in" style="--d:.3s">
+  <div class="hw-screw tl"></div><div class="hw-screw tr"></div><div class="hw-screw bl"></div><div class="hw-screw br"></div>
+  <div class="hw-silk">
+    <div><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#d4af37;margin-right:6px"></span><b>ESP32-8048S043 // 4.3" IPS 800x480</b></div>
+    <div><span class="ext">GT911 TOUCH • 8MB PSRAM • </span><strong id="hw-status-badge" style="color:#76b900">ENLACE ACTIVO (COM6+COM9)</strong></div>
   </div>
-  <div style="flex:1;min-width:280px;background:rgba(8,12,24,.86);border:1px solid rgba(118,185,0,.4);border-radius:12px;padding:22px;text-align:left;box-shadow:0 10px 40px rgba(0,0,0,.6)">
-    <div style="font-size:11px;color:#76b900;font-weight:700;letter-spacing:1px;text-transform:uppercase">Flight Deck Cabina (COM9)</div>
-    <div style="font-size:22px;font-weight:800;color:#fff;margin:6px 0">Sunton ESP32-8048S043</div>
-    <div style="font-size:13px;color:#8d9dbb;margin-bottom:12px">Display 4.3" IPS 800x480 · Bus RGB 14MHz</div>
-    <div style="font-family:Consolas,monospace;font-size:12px;background:#05070e;padding:12px;border-radius:6px;border:1px solid rgba(255,255,255,.08);line-height:1.6">
-      <div style="color:#76b900">● C++ / LovyanGFX / PSRAM 8MB</div>
-      <div style="color:#c3cee4">Táctil GT911: Botón de purga N₂</div>
-      <div style="color:#6ec8ff">Latencia Serial: &lt; 1 ms</div>
+  <div class="hw-screen">
+    <div class="hw-glare"></div>
+    <div class="hw-top">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:16px;font-weight:900;color:#76b900;letter-spacing:1px">STELLARAPP</span>
+        <span style="font-size:11px;font-weight:700;color:#fff;letter-spacing:.5px">ASTRONAUT FLIGHT DECK</span>
+      </div>
+      <div id="hw-pill" style="background:#0f1420;border:1px solid #2a344a;padding:3px 10px;border-radius:4px;color:#76b900;font-size:11px;font-weight:800;display:flex;align-items:center">
+        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#76b900;margin-right:6px;box-shadow:0 0 8px #76b900"></span><span id="hw-status-text">NOMINAL</span>
+      </div>
     </div>
+    <div class="hw-cards">
+      <!-- Card 1: Oxigeno -->
+      <div class="hw-card">
+        <span style="font-size:10px;font-weight:700;color:#8892b0;letter-spacing:1px;text-transform:uppercase">Oxígeno O₂</span>
+        <div class="hw-num" style="color:#00d2ff"><span id="hw-o2">21.0</span><small style="font-size:13px;color:#8892b0">%</small></div>
+        <div style="font-size:10px;color:#8892b0;display:flex;justify-content:space-between"><span>Sensor Raw:</span><strong id="hw-o2-raw" style="color:#fff">21.0%</strong></div>
+        <div class="hw-bar"><div id="hw-bar-fill" class="hw-bar-fill" style="width:45%"></div></div>
+        <div style="font-size:8px;color:#5c6882;display:flex;justify-content:space-between"><span>SUB-OX</span><span>NOMINAL</span><span>ALTO</span></div>
+      </div>
+      <!-- Card 2: Kalman -->
+      <div class="hw-card">
+        <span style="font-size:10px;font-weight:700;color:#8892b0;letter-spacing:1px;text-transform:uppercase">Filtro de Kalman</span>
+        <div class="hw-num" style="color:#76b900"><span id="hw-co">22</span><small style="font-size:13px;color:#8892b0">ppm CO</small></div>
+        <div style="font-size:10px;color:#8892b0;display:flex;justify-content:space-between"><span>Ganancia K:</span><strong id="hw-k-gain" style="color:#fff">0.167</strong></div>
+        <div style="margin-top:6px;font-size:10px;color:#5fd6a0;font-weight:800">● ESTABLE (Ruido ±3.5σ)</div>
+        <div style="font-size:8px;color:#5c6882;margin-top:2px">Filtrado en tiempo real</div>
+      </div>
+      <!-- Card 3: Pico W Temp -->
+      <div class="hw-card">
+        <span style="font-size:10px;font-weight:700;color:#8892b0;letter-spacing:1px;text-transform:uppercase">Sonda Silicio RP2040</span>
+        <div class="hw-num" style="color:#00d2ff"><span id="hw-temp">36.4</span><small style="font-size:13px;color:#8892b0">°C</small></div>
+        <div style="font-size:10px;color:#8892b0;display:flex;justify-content:space-between"><span>Puerto:</span><strong style="color:#fff">Pico W (COM6)</strong></div>
+        <div style="margin-top:6px;font-size:10px;color:#76b900;font-weight:800">Evacuación: NOMINAL</div>
+        <div style="font-size:8px;color:#ffb347;margin-top:2px">Alarma térmica &gt; 42.0 °C</div>
+      </div>
+    </div>
+    <button id="hw-touch-btn" class="hw-btn" type="button">
+      ⚡ PURGA DE CABINA N₂ (GT911 TOUCH)
+    </button>
   </div>
 </div>
-<div class="chips in" style="--d:.5s"><span>Hardware-in-the-Loop Activo</span><span>0g Resiliente</span><span>Telemetría en Vivo</span></div></section>
+<div class="chips in" style="--d:.5s"><span>Hardware-in-the-Loop Activo</span><span>Sonda Pico W (COM6)</span><span>Cabina ESP32 (COM9)</span></div></section>
 
 <section class="s"><span class="k in">Base científica</span><h2 class="in" style="--d:.1s">Cuatro décadas de fuego,<br><span class="g">en una sola mente.</span></h2>
 <svg id="or" class="in" style="--d:.3s;max-width:780px" viewBox="0 0 700 440" role="img" aria-label="Misiones NASA orbitando StellarApp"></svg>
@@ -314,6 +360,10 @@ const EN={"Software en vivo ↗":"Live software ↗","En órbita no hay":"In orb
 "Cortar ventilación a menos de 1.2 cm/s y purgar con N₂":"Cut ventilation below 1.2 cm/s and purge with N₂",
 "Base científica":"Scientific basis","Cuatro décadas de fuego,":"Four decades of fire,","en una sola mente.":"in a single mind.","años de datos":"years of data","estudios NASA PSI":"NASA PSI studies","parámetros":"parameters",
 "Hardware en Vivo":"Live Hardware","Sonda IoT y Cabina":"IoT Probe & Cockpit","Sonda de Silicio (COM6)":"Silicon Probe (COM6)","Flight Deck Cabina (COM9)":"Cockpit Flight Deck (COM9)",
+"Cabina de Astronauta":"Astronaut Flight Deck","Sonda Silicio RP2040":"RP2040 Silicon Probe","Sonda Pico W (COM6)":"Pico W Probe (COM6)","Cabina ESP32 (COM9)":"ESP32 Cockpit (COM9)",
+"Filtro de Kalman":"Kalman Filter","Sensor Raw:":"Raw Sensor:","Ganancia K:":"Gain K:","● ESTABLE (Ruido ±3.5σ)":"● STABLE (Noise ±3.5σ)","Filtrado en tiempo real":"Real-time filtering",
+"Puerto:":"Port:","Evacuación: NOMINAL":"Evacuation: NOMINAL","Alarma térmica > 42.0 °C":"Thermal alarm > 42.0 °C",
+"⚡ PURGA DE CABINA N₂ (GT911 TOUCH)":"⚡ N₂ CABIN PURGE (GT911 TOUCH)","ENLACE ACTIVO (COM6+COM9)":"ACTIVE LINK (COM6+COM9)",
 "Hardware-in-the-Loop Activo":"Hardware-in-the-Loop Active","0g Resiliente":"0g Resilient","Telemetría en Vivo":"Live Telemetry",
 "AUDITORIO Y JUECES EN VIVO":"LIVE AUDIENCE & JUDGES","Escanea con tu teléfono":"Scan with your phone",
 "Vincula tu móvil con el bot de cabina para recibir la alarma y protocolos en vivo.":"Link your phone with the cockpit bot to receive live alerts and protocols.",
@@ -325,6 +375,67 @@ function setLang(l){lang=l;document.documentElement.lang=l;tn.forEach(n=>{const 
  document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));capI=-1;tI=-1;try{localStorage.setItem('lang',l)}catch(e){}}
 $('lang').onclick=e=>{const b=e.target.closest('button');if(b){setLang(b.dataset.l);b.blur()}};
 let sl='';try{sl=localStorage.getItem('lang')||''}catch(e){}if(sl==='en')setLang('en');
+/* Live Hardware Mirror Polling */
+(function(){
+  const tempEl=$('hw-temp'),o2El=$('hw-o2'),o2RawEl=$('hw-o2-raw'),coEl=$('hw-co'),kgEl=$('hw-k-gain'),barEl=$('hw-bar-fill'),pillEl=$('hw-pill'),btn=$('hw-touch-btn'),badge=$('hw-status-badge');
+  if(!tempEl)return;
+  let simulated=false;
+  async function poll(){
+    if(simulated)return;
+    try{
+      const res=await fetch('/api/telemetry/hardware');
+      if(!res.ok)return;
+      const d=await res.json();
+      if(tempEl)tempEl.textContent=(d.chip_temp_c||38.5).toFixed(1);
+      if(o2El)o2El.textContent=(d.o2_kalman||21.0).toFixed(1);
+      if(o2RawEl)o2RawEl.textContent=(d.o2_raw||21.0).toFixed(1)+'%';
+      if(coEl)coEl.textContent=Math.round(d.co_ppm||22.2);
+      if(kgEl)kgEl.textContent=(d.k_gain||0.167).toFixed(3);
+      const o2=d.o2_kalman||21.0;
+      const pct=Math.max(0,Math.min(100,((o2-15)/(35-15))*100));
+      if(barEl)barEl.style.width=pct+'%';
+      const crit=(d.status&&d.status.includes('CRITICO'))||(d.chip_temp_c>=42.0);
+      if(pillEl){
+        pillEl.style.color=crit?'#ff4444':'#76b900';
+        pillEl.innerHTML='<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:'+(crit?'#ff4444':'#76b900')+';margin-right:5px;box-shadow:0 0 8px '+(crit?'#ff4444':'#76b900')+'"></span>'+(crit?'CRÍTICO':'NOMINAL');
+      }
+      if(badge){
+        badge.textContent=d.is_live?'ENLACE ACTIVO (COM6+COM9)':'ENLACE SIMULADO';
+        badge.style.color=d.is_live?'#76b900':'#00b0ff';
+      }
+    }catch(e){}
+  }
+  setInterval(poll,2000);
+  poll();
+  if(btn){
+    btn.onclick=()=>{
+      simulated=!simulated;
+      btn.style.transform='scale(.97)';
+      btn.style.background='#00d2ff';
+      btn.style.color='#04101a';
+      setTimeout(()=>{
+        btn.style.transform='none';
+        btn.style.background='#141926';
+        btn.style.color='#fff';
+      },250);
+      if(simulated){
+        btn.innerHTML='⚡ PURGA ACTIVADA · INYECCIÓN N₂ EN CURSO';
+        if(tempEl)tempEl.textContent='24.2';
+        if(o2El)o2El.textContent='17.5';
+        if(coEl)coEl.textContent='9';
+        if(pillEl){
+          pillEl.style.color='#5fd6a0';
+          pillEl.innerHTML='<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#5fd6a0;margin-right:5px"></span>PURGA N₂';
+        }
+        setTimeout(()=>{
+          simulated=false;
+          btn.innerHTML='⚡ PURGA DE CABINA N₂ (GT911 TOUCH)';
+          poll();
+        },4000);
+      }
+    };
+  }
+})();
 </script>
 </body>
 </html>
