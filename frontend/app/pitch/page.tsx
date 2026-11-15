@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import KalmanTelemetry from "../../components/KalmanTelemetry";
 import { 
   Flame, 
   Database, 
@@ -224,6 +225,14 @@ export default function PitchLanding() {
 
           {/* Desktop Actions */}
           <div className="hidden sm:flex items-center space-x-3">
+            <a
+              href="#kalman"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider bg-black hover:bg-[#111111] text-[#76b900] border border-[#76b900]/40 transition-colors"
+            >
+              <Activity className="h-3.5 w-3.5" />
+              <span>SONDA HARDWARE</span>
+            </a>
+
             <button
               onClick={() => setShowQRModal(true)}
               className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider bg-[#0088cc] hover:bg-[#0077b5] text-white border border-[#0099e6] shadow-sm shadow-[#0088cc]/30 transition-colors"
@@ -236,7 +245,7 @@ export default function PitchLanding() {
               href="/"
               className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider bg-[#76b900] text-black hover:bg-[#5a8d00] transition-colors"
             >
-              <span>WORKBENCH EN VIVO</span>
+              <span>WORKBENCH</span>
               <ChevronRight className="h-4 w-4" />
             </Link>
           </div>
@@ -263,6 +272,18 @@ export default function PitchLanding() {
         {/* Mobile Drawer */}
         {isMobileMenuOpen && (
           <div className="sm:hidden bg-[#0d0d0d] border-b border-[#333333] px-5 py-4 space-y-2.5 animate-in slide-in-from-top-2 duration-200">
+            <a
+              href="#kalman"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full flex items-center justify-between px-3.5 py-2.5 bg-black border border-[#76b900] text-[#76b900] text-xs font-bold uppercase tracking-wider hover:bg-[#111111] transition-colors rounded-[2px]"
+            >
+              <div className="flex items-center space-x-2">
+                <Activity className="h-4 w-4" />
+                <span>SONDA HARDWARE (COM6)</span>
+              </div>
+              <ChevronRight className="h-4 w-4" />
+            </a>
+
             <Link
               href="/"
               onClick={() => setIsMobileMenuOpen(false)}
@@ -766,6 +787,11 @@ export default function PitchLanding() {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* Hardware-in-the-Loop & Algoritmo Filtro de Kalman */}
+        <section id="kalman" className="space-y-4">
+          <KalmanTelemetry />
         </section>
 
         {/* Evidencia en Video y Fotografía Oficial NASA */}
