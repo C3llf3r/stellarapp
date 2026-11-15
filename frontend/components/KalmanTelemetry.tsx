@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Activity, ShieldAlert, Cpu, AlertTriangle, ArrowRight, Gauge } from "lucide-react";
+import { Activity, ShieldAlert, Cpu, AlertTriangle, ArrowRight, Gauge, Send, Radio } from "lucide-react";
 
 interface Scenario {
   id: string;
@@ -31,6 +31,42 @@ export default function KalmanTelemetry() {
   const [o2Pct, setO2Pct] = useState(26.0);
   const [data, setData] = useState<TelemetryResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [broadcasting, setBroadcasting] = useState(false);
+  const [broadcastStatus, setBroadcastStatus] = useState<string | null>(null);
+
+  const broadcastToAudience = async () => {
+    if (!data) return;
+    setBroadcasting(true);
+    try {
+      const resp = await fetch("/api/telegram/broadcast", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: `Alerta Telemetría // ${data.scenario.name}`,
+          message: `Estado: ${data.alert_title}\nDiagnóstico: ${data.diagnosis}`,
+          severity: data.safety_level === "CRÍTICO" ? "CRITICAL" : "WARNING",
+          details: {
+            "Oxígeno O₂": `${data.o2_percentage}%`,
+            "CO Crudo": `${data.raw_co_ppm} ppm`,
+            "CO Filtrado (Kalman)": `${data.filtered_co_ppm} ppm`,
+            "Ganancia Kalman": `${data.kalman_gain}`,
+            "Tiempo Evacuación": data.critical_evac_time
+          }
+        })
+      });
+      if (resp.ok) {
+        const json = await resp.json();
+        setBroadcastStatus(`Alerta emitida con éxito a ${json.recipients_sent} dispositivos en Telegram.`);
+      } else {
+        setBroadcastStatus("Error emitiendo alerta a Telegram.");
+      }
+    } catch {
+      setBroadcastStatus("Servidor de alertas temporalmente offline.");
+    } finally {
+      setBroadcasting(false);
+      setTimeout(() => setBroadcastStatus(null), 6000);
+    }
+  };
 
   const fetchTelemetry = async (scen = scenarioId, o2 = o2Pct) => {
     setLoading(true);
@@ -223,6 +259,34 @@ export default function KalmanTelemetry() {
                     </li>
                   ))}
                 </ul>
+              </div>
+
+              {/* Telegram Audience Broadcast Action */}
+              <div className="pt-3 border-t border-[#333333] space-y-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
+                  <button
+                    onClick={broadcastToAudience}
+                    disabled={broadcasting}
+                    className="inline-flex items-center justify-center space-x-2 px-3 py-2 bg-[#0088cc] hover:bg-[#0077b5] text-white text-xs font-bold uppercase tracking-wider transition-colors border border-[#0099e6] shadow-sm shadow-[#0088cc]/30 disabled:opacity-50"
+                  >
+                    <Send className="h-3.5 w-3.5" />
+                    <span>{broadcasting ? "EMITIENDO A TELEGRAM..." : "🚨 EMITIR ALERTA AL AUDITORIO (TELEGRAM)"}</span>
+                  </button>
+                  <a
+                    href="https://t.me/Stellar_App_bot"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[10px] font-mono text-[#0088cc] hover:underline flex items-center space-x-1 justify-center sm:justify-start"
+                  >
+                    <Radio className="h-3 w-3" />
+                    <span>Canal: @Stellar_App_bot</span>
+                  </a>
+                </div>
+                {broadcastStatus && (
+                  <p className="text-[11px] font-mono text-[#76b900] bg-black/60 p-1.5 border border-[#76b900]/40">
+                    {broadcastStatus}
+                  </p>
+                )}
               </div>
             </div>
           ) : (

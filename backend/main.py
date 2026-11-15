@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 from ai_service import CombustionAIService
 from physics_engine import engine, SCENARIOS
 from firms_service import firms_bridge
+import telegram_service
 
 load_dotenv()
 
@@ -200,6 +201,13 @@ def calculate_frp(req: FrpRequest):
 class KalmanRequest(BaseModel):
     scenario_id: str = Field(default="iss", max_length=50)
     o2_pct: float = Field(default=21.0, ge=0.0, le=100.0)
+    broadcast_to_telegram: Optional[bool] = Field(default=False)
+
+class TelegramBroadcastRequest(BaseModel):
+    title: str = Field(..., max_length=150)
+    message: str = Field(..., max_length=1000)
+    severity: str = Field(default="CRITICAL", max_length=20)
+    details: Optional[Dict[str, Any]] = None
 
 @app.get("/api/scenarios")
 def get_scenarios():
@@ -393,8 +401,22 @@ def evaluate_material_flammability(req: MaterialEvalRequest):
     }
 
 @app.post("/api/telemetry/kalman")
-def get_kalman_telemetry(req: KalmanRequest):
-    return engine.compute_telemetry(req.scenario_id, req.o2_pct)
+async def get_kalman_telemetry(req: KalmanRequest):
+    result = engine.compute_telemetry(req.scenario_id, req.o2_pct)
+    if req.broadcast_to_telegram:
+        await telegram_service.broadcast_alert(
+            title=f"Telemetría en Vivo: {result['scenario']['name']}",
+            message=f"Alerta: {result['alert_title']}\nDiagnóstico: {result['diagnosis']}",
+            severity="CRITICAL" if result["safety_level"] == "CRÍTICO" else "WARNING",
+            details={
+                "Oxígeno": f"{result['o2_percentage']}%",
+                "CO Crudo": f"{result['raw_co_ppm']} ppm",
+                "CO Filtrado (Kalman)": f"{result['filtered_co_ppm']} ppm",
+                "Ganancia Kalman": f"{result['kalman_gain']}",
+                "Evacuación Límite": result["critical_evac_time"]
+            }
+        )
+    return result
 
 @app.get("/api/analytics/charts")
 def get_analytics_charts():
@@ -527,4 +549,61 @@ async def get_iss_telemetry():
         "visibility": "daylight",
         "is_live": False
     }
+
+# ==========================================
+# TELEGRAM BOT & AUDIENCE ALERT ENDPOINTS
+# ==========================================
+
+@app.get("/api/telegram/status")
+async def get_telegram_status():
+    """
+    Retorna el estado de conexión del bot de Telegram, cantidad de suscriptores del auditorio y estado del webhook.
+    """
+    subs = telegram_service.get_subscribers()
+    wh_info = await telegram_service.get_webhook_info()
+    return {
+        "bot_username": "Stellar_App_bot",
+        "bot_link": "https://t.me/Stellar_App_bot",
+        "subscribers_count": len(subs),
+        "subscribers": subs,
+        "webhook_info": wh_info.get("result", wh_info)
+    }
+
+@app.post("/api/telegram/webhook")
+async def telegram_webhook(update: Dict[str, Any]):
+    """
+    Punto de entrada para actualizaciones enviadas por Telegram Webhook.
+    Procesa /start, /telemetria, callbacks de botones y mensajes de la audiencia.
+    """
+    return await telegram_service.handle_update(update)
+
+@app.post("/api/telegram/broadcast")
+async def broadcast_to_telegram(req: TelegramBroadcastRequest):
+    """
+    Emite una alerta de emergencia en vivo a todos los teléfonos del auditorio conectados al bot.
+    """
+    sent = await telegram_service.broadcast_alert(
+        title=req.title,
+        message=req.message,
+        severity=req.severity,
+        details=req.details
+    )
+    return {
+        "status": "success",
+        "recipients_sent": sent,
+        "total_subscribers": len(telegram_service.get_subscribers())
+    }
+
+@app.post("/api/telegram/set-webhook")
+async def set_telegram_webhook(url: Optional[str] = None):
+    """
+    Configura el webhook de Telegram hacia la URL de producción de StellarApp.
+    """
+    target_url = url or "https://stellarapp.nerosystem.solutions/api/telegram/webhook"
+    res = await telegram_service.set_webhook(target_url)
+    return {
+        "webhook_url": target_url,
+        "telegram_response": res
+    }
+
 

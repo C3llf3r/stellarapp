@@ -16,7 +16,10 @@ import {
   Cpu,
   Activity,
   CheckCircle2,
-  Zap
+  Zap,
+  Send,
+  Radio,
+  QrCode
 } from "lucide-react";
 
 export default function PitchLanding() {
@@ -396,6 +399,91 @@ export default function PitchLanding() {
                   <span className="px-2 py-1 bg-black border border-[#76b900]/40 text-[11px] font-mono text-[#76b900]">
                     • 14 Estudios & 32 Parámetros NASA PSI Validados
                   </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Feature Showcase 2: Live Audience Telegram Bot & QR Code */}
+          <div className="relative bg-gradient-to-r from-[#0d1b2a] via-[#102030] to-[#0d1b2a] border border-[#0088cc]/60 p-6 sm:p-8 mt-6">
+            <div className="corner-square border-[#0088cc]" />
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+              {/* QR Code Column */}
+              <div className="md:col-span-4 flex flex-col items-center justify-center space-y-3">
+                <div className="relative bg-white p-3 border-2 border-[#0088cc] shadow-xl shadow-[#0088cc]/20">
+                  <Image
+                    src="/images/telegram-bot-qr.png"
+                    alt="QR Bot Telegram StellarApp"
+                    width={180}
+                    height={180}
+                    className="object-contain"
+                  />
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-[#0088cc] text-white font-mono text-[9px] font-bold uppercase whitespace-nowrap">
+                    ESCANEAR CON LA CÁMARA
+                  </div>
+                </div>
+                <a
+                  href="https://t.me/Stellar_App_bot"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#0088cc] hover:bg-[#0077b5] text-white text-xs font-bold uppercase tracking-wider transition-colors"
+                >
+                  <Send className="h-3.5 w-3.5" />
+                  <span>@Stellar_App_bot</span>
+                </a>
+              </div>
+
+              {/* Pitch & Instructions Column */}
+              <div className="md:col-span-8 space-y-4">
+                <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 bg-black border border-[#0088cc] text-[#0088cc] text-[10px] font-bold uppercase tracking-wider">
+                  <Radio className="h-3 w-3 animate-pulse" />
+                  <span>DEMOSTRACIÓN INTERACTIVA EN VIVO CON EL AUDITORIO Y JUECES</span>
+                </div>
+
+                <h3 className="text-lg sm:text-2xl font-bold text-white">
+                  Conecta tu Teléfono a la Red de Alerta Temprana ECLSS
+                </h3>
+
+                <p className="text-xs sm:text-sm text-[#cccccc] leading-relaxed">
+                  Para que los evaluadores de la NASA y el público experimenten la velocidad de respuesta en primera persona, hemos habilitado un <strong>Webhook en tiempo real con Telegram</strong>. Cualquier persona en la sala puede suscribirse en 5 segundos sin instalar ninguna aplicación adicional.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  <div className="p-3 bg-black/60 border border-[#333333] space-y-1">
+                    <span className="text-[10px] font-bold text-[#0088cc] uppercase block">
+                      1. ESCANEAR & SUSCRIBIRSE
+                    </span>
+                    <p className="text-[11px] text-[#a7a7a7]">
+                      Apunta tu cámara al código QR y pulsa <strong>/start</strong> en Telegram para autenticar tu credencial de tripulante.
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-black/60 border border-[#333333] space-y-1">
+                    <span className="text-[10px] font-bold text-[#76b900] uppercase block">
+                      2. ALARMA SIMULTÁNEA DE CABINA
+                    </span>
+                    <p className="text-[11px] text-[#a7a7a7]">
+                      Cuando simulamos una fuga crítica de CO o fuego difusivo en el escenario, <strong>todos los teléfonos vibran al mismo milisegundo</strong>.
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-black/60 border border-[#333333] space-y-1">
+                    <span className="text-[10px] font-bold text-[#ffb703] uppercase block">
+                      3. BOTONES DE TELEMETRÍA IOT
+                    </span>
+                    <p className="text-[11px] text-[#a7a7a7]">
+                      Consulta el estado del Filtro de Kalman, la concentración de O₂ y el tiempo límite de evacuación directamente en el bot.
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-black/60 border border-[#333333] space-y-1">
+                    <span className="text-[10px] font-bold text-[#ff0055] uppercase block">
+                      4. SIMULADOR DE MATERIALES
+                    </span>
+                    <p className="text-[11px] text-[#a7a7a7]">
+                      Envía <code>/simular nomex</code> o pulsa el botón para ver cómo un material ignífugo en la Tierra se vuelve reactivo en Artemis.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
