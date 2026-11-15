@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { 
@@ -19,10 +19,15 @@ import {
   Zap,
   Send,
   Radio,
-  QrCode
+  QrCode,
+  Menu,
+  X
 } from "lucide-react";
 
 export default function PitchLanding() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showQRModal, setShowQRModal] = useState(false);
+
   const problems = [
     {
       title: "40 AÑOS DE DATOS INACCESIBLES",
@@ -139,30 +144,155 @@ export default function PitchLanding() {
     <div className="min-h-screen bg-black text-[#cccccc] flex flex-col font-sans">
       {/* Top Navbar */}
       <header className="border-b border-[#333333] bg-black sticky top-0 z-50">
-        <div className="max-w-[1280px] mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-3">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center space-x-2.5 sm:space-x-3">
             <div className="h-7 w-7 bg-[#76b900] flex items-center justify-center">
               <Flame className="h-4 w-4 text-black fill-black" />
             </div>
-            <div>
-              <span className="font-bold text-base tracking-wider text-white">STELLAR<span className="text-[#76b900]">APP</span></span>
-              <span className="ml-2 px-2 py-0.5 text-[10px] font-bold bg-[#1a1a1a] text-[#76b900] border border-[#333333]">
-                NASA SPACE APPS 2026
+            <div className="flex items-baseline space-x-2">
+              <span className="font-bold text-base sm:text-lg tracking-wider text-white">
+                STELLAR<span className="text-[#76b900]">APP</span>
+              </span>
+              <span className="text-[10px] sm:text-[11px] font-bold tracking-widest text-[#898989] uppercase border-l border-[#333333] pl-2 hidden xs:inline">
+                PITCH 2026
               </span>
             </div>
           </Link>
 
-          <div className="flex items-center space-x-3">
+          {/* Desktop Actions */}
+          <div className="hidden sm:flex items-center space-x-3">
+            <button
+              onClick={() => setShowQRModal(true)}
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider bg-[#0088cc] hover:bg-[#0077b5] text-white border border-[#0099e6] shadow-sm shadow-[#0088cc]/30 transition-colors"
+            >
+              <Send className="h-3.5 w-3.5" />
+              <span>BOT EN VIVO</span>
+            </button>
+
             <Link
               href="/"
-              className="inline-flex items-center space-x-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider bg-[#76b900] text-black hover:bg-[#5a8d00] transition-colors"
+              className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider bg-[#76b900] text-black hover:bg-[#5a8d00] transition-colors"
             >
-              <span>ABRIR WORKBENCH EN VIVO</span>
+              <span>WORKBENCH EN VIVO</span>
               <ChevronRight className="h-4 w-4" />
             </Link>
           </div>
+
+          {/* Mobile Hamburger & Actions */}
+          <div className="flex sm:hidden items-center space-x-2">
+            <button
+              onClick={() => setShowQRModal(true)}
+              className="p-1.5 bg-[#0088cc] text-white rounded-[2px] border border-[#0099e6]"
+              aria-label="Abrir QR Telegram"
+            >
+              <Send className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-1.5 text-white hover:text-[#76b900] border border-[#333333] bg-[#111111] transition-colors rounded-[2px]"
+              aria-label="Abrir menú de navegación"
+            >
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Drawer */}
+        {isMobileMenuOpen && (
+          <div className="sm:hidden bg-[#0d0d0d] border-b border-[#333333] px-5 py-4 space-y-2.5 animate-in slide-in-from-top-2 duration-200">
+            <Link
+              href="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full flex items-center justify-between px-3.5 py-2.5 bg-[#76b900] text-black text-xs font-bold uppercase tracking-wider hover:bg-[#5a8d00] transition-colors rounded-[2px]"
+            >
+              <div className="flex items-center space-x-2">
+                <Sparkles className="h-4 w-4 fill-black" />
+                <span>ABRIR WORKBENCH EN VIVO</span>
+              </div>
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                setShowQRModal(true);
+              }}
+              className="w-full flex items-center justify-between px-3.5 py-2.5 bg-[#0088cc] hover:bg-[#0077b5] text-white text-xs font-bold uppercase tracking-wider transition-colors rounded-[2px]"
+            >
+              <div className="flex items-center space-x-2">
+                <Send className="h-4 w-4" />
+                <span>CONECTAR BOT TELEGRAM</span>
+              </div>
+              <QrCode className="h-4 w-4" />
+            </button>
+
+            <Link
+              href="/#kalman-section"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full flex items-center space-x-2 px-3.5 py-2.5 border border-[#333333] text-white text-xs font-bold uppercase tracking-wider bg-black/60 hover:border-white transition-colors rounded-[2px]"
+            >
+              <Radio className="h-4 w-4 text-[#76b900]" />
+              <span>TELEMETRÍA FILTRO DE KALMAN</span>
+            </Link>
+          </div>
+        )}
       </header>
+
+      {/* Telegram Audience QR Modal */}
+      {showQRModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative w-full max-w-sm bg-[#111111] border-2 border-[#0088cc] shadow-2xl p-6 text-center space-y-4">
+            <div className="corner-square border-[#0088cc]" />
+            <div className="flex items-center justify-between pb-2 border-b border-[#222222]">
+              <div className="flex items-center space-x-2 text-[#0088cc]">
+                <Send className="h-4 w-4" />
+                <span className="text-xs font-bold uppercase tracking-wider text-white">RED TELEMETRÍA TELEGRAM</span>
+              </div>
+              <button
+                onClick={() => setShowQRModal(false)}
+                className="text-[#888888] hover:text-white transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="p-3 bg-white border border-[#0088cc]/50 inline-block shadow-lg">
+              <Image
+                src="/images/telegram-bot-qr.png"
+                alt="QR Bot Telegram @Stellar_App_bot"
+                width={200}
+                height={200}
+                className="mx-auto"
+                priority
+              />
+            </div>
+
+            <div className="space-y-1.5 font-mono">
+              <p className="text-xs text-white font-bold">@Stellar_App_bot</p>
+              <p className="text-[11px] text-[#aaaaaa] leading-relaxed">
+                Escanea el código con tu celular para unirte a la red de alertas de vuelo del auditorio.
+              </p>
+            </div>
+
+            <div className="pt-2 flex flex-col gap-2">
+              <a
+                href="https://t.me/Stellar_App_bot"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-2 bg-[#0088cc] hover:bg-[#0077b5] text-white text-xs font-bold uppercase tracking-wider transition-colors inline-block text-center"
+              >
+                ABRIR EN TELEGRAM
+              </a>
+              <button
+                onClick={() => setShowQRModal(false)}
+                className="w-full py-1.5 bg-black border border-[#333333] hover:border-white text-xs text-[#aaaaaa] uppercase tracking-wider transition-colors"
+              >
+                CERRAR
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <main className="flex-1 max-w-[1280px] w-full mx-auto px-6 py-12 space-y-16">
         {/* Pitch Hero */}
