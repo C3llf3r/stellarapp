@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import MetricsCards from "../components/MetricsCards";
 import ComparisonViewer from "../components/ComparisonViewer";
+import NASAOfficialFootage from "../components/NASAOfficialFootage";
 import AISimulator from "../components/AISimulator";
 import KalmanTelemetry from "../components/KalmanTelemetry";
 import EarthSpaceBridge from "../components/EarthSpaceBridge";
@@ -144,6 +145,9 @@ export default function Home() {
         <section>
           <ComparisonViewer />
         </section>
+
+        {/* 2.5 Official NASA Video & Photo Evidence */}
+        <NASAOfficialFootage />
 
         {/* 3. AI Atmospheric Simulator */}
         <section>
