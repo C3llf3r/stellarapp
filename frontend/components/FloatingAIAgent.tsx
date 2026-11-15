@@ -135,41 +135,41 @@ export default function FloatingAIAgent() {
 
   return (
     <aside aria-label="Asistente de IA Flotante" className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end">
-      {/* 1. Closed state: Floating Astronaut Widget */}
+      {/* 1. Closed state: Floating Astronaut Widget (Option 1: 100% Transparent / Hologram) */}
       {!isOpen && (
         <button
           onClick={() => {
             setIsOpen(true);
             setIsMinimized(false);
           }}
-          className="group relative flex items-center gap-3 p-2.5 pr-4 bg-black/90 backdrop-blur-md border-2 border-[#76b900] shadow-[0_0_25px_rgba(118,185,0,0.4)] hover:shadow-[0_0_40px_rgba(118,185,0,0.7)] hover:border-[#76b900] text-white transition-all duration-300 rounded-[2px]"
+          className="group relative flex items-center gap-2.5 p-1 bg-transparent border-0 shadow-none hover:scale-105 text-white transition-transform duration-300 cursor-pointer select-none"
         >
           {/* Animated Astronaut on Rocket */}
-          <div className="relative w-12 h-12 flex-shrink-0 animate-bounce" style={{ animationDuration: "2.5s" }}>
+          <div className="relative w-14 h-14 flex-shrink-0 animate-bounce" style={{ animationDuration: "2.5s" }}>
             <img
               src="/images/astronaut-agent.png"
               alt="Astronauta Asistente NASA"
-              className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(118,185,0,0.8)] group-hover:scale-115 transition-transform duration-300"
+              className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(118,185,0,0.85)] group-hover:scale-110 transition-transform duration-300"
             />
             {/* Green Online Beacon */}
             <span className="absolute -top-1 -right-1 flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#76b900] opacity-75" />
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-[#76b900] border-2 border-black" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#76b900] border-2 border-black" />
             </span>
           </div>
 
-          <div className="flex flex-col text-left">
+          <div className="flex flex-col text-left drop-shadow-[0_2px_5px_rgba(0,0,0,0.95)]">
             <div className="flex items-center space-x-1.5">
-              <span className="text-[11px] font-bold tracking-wider uppercase text-white group-hover:text-[#76b900] transition-colors">
+              <span className="text-xs font-bold tracking-wider uppercase text-white group-hover:text-[#76b900] transition-colors">
                 ASISTENTE NASA
               </span>
             </div>
-            <span className="text-[9px] font-mono text-[#898989] group-hover:text-[#cccccc] transition-colors">
+            <span className="text-[10px] font-mono text-[#a7a7a7] group-hover:text-white transition-colors">
               ASTRONAUTA • EN ÓRBITA
             </span>
           </div>
 
-          <Sparkles className="h-4 w-4 text-[#76b900] group-hover:rotate-12 transition-transform ml-0.5" />
+          <Sparkles className="h-4 w-4 text-[#76b900] group-hover:rotate-12 transition-transform drop-shadow-[0_0_8px_#76b900] ml-0.5" />
         </button>
       )}
 
