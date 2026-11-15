@@ -289,7 +289,7 @@ export default function KalmanTelemetry() {
                   <button
                     onClick={broadcastToAudience}
                     disabled={broadcasting}
-                    className="inline-flex items-center justify-center space-x-2 px-3 py-2 bg-[#0088cc] hover:bg-[#0077b5] text-white text-xs font-bold uppercase tracking-wider transition-colors border border-[#0099e6] shadow-sm shadow-[#0088cc]/30 disabled:opacity-50"
+                    className="inline-flex items-center justify-center space-x-2 px-3.5 py-2.5 bg-[#e52020] hover:bg-[#c51818] text-white text-xs font-bold uppercase tracking-wider transition-all border border-[#ff4444] shadow-md shadow-[#e52020]/40 hover:shadow-[#e52020]/70 disabled:opacity-50 rounded-[2px]"
                   >
                     <Send className="h-3.5 w-3.5" />
                     <span>{broadcasting ? "EMITIENDO A TELEGRAM..." : "🚨 EMITIR ALERTA AL AUDITORIO (TELEGRAM)"}</span>
