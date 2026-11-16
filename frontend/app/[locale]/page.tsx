@@ -16,9 +16,10 @@ import RankingTable from "../../components/RankingTable";
 import EarthImpact from "../../components/EarthImpact";
 import FireHistoryTimeline from "../../components/FireHistoryTimeline";
 import ResourcesSection from "../../components/ResourcesSection";
+import DemoVideoModal from "../../components/DemoVideoModal";
 import { Experiment, MetricsData } from "../../types";
 import { useLocale, useTranslations } from "next-intl";
-import { Search, Sparkles, Terminal, ChevronRight, AlertTriangle } from "lucide-react";
+import { Search, Sparkles, Terminal, ChevronRight, AlertTriangle, Play } from "lucide-react";
 
 export default function Home() {
   const t = useTranslations();
@@ -29,6 +30,7 @@ export default function Home() {
   const [selectedRisk, setSelectedRisk] = useState("all");
   const [selectedEnv, setSelectedEnv] = useState("all");
   const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [demoModalOpen, setDemoModalOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/metrics")
@@ -123,10 +125,18 @@ export default function Home() {
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <button
-                onClick={openFloatingAI}
-                className="px-6 py-3 bg-[#76b900] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#5a8d00] transition-colors flex items-center space-x-2"
+                onClick={() => setDemoModalOpen(true)}
+                className="px-6 py-3 bg-[#76b900] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#5a8d00] transition-colors flex items-center space-x-2 shadow-lg shadow-[#76b900]/20"
               >
-                <Sparkles className="h-4 w-4 fill-black" />
+                <Play className="h-4 w-4 fill-black" />
+                <span>{t("hero.ctaDemo")}</span>
+              </button>
+
+              <button
+                onClick={openFloatingAI}
+                className="px-6 py-3 bg-black text-white border border-[#333333] hover:border-[#76b900] font-bold text-xs uppercase tracking-wider transition-colors flex items-center space-x-2"
+              >
+                <Sparkles className="h-4 w-4 text-[#76b900]" />
                 <span>{t("hero.ctaAI")}</span>
               </button>
 
@@ -287,6 +297,7 @@ export default function Home() {
       </footer>
 
       <AIAssistantModal isOpen={aiModalOpen} onClose={() => setAiModalOpen(false)} />
+      <DemoVideoModal isOpen={demoModalOpen} onClose={() => setDemoModalOpen(false)} />
       <FloatingAIAgent />
     </div>
   );

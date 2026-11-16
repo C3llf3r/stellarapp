@@ -76,8 +76,19 @@
     "title": "Combustión en Microgravedad: Predicción y Seguridad para Artemis & Marte",
     "body": "La NASA ha recopilado cuatro décadas de datos experimentales en la ISS y naves Cygnus (Saffire, BASS, FLEX). <b>StellarApp</b> sintetiza, clasifica e interpreta esta física con IA para salvaguardar a la tripulación en hábitats presurizados lunares y marcianos.",
     "ctaAI": "CONSULTAR AGENTE IA NASA",
+    "ctaDemo": "VER DEMO OPERACIONAL",
     "ctaSimulator": "WORKBENCH DE SIMULACIÓN",
     "ctaCharts": "DASHBOARD DE GRÁFICOS"
+  },
+  "demoModal": {
+    "title": "DEMOSTRACIÓN OPERACIONAL DEL SISTEMA // HARDWARE-IN-THE-LOOP",
+    "subtitle": "Verificación en Vivo: Telemetría USB Serial (Pico W + Sunton ESP32) • Algoritmo Filtro de Kalman",
+    "badge": "EVIDENCIA OFICIAL DE VUELO",
+    "videoNote": "Demostración física del sistema completo operando con adquisición de datos y enlace en tiempo real.",
+    "downloadEn": "INFORME NASA (INGLÉS · PDF)",
+    "downloadAudit": "AUDITORÍA DEL JURADO (PDF)",
+    "downloadTech": "FICHA TÉCNICA (PDF)",
+    "close": "CERRAR"
   },
   "catalog": {
     "eyebrow": "CATÁLOGO DE EXPERIMENTOS OFICIALES",
