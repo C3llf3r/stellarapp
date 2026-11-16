@@ -192,7 +192,7 @@ export default function DemoVideoModal({ isOpen, onClose }: DemoVideoModalProps)
 
                 {/* 2. Hardware & Software Technical Sheet */}
                 <a
-                  href="/StellarApp_Ficha_Tecnica_Hardware_Software.pdf"
+                  href="/StellarApp_Ficha_Tecnica_Hardware_Software.pdf?v=2026"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2.5 bg-black hover:bg-[#161616] text-white border border-[#444444] hover:border-white rounded-[2px] transition-colors flex items-center justify-between group"
