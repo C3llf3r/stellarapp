@@ -1,12 +1,30 @@
 # StellarApp — NASA Space Apps Challenge 2026
 
+[![NASA Space Apps](https://img.shields.io/badge/NASA_Space_Apps-2026-0B3D91?style=for-the-badge&logo=nasa&logoColor=white)](https://www.spaceappschallenge.org/)
+[![Production Live](https://img.shields.io/badge/Plataforma_En_Vivo-stellarapp.nerosystem.solutions-76b900?style=for-the-badge&logo=cloudflare&logoColor=white)](https://stellarapp.nerosystem.solutions)
+[![Next.js 14](https://img.shields.io/badge/Next.js-14_App_Router-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+
 [English](README.md) · **Español**
 
 **Desafío:** Seguridad Contra Incendios y Combustión en Microgravedad
 
-Plataforma interactiva con Inteligencia Artificial que desbloquea, clasifica e interpreta décadas de investigación de la NASA sobre la física del fuego en microgravedad (ISS, Cygnus Saffire, BASS-II, FLEX-2), orientada a proteger a los astronautas en misiones **Artemis (Luna)** y naves hacia **Marte**.
+Plataforma interactiva con Inteligencia Artificial que desbloquea, clasifica e interpreta cuatro décadas de investigación de la NASA sobre la física del fuego en microgravedad (ISS, Cygnus Saffire, BASS-II, FLEX-2), orientada a proteger a los astronautas en misiones **Artemis (Luna)** y naves hacia **Marte**.
 
-Demo en vivo: <https://stellarapp.nerosystem.solutions>
+- 🌐 **Plataforma en vivo:** <https://stellarapp.nerosystem.solutions>
+- 🎥 **Video Demostración Operacional (HIL):** [Ver Video del Sistema (MP4)](https://stellarapp.nerosystem.solutions/media/STELLARAPP_Demo.mp4)
+- 🤖 **Bot de Telegram Telemetría IoT:** [@Stellar_App_bot](https://t.me/Stellar_App_bot)
+
+---
+
+## Dossier Técnico Oficial & Reportes de Vuelo (PDF)
+
+| Documento | Alcance | Idioma | Descarga Directa |
+| --- | --- | :---: | :---: |
+| **Informe de Investigación Oficial NASA** | Documento técnico y científico completo para el Space Apps Challenge 2026 | Inglés | [📄 Descargar PDF](https://stellarapp.nerosystem.solutions/STELLARAPP_NASA_INGLES.pdf) |
+| **Auditoría Técnica de Jurado NASA Space Apps** | Matriz de cumplimiento normativo NASA-STD-6001 y desglose de puntuación | Español / Técnico | [📄 Descargar PDF](https://stellarapp.nerosystem.solutions/AUDITORIA_JUEZ_NASA_SPACE_APPS_2026.pdf) |
+| **Ficha Técnica de Hardware y Aviónica** | Sonda sensorial RP2040 Pico W + Cabina Sunton ESP32 4.3" TFT y esquemas | Técnico | [📄 Descargar PDF](https://stellarapp.nerosystem.solutions/StellarApp_Ficha_Tecnica_Hardware_Software.pdf) |
 
 ---
 

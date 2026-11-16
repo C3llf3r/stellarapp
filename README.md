@@ -1,12 +1,30 @@
 # StellarApp — NASA Space Apps Challenge 2026
 
+[![NASA Space Apps](https://img.shields.io/badge/NASA_Space_Apps-2026-0B3D91?style=for-the-badge&logo=nasa&logoColor=white)](https://www.spaceappschallenge.org/)
+[![Production Live](https://img.shields.io/badge/Live_Platform-stellarapp.nerosystem.solutions-76b900?style=for-the-badge&logo=cloudflare&logoColor=white)](https://stellarapp.nerosystem.solutions)
+[![Next.js 14](https://img.shields.io/badge/Next.js-14_App_Router-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+
 **English** · [Español](README.es.md)
 
 **Challenge:** Fire Safety and Combustion in Microgravity
 
 An interactive AI platform that unlocks, classifies and models four decades of NASA research on fire physics in microgravity (ISS, Cygnus Saffire, BASS-II, FLEX-2), aimed at protecting astronauts on **Artemis (Moon)** missions and spacecraft traveling to **Mars**.
 
-Live demo: <https://stellarapp.nerosystem.solutions>
+- 🌐 **Live Platform:** <https://stellarapp.nerosystem.solutions>
+- 🎥 **Operational Demonstration Video (HIL):** [Watch System Demo (MP4)](https://stellarapp.nerosystem.solutions/media/STELLARAPP_Demo.mp4)
+- 🤖 **Telegram IoT Cockpit Bot:** [@Stellar_App_bot](https://t.me/Stellar_App_bot)
+
+---
+
+## Official Flight Dossier & Technical Reports (PDF)
+
+| Document | Scope | Language | Direct Download |
+| --- | --- | :---: | :---: |
+| **NASA Space Apps Research Paper** | Comprehensive scientific & engineering report for Space Apps Challenge 2026 | English | [📄 Download PDF](https://stellarapp.nerosystem.solutions/STELLARAPP_NASA_INGLES.pdf) |
+| **NASA Space Apps Judge Technical Audit** | Rigorous evaluation matrix, compliance with NASA-STD-6001 and scoring breakdown | Spanish / Tech | [📄 Download PDF](https://stellarapp.nerosystem.solutions/AUDITORIA_JUEZ_NASA_SPACE_APPS_2026.pdf) |
+| **Hardware & Avionics Specification** | RP2040 Pico W sensory probe + Sunton ESP32 4.3" TFT Cockpit schematic & pinouts | Technical | [📄 Download PDF](https://stellarapp.nerosystem.solutions/StellarApp_Ficha_Tecnica_Hardware_Software.pdf) |
 
 ---
 
