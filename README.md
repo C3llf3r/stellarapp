@@ -23,7 +23,6 @@ An interactive AI platform that unlocks, classifies and models four decades of N
 | Document | Scope | Language | Direct Download |
 | --- | --- | :---: | :---: |
 | **NASA Space Apps Research Paper** | Comprehensive scientific & engineering report for Space Apps Challenge 2026 | English | [📄 Download PDF](https://stellarapp.nerosystem.solutions/STELLARAPP_NASA_INGLES.pdf) |
-| **NASA Space Apps Judge Technical Audit** | Rigorous evaluation matrix, compliance with NASA-STD-6001 and scoring breakdown | Spanish / Tech | [📄 Download PDF](https://stellarapp.nerosystem.solutions/AUDITORIA_JUEZ_NASA_SPACE_APPS_2026.pdf) |
 | **Hardware & Avionics Specification** | RP2040 Pico W sensory probe + Sunton ESP32 4.3" TFT Cockpit schematic & pinouts | Technical | [📄 Download PDF](https://stellarapp.nerosystem.solutions/StellarApp_Ficha_Tecnica_Hardware_Software.pdf) |
 
 ---

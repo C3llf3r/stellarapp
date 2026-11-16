@@ -23,7 +23,6 @@ Plataforma interactiva con Inteligencia Artificial que desbloquea, clasifica e i
 | Documento | Alcance | Idioma | Descarga Directa |
 | --- | --- | :---: | :---: |
 | **Informe de Investigación Oficial NASA** | Documento técnico y científico completo para el Space Apps Challenge 2026 | Inglés | [📄 Descargar PDF](https://stellarapp.nerosystem.solutions/STELLARAPP_NASA_INGLES.pdf) |
-| **Auditoría Técnica de Jurado NASA Space Apps** | Matriz de cumplimiento normativo NASA-STD-6001 y desglose de puntuación | Español / Técnico | [📄 Descargar PDF](https://stellarapp.nerosystem.solutions/AUDITORIA_JUEZ_NASA_SPACE_APPS_2026.pdf) |
 | **Ficha Técnica de Hardware y Aviónica** | Sonda sensorial RP2040 Pico W + Cabina Sunton ESP32 4.3" TFT y esquemas | Técnico | [📄 Descargar PDF](https://stellarapp.nerosystem.solutions/StellarApp_Ficha_Tecnica_Hardware_Software.pdf) |
 
 ---

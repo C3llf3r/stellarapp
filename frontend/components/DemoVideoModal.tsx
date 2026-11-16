@@ -175,47 +175,33 @@ export default function DemoVideoModal({ isOpen, onClose }: DemoVideoModalProps)
               <div className="text-[10px] font-mono uppercase tracking-wider text-[#888888]">
                 {t("dossierTitle")}
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 font-mono text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-mono text-xs">
                 {/* 1. Main NASA Report in English */}
                 <a
                   href="/STELLARAPP_NASA_INGLES.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 bg-[#14230b] hover:bg-[#1f3711] text-[#76b900] border border-[#76b900] rounded-[2px] transition-colors flex items-center justify-between group"
+                  className="p-2.5 bg-[#14230b] hover:bg-[#1f3711] text-[#76b900] border border-[#76b900] rounded-[2px] transition-colors flex items-center justify-between group"
                 >
-                  <div className="flex items-center space-x-1.5 truncate">
-                    <FileText className="h-3.5 w-3.5 shrink-0" />
-                    <span className="font-bold text-[10px] truncate">{t("downloadEn")}</span>
+                  <div className="flex items-center space-x-2 truncate">
+                    <FileText className="h-4 w-4 shrink-0" />
+                    <span className="font-bold text-[11px] truncate">{t("downloadEn")}</span>
                   </div>
-                  <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100 shrink-0 ml-1" />
+                  <ExternalLink className="h-3.5 w-3.5 opacity-60 group-hover:opacity-100 shrink-0 ml-1" />
                 </a>
 
-                {/* 2. Official Judge Audit Report */}
-                <a
-                  href="/AUDITORIA_JUEZ_NASA_SPACE_APPS_2026.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 bg-[#0e1726] hover:bg-[#16253d] text-[#6ec8ff] border border-[#0088cc]/60 rounded-[2px] transition-colors flex items-center justify-between group"
-                >
-                  <div className="flex items-center space-x-1.5 truncate">
-                    <FileText className="h-3.5 w-3.5 shrink-0" />
-                    <span className="font-bold text-[10px] truncate">{t("downloadAudit")}</span>
-                  </div>
-                  <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100 shrink-0 ml-1" />
-                </a>
-
-                {/* 3. Hardware & Software Technical Sheet */}
+                {/* 2. Hardware & Software Technical Sheet */}
                 <a
                   href="/StellarApp_Ficha_Tecnica_Hardware_Software.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 bg-black hover:bg-[#161616] text-white border border-[#444444] hover:border-white rounded-[2px] transition-colors flex items-center justify-between group"
+                  className="p-2.5 bg-black hover:bg-[#161616] text-white border border-[#444444] hover:border-white rounded-[2px] transition-colors flex items-center justify-between group"
                 >
-                  <div className="flex items-center space-x-1.5 truncate">
-                    <FileText className="h-3.5 w-3.5 shrink-0" />
-                    <span className="font-bold text-[10px] truncate">{t("downloadTech")}</span>
+                  <div className="flex items-center space-x-2 truncate">
+                    <FileText className="h-4 w-4 shrink-0" />
+                    <span className="font-bold text-[11px] truncate">{t("downloadTech")}</span>
                   </div>
-                  <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100 shrink-0 ml-1" />
+                  <ExternalLink className="h-3.5 w-3.5 opacity-60 group-hover:opacity-100 shrink-0 ml-1" />
                 </a>
               </div>
             </div>
