@@ -27,7 +27,8 @@ export default function ThemeToggle({ className = "" }: ThemeToggleProps) {
     } catch (e) {}
   }, []);
 
-  const setTheme = (nextTheme: "dark" | "light") => {
+  const toggleTheme = () => {
+    const nextTheme = theme === "dark" ? "light" : "dark";
     setThemeState(nextTheme);
     try {
       localStorage.setItem("stellar_theme", nextTheme);
@@ -41,44 +42,27 @@ export default function ThemeToggle({ className = "" }: ThemeToggleProps) {
 
   if (!mounted) {
     return (
-      <div className={`h-8 w-16 border border-[#333333] bg-[#111111] opacity-60 box-border rounded-[2px] ${className}`} />
+      <div
+        className={`h-8 w-8 border border-[#333333] bg-[#111111] opacity-60 box-border rounded-[2px] ${className}`}
+      />
     );
   }
 
+  const isDark = theme === "dark";
+
   return (
-    <div
-      role="group"
-      aria-label={t("label")}
-      className={`h-8 inline-flex items-center border border-[#333333] bg-[#111111] box-border rounded-[2px] ${className}`}
+    <button
+      type="button"
+      onClick={toggleTheme}
+      aria-label={isDark ? t("switchToDay") : t("switchToNight")}
+      title={isDark ? t("switchToDay") : t("switchToNight")}
+      className={`h-8 w-8 inline-flex items-center justify-center border border-[#333333] hover:border-white bg-[#111111] hover:bg-[#1a1a1a] text-white rounded-[2px] box-border transition-colors ${className}`}
     >
-      <button
-        type="button"
-        onClick={() => setTheme("dark")}
-        aria-pressed={theme === "dark"}
-        aria-label={t("switchToNight")}
-        title={t("switchToNight")}
-        className={`h-full w-8 flex items-center justify-center text-[11px] font-bold uppercase tracking-wider transition-colors ${
-          theme === "dark"
-            ? "bg-[#76b900] text-black"
-            : "text-[#a7a7a7] hover:text-white hover:bg-[#1f1f1f]"
-        }`}
-      >
-        <Moon className="h-4 w-4" />
-      </button>
-      <button
-        type="button"
-        onClick={() => setTheme("light")}
-        aria-pressed={theme === "light"}
-        aria-label={t("switchToDay")}
-        title={t("switchToDay")}
-        className={`h-full w-8 flex items-center justify-center text-[11px] font-bold uppercase tracking-wider transition-colors ${
-          theme === "light"
-            ? "bg-[#76b900] text-black"
-            : "text-[#a7a7a7] hover:text-white hover:bg-[#1f1f1f]"
-        }`}
-      >
-        <Sun className="h-4 w-4" />
-      </button>
-    </div>
+      {isDark ? (
+        <Moon className="h-4 w-4 text-[#76b900]" />
+      ) : (
+        <Sun className="h-4 w-4 text-[#f59e0b]" />
+      )}
+    </button>
   );
 }

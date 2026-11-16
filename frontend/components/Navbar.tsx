@@ -293,7 +293,7 @@ export default function Navbar({ onOpenAI, onOpenSimulator, onOpenAnalytics }: N
           </button>
 
           {/* Controls toggle (mobile) */}
-          <div className="flex items-center justify-between px-1 pt-1 gap-2">
+          <div className="flex items-center justify-start px-1 pt-1 gap-2">
             <ThemeToggle className="rounded-[2px]" />
             <LocaleSwitcher className="rounded-[2px]" />
           </div>
