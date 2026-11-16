@@ -419,6 +419,7 @@
     "contingency": "CONTINGENCY STATUS",
     "criticalTime": "CRITICAL TIME",
     "physicalDiagnosis": "Physical Diagnosis:",
+    "calibrationNote": "Stoichiometry and CO generation rate coefficients calibrated against PMMA pyrolysis data from Saffire-I and BASS-II (0.2 m/s forced flow in microgravity).",
     "protocols": "Mandatory Crew Protocols:",
     "audience": {
       "question": "ARE YOU IN THE AUDIENCE OR A JUDGE?",

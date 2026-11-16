@@ -424,6 +424,10 @@ export default function KalmanTelemetry() {
               <div>
                 <span className="text-[11px] font-bold uppercase text-white block mb-1">{t("physicalDiagnosis")}</span>
                 <p className="text-xs text-[#cccccc] leading-relaxed">{data.diagnosis}</p>
+                <div className="mt-2 p-2 bg-[#121212] border border-[#262626] text-[10px] font-mono text-[#8da2c0] flex items-start space-x-2">
+                  <span className="text-[#76b900] font-bold shrink-0">[NASA EMPIRICAL]</span>
+                  <span>{t("calibrationNote")}</span>
+                </div>
               </div>
 
               <div>

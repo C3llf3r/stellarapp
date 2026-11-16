@@ -419,6 +419,7 @@
     "contingency": "ESTADO DE CONTINGENCIA",
     "criticalTime": "TIEMPO CRÍTICO",
     "physicalDiagnosis": "Diagnóstico Físico:",
+    "calibrationNote": "Coeficientes de estequiometría y tasa de generación de CO calibrados con datos de pirólisis de PMMA en Saffire-I y BASS-II (flujo forzado a 0.2 m/s en microgravedad).",
     "protocols": "Protocolos Obligatorios para la Tripulación:",
     "audience": {
       "question": "¿ESTÁS EN EL AUDITORIO O ERES JUEZ?",

@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "../../../navigation";
 import KalmanTelemetry from "../../../components/KalmanTelemetry";
 import LocaleSwitcher from "../../../components/LocaleSwitcher";
+import ThemeToggle from "../../../components/ThemeToggle";
 import FireHistoryTimeline from "../../../components/FireHistoryTimeline";
 import EarthImpact from "../../../components/EarthImpact";
 import { 
@@ -210,6 +211,7 @@ export default function PitchLanding() {
 
           {/* Desktop Actions */}
           <div className="hidden sm:flex items-center gap-2 sm:gap-2.5">
+            <ThemeToggle className="rounded-[2px]" />
             <LocaleSwitcher className="rounded-[2px]" />
 
             <a
@@ -249,6 +251,7 @@ export default function PitchLanding() {
 
           {/* Mobile Hamburger & Actions */}
           <div className="flex sm:hidden items-center space-x-2">
+            <ThemeToggle className="rounded-[2px]" />
             <LocaleSwitcher className="rounded-[2px]" />
             <button
               onClick={() => setShowQRModal(true)}
